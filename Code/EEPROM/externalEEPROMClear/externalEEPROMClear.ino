@@ -1,7 +1,7 @@
 // For use with AT24CX EEPROM
 // Connect SDA and SCL to EEPROM. Voltage does not matter. Tested with 3.3v and 5v.
 // Charles Nicholson, 2023
-// Use this code to clear the EEPROM to use in conjuction with the StratoSoar autopilot
+// Use this code to clear the EEPROM to use in conjunction with the StratoSoar autopilot
 #include <Wire.h>
 #define EEPROM_I2C_address 0x50
 #define maxAddress 5000
