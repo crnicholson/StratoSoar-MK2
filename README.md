@@ -32,11 +32,11 @@ As far as potential uses, the list goes on and on:
 4. Basic understanding of embedded systems/ICs.
 5. Knowledge of fabrication processes. 
 
-# Using This Repo
+# Using StratoSoar and This Repo
 ### NOTE: Currently, no GPS has been interfaced with the board. The board's location is static. This is getting worked on.
 To use this repo in your own project, a few things have to be done. First, you have to either use my PCB or make your own based on the posted schematic. DO NOT think that you can switch out parts that I have used; catastrophic failure is imminent without changing the provided code. You HAVE to use an ATMega328P, running 3.3v at 8 mHz, or else the script won't work. That is just an example of a failure point; there are many more. I recommend building the circuit on a breadboard first. I won't outline the circuit too much seeing as there is a detailed schematic that should tell you everything you need. 
 
-After you've purchased and designed a PCB, parts will need to get purchased, and don't be surprised if you're easily spending $150+ on components. You have to know what you're getting into. I've made the SMD pads on my board quite large to make it easily solderable, but you should be comfortable with SMD soldering. Follow the SMD
+After you've purchased and designed a PCB, parts will need to get purchased, and don't be surprised if you're easily spending $150+ on components. You have to know what you're getting into. I've made the SMD pads on my board quite large to make it easily solderable, but you should be comfortable with SMD soldering. All the components you need are listed in the PCB and schematic files.
 
 Once you have your board, it's time to program this. This can be a bit tricky, as there are two different things to program. There are two MCUs in my system. This is to enable low-power operation. The AHRS script that I'm using will go berserks in low power mode, but it already consumes minimal power. On the other hand, the GPS and the servo script are a power hog, so I've figured out ways to make it lower power. But, for my system to work properly, the two MCUs have to be sending data between each other. This is achieved by using SoftwareSerial, which sends yaw, pitch, temp, and pressure data. The one that receives data is called `autopilot.vx.x.inn` and has a file, `settings.h` that you can change to make the system work differently. It is not recommended to change the code in the main .ino file. The one that sends data, `autopilotIMU.vx.x`, doesn't have a settings file, but has a section where you can change values to your liking. This sketch can be a bit more confusing - you need to calibrate the IMU (the sensor that obtains position measurements) using an outdated Windows program. This process is described here by J. Remington: https://github.com/jremington/MPU-9250-AHRS. The actual programming is conducted in Arduino IDE. To do this, follow these steps:
 1. Download this repo and the code.
@@ -61,6 +61,8 @@ This autopilot moves servos based on yaw and pitch values. It takes into account
 only pro mini 3.3v8mhz
 
 # Funding
-We currently have very limited funding to complete this project. We would love. 
+We currently have very limited funding to complete this project. We would love any outside support we could get to elevate this project to the next level. Reach out to me if you have interest at:
+1. charlienicholsonr@gmail.com (personal email).
+2. 
 
-# Special Thanks
+# Special Thanks and Credits
