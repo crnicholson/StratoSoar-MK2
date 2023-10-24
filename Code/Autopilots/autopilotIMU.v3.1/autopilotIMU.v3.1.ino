@@ -4,6 +4,8 @@ Adapted to work in an autopilot system by Charles Nicholson, 2023.
 
 Use this code in conjuction with autopilot.vx.x to obtain pitch, roll, and yaw values that can be used in the autopilot system.
 
+Please read this repo over before using this code: https://github.com/jremington/MPU-9250-AHRS.
+
 NOTE: For the autopilot to work correctly, sendMs has to be greater than the total delay in autopilot.vx.x. 
       Right now, it is greater, as sendMs is 1500, and the total delay in autopilot.vx.x is equal to 1000 ms.
 
@@ -19,8 +21,8 @@ add them in to the corrections in function get_MPU_scaled().
 */
 
 #include "Wire.h"
-#include "/Users/Charlie/Documents/Arduino/libraries/libs/MPU9250.cpp"
-#include "/Users/Charlie/Documents/Arduino/libraries/libs/I2Cdev.cpp"
+#include "MPU9250.cpp" // Found in https://github.com/jremington/MPU-9250-AHRS
+#include "I2Cdev.cpp" // Found in https://github.com/jremington/MPU-9250-AHRS
 #include <BMP280.h>
 #include <SoftwareSerial.h>
 #include <avr/wdt.h>
