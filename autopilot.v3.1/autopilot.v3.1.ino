@@ -1,7 +1,7 @@
 /*
 StratoSoar, an autonomous glider project.
 Majortiy of this code was written by myself, Charles Nicholson, 2023. autopilotIMU.vx.x was mostly written by J. Remington.
-To use this program, change the values in "settings.h" to your liking.
+To use this program, change the values in "settings.h" to your liking. No values in "vars.h" have to be changed.
 Then, upload the program "autopilotIMU.vx.x" to a different Arduino.
 That Arduino will be hooked up over SoftwareSerial. It will be sending yaw, pitch, temp, and pressure data.
 The corresponding data can be used in calculations to move the servos accordingly. 
@@ -12,7 +12,7 @@ I also use an NPN BJT (2N3906) to power on and off the PWM line.
 I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino.
 
 NOTE: For proper functionality, make sure the data transmission rate is more than the reading. 
-      I.E. sendMs (in autopilotIMU.vx.x) = 1500 and the combined delay in this sketch is equal to 1000 ms.
+      I.E. sendMs in autopilotIMU.vx.x is equal to 1500 and the combined delay in this sketch is equal to 1000 ms.
 
 NOTE: this error message does not effect the performance of the autopilot: "uint8_t requestFrom(uint8_t, uint8_t);".
 */
