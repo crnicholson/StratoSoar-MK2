@@ -10,3 +10,6 @@ There are many goals for my project,
 
 # Limitations
 only pro mini 3.3v8mhz
+
+# Funding
+We currently have very limited funding to complete this project. We would love. 
