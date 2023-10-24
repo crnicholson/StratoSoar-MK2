@@ -24,6 +24,8 @@ As far as potential uses, the list goes on and on:
 7. And of course, a spy drone
 
 # Use
+### NOTE: Currently, no GPS has been interfaced with the board. The board's location is static.
+
 
 # Limitations
 only pro mini 3.3v8mhz
