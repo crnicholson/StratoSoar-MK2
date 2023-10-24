@@ -1,2 +1,2 @@
 # StratoSoar-MK2
-This is a large project that, in the end, will be able to fly a glider (dropped from a high-altitude balloon), down to any selected coordinates.
+NOTE: This is a work in progress, and I warn you if you use my code or anything else here, stuff could go wrong. That being said, I hope you find some use out of this.
