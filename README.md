@@ -25,12 +25,12 @@ As far as potential uses, the list goes on and on:
 6. Small-scale deliveries in remote areas, such as blood or medicine
 7. And of course, a spy drone
 
-# Prerequiestes
-1. Understanding of Arduino and Arduino IDE.
-2. Understanding of electronics.
-3. Basic understanding of planes and gliders.
-4. Basic understanding of embedded systems/ICs.
-5. Knowledge of fabrication processes. 
+# Prerequisites
+1. Understanding of Arduino and Arduino IDE
+2. Understanding of electronics
+3. Basic understanding of planes and gliders
+4. Basic understanding of embedded systems/ICs
+5. Knowledge of fabrication processes
 
 # Using StratoSoar and This Repo
 ### NOTE: Currently, no GPS has been interfaced with the board. The board's location is static. This is getting worked on.
@@ -55,7 +55,18 @@ Once you have your board, it's time to program this. This can be a bit tricky, a
 15. Realize that is very complicated and I'm not explaining this well.
 16. Be happy and be done!
 
-This autopilot moves servos based on yaw and pitch values. It takes into account current GPS location, yaw, and target GPS location to calculate the azimuth, which with more math, can be turned into a turning angle. This turning angle is then pushed through a PID system that tells the servos where to move with even more math. This is the same for the pitch - it tries to keep the angle of attack at -10 degrees. MOSFETs are used in this program to turn the servos on and off to save power. The one I use is the 30N06L, a logic level N-Channel FET. I also use an NPN BJT (2N3906) to power on and off the PWM line. I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino. The servos I use are quite special servos that are tiny and weigh 2 grams. A link to where I purchased them is included: 
+This autopilot moves servos based on yaw and pitch values. It takes into account current GPS location, yaw, and target GPS location to calculate the azimuth, which with more math, can be turned into a turning angle. This turning angle is then pushed through a PID system that tells the servos where to move with even more math. This is the same for the pitch - it tries to keep the angle of attack at -10 degrees. MOSFETs are used in this program to turn the servos on and off to save power. The one I use is the 30N06L, a logic level N-Channel FET. I also use an NPN BJT (2N3906) to power on and off the PWM line. I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the MCU. The servos I use are quite special servos that are tiny and weigh 2 grams. A link to where I purchased them is included: 
+
+The main MCU goes to sleep between servo movements to save power. Note that there are also no power LEDs to save furthre power. Input power ranges from 3.7v to 4.8v, with being on the higher side better. This means that a LiPo would be perfect for power input.
+
+# Flying and Building the Glider
+Okay, so you've spent too much time doing making and programming your flight controller, and you just want to fly your glider now. Understandable. Unfortunely, I don't really know how to build a glider myself, so I can't give you much advice. What I can tell you is that you should:
+1. Buy a glider on Amazon.
+2. Carve out a spot for your flight contoller, battery, and servos.
+3. Glue the servos to the glider and connect the push rods to the rudder and elevator.
+4. Connect the servos to their respective ports on the PCB.
+5. Plug in a LiPo to the PCB.
+6. Chuck you glider and see what happens!
 
 # Limitations
 only pro mini 3.3v8mhz
