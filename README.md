@@ -75,13 +75,10 @@ So, you've flown (and crash) your glider, and you're eager to see what environme
 1. Upload the program `externalEEPROMRead.ino` to the main MCU using the FTDI breakout board and Arduino IDE.
 2. Pop open your serial monitor and see your results!
 
-# Limitations
-only pro mini 3.3v8mhz
-
 # Funding
 We currently have very limited funding to complete this project. We would love any outside support we could get to elevate this project to the next level. Reach out to me if you have interest at:
 1. charlienicholsonr@gmail.com (personal email).
-2. 
+2. newbsballoons@gmail.com (org email, recomended)
 
 # Special Thanks and Credits
 Thanks to the amazing team at NEWBS (New England Weather Balloon Society): Max and Seth Kendall for the opportunity. Thanks to Bob Phinney at NeSciTech for supporting NEWBS and providing a workspace. Thanks to Brett Miwa at NeSciTech for the electrical engineering advice. Thanks to J. Remington for AHRS code. And last, but defiently not least, thanks to the large community of people on the Arduino Forum, Arduino Discord, StackExchange, and StackOverflow that indirectly contributed to this project.
