@@ -84,3 +84,4 @@ We currently have very limited funding to complete this project. We would love a
 2. 
 
 # Special Thanks and Credits
+Thanks to the amazing team at NEWBS (New England Weather Balloon Society): Max and Seth Kendall for the opportunity. Thanks to Bob Phinney at NeSciTech for supporting NEWBS and providing a workspace. Thanks to Brett Miwa at NeSciTech for the electrical engineering advice. Thanks to J. Remington for AHRS code. And last, but defiently not least, thanks to the large community of people on the Arduino Forum, Arduino Discord, StackExchange, and StackOverflow that indirectly contributed to this project.
