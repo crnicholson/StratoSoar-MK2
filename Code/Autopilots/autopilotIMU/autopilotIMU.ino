@@ -23,6 +23,9 @@
 // ***** To-Do *****
 // Format code - add periods, capitalize, format above documentation
 // Write documentation
+// Add DEVMODE
+// Capitalize #defines
+// Add MPU cal
 
 #include "Wire.h"
 #include "src/I2Cdev.cpp"  // Credit: https://github.com/jremington/MPU-9250-AHRS
