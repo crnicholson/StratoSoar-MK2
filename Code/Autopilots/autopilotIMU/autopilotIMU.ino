@@ -21,8 +21,8 @@ add them in to the corrections in function get_MPU_scaled().
 */
 
 #include "Wire.h"
-#include "MPU9250.cpp" // Found in https://github.com/jremington/MPU-9250-AHRS
-#include "I2Cdev.cpp" // Found in https://github.com/jremington/MPU-9250-AHRS
+#include "src/MPU9250.cpp" // Credit: https://github.com/jremington/MPU-9250-AHRS
+#include "src/I2Cdev.cpp" // Credit: https://github.com/jremington/MPU-9250-AHRS
 #include <BMP280.h>
 #include <SoftwareSerial.h>
 #include <avr/wdt.h>
