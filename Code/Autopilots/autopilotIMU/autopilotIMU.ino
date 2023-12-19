@@ -4,17 +4,21 @@
 // Use this code in conjuction with the autopilot sketch to obtain pitch, roll, and yaw values that can be used in the autopilot system.
 
 // Please read this repo over before using this code: https://github.com/jremington/MPU-9250-AHRS.
-// Also note that I take no credit for the AHRS, 
+// Also note that I take no credit for the AHRS, only the serial sender.
 
 // NOTE: For the autopilot to work correctly, sendMs has to be greater than the total delay in the autopilot.
 // Right now, it is greater, as sendMs is 1500, and the total delay in autopilot.vx.x is equal to 1000 ms.
 
+// ***** Calibration *****
 // Both the accelerometer and magnetometer MUST be properly calibrated for this program to work, and the gyro offset must be determined.
 // Follow the procedure described in http://sailboatinstruments.blogspot.com/2011/08/improved-magnetometer-calibration.html.
 // or in more detail, the tutorial https://thecavepearlproject.org/2015/05/22/calibrating-any-compass-or-accelerometer-for-arduino/.
 
-// ***** Calibration *****
-// To collect data for calibration, use the companion programs MPU9250_cal and Magneto 1.2 from sailboatinstruments.blogspot.com.
+// To collect data for calibration, use the programs MPU9250_cal and Magneto 1.2 from sailboatinstruments.blogspot.com.
+// Magneto can be installed on all Window machines with a simple .exe file, and requires a .txt or .csv from MPU9250_cal.ino. 
+// The serial output from MPU9250_cal.ino can be copied and pasted into a spreadsheet, then downloaded and uploaded to Magneto.
+// The oupput from Magneto cannot be copied and pasted or downloaded, so you have to manually input the values to M_B, M_Ainv,
+// A_B, and A
 
 // ***** To-Do *****
 // Format code - add periods, capitalize, format above documentation
