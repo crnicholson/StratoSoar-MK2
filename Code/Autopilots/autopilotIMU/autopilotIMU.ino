@@ -2,14 +2,14 @@
 Original work done by S.J. Remington 3/2020.
 Adapted to work in an autopilot system by Charles Nicholson, 2023.
 
-Use this code in conjuction with autopilot.vx.x to obtain pitch, roll, and yaw values that can be used in the autopilot system.
+Use this code in conjuction with the autopilot sketch to obtain pitch, roll, and yaw values that can be used in the autopilot system.
 
 Please read this repo over before using this code: https://github.com/jremington/MPU-9250-AHRS.
 
-NOTE: For the autopilot to work correctly, sendMs has to be greater than the total delay in autopilot.vx.x. 
+NOTE: For the autopilot to work correctly, sendMs has to be greater than the total delay in the autopilot
       Right now, it is greater, as sendMs is 1500, and the total delay in autopilot.vx.x is equal to 1000 ms.
 
-Both the accelerometer and magnetometer MUST be properly calibrated for this program to work, and the gyro offset must be determned.
+Both the accelerometer and magnetometer MUST be properly calibrated for this program to work, and the gyro offset must be determined.
 Follow the procedure described in http://sailboatinstruments.blogspot.com/2011/08/improved-magnetometer-calibration.html.
 or in more detail, the tutorial https://thecavepearlproject.org/2015/05/22/calibrating-any-compass-or-accelerometer-for-arduino/.
 
@@ -20,64 +20,66 @@ the off diagonal components. If those terms are large, (most likely only for the
 add them in to the corrections in function get_MPU_scaled().
 */
 
-#include "Wire.h"
-#include "src/MPU9250.cpp" // Credit: https://github.com/jremington/MPU-9250-AHRS
-#include "src/I2Cdev.cpp" // Credit: https://github.com/jremington/MPU-9250-AHRS
-#include <BMP280.h>
-#include <SoftwareSerial.h>
-#include <avr/wdt.h>
-#include <avr/sleep.h>
-#include <Narcoleptic.h>
+// ***** To-Do *****
+// Format code - add periods, capitalize, format above documentation
+// Write documentation
 
-// Vars you can (and should) change:
+#include "Wire.h"
+#include "src/I2Cdev.cpp"  // Credit: https://github.com/jremington/MPU-9250-AHRS
+#include "src/MPU9250.cpp" // Credit: https://github.com/jremington/MPU-9250-AHRS
+#include <BMP280.h>
+#include <Narcoleptic.h>
+#include <SoftwareSerial.h>
+#include <avr/sleep.h>
+#include <avr/wdt.h>
+
+// Settings:
 #define SerialRX 10
 #define SerialTX 11
-#define sendMs 1500 // Send data every "sendMs" milliseconds
-#define baudRate 9600 // Baud rate for the mcuConn
+#define sendMs 1500   // Send data every "sendMs" milliseconds.
+#define baudRate 9600 // Baud rate for the mcuConn.
+#define DEVMODE       // Comment out to send data over serial to the autopilot.
 
 // Accel offsets and correction matrix:
-float A_B[3] {539.75, 218.36, 834.53}; 
-float A_Ainv[3][3] {
-  {  0.51280,  0.00230,  0.00202},
-  {  0.00230,  0.51348, -0.00126},
-  {  0.00202, -0.00126,  0.50368}
-};
-  
+float A_B[3]{539.75, 218.36, 834.53};
+float A_Ainv[3][3]{
+    {0.51280, 0.00230, 0.00202},
+    {0.00230, 0.51348, -0.00126},
+    {0.00202, -0.00126, 0.50368}};
+
 // Mag offsets and correction matrix:
-float M_B[3] {18.15, 28.05, -36.09};
-float M_Ainv[3][3] {
-  {  0.68093,  0.00084,  0.00923},
-  {  0.00084,  0.69281,  0.00103},
-  {  0.00923,  0.00103,  0.64073}
-};
-  
-float G_off[3] = {-299.7, 113.2, 202.4}; // Raw offsets, determined for gyro at rest
-// You don't need to change any other vars now
+float M_B[3]{18.15, 28.05, -36.09};
+float M_Ainv[3][3]{
+    {0.68093, 0.00084, 0.00923},
+    {0.00084, 0.69281, 0.00103},
+    {0.00923, 0.00103, 0.64073}};
+
+float G_off[3] = {-299.7, 113.2, 202.4}; // Raw offsets, determined for gyro at rest.
+// You don't need to change any other vars now.
 
 MPU9250 accelgyro;
 I2Cdev I2C_M;
 BMP280 bmp280;
-SoftwareSerial mcuConn(SerialRX, SerialTX); // RX, TX
+SoftwareSerial mcuConn(SerialRX, SerialTX); // RX, TX.
 
-char s[60]; // Snprintf buffer
-// Raw data and scaled as vector
+char s[60]; // Snprintf buffer.
+// Raw data and scaled as vector.
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t mx, my, mz;
 float Axyz[3];
 float Gxyz[3];
 float Mxyz[3];
-#define gscale (250./32768.0)*(PI/180.0)  // gyro default 250 LSB per d/s -> rad/s
+#define gscale (250. / 32768.0) * (PI / 180.0) // Gyro default 250 LSB per d/s -> rad/s.
 
-// These are the free parameters in the Mahony filter and fusion scheme,
-// Kp for proportional feedback, Ki for integral
+// These are the free parameters in the Mahony filter and fusion scheme, Kp for proportional feedback, Ki for integral.
 // With MPU-9250, angles start oscillating at Kp=40. Ki does not seem to help and is not required.
 #define Kp 30.0
 #define Ki 0.0
 
-// Globals for AHRS loop timing
-unsigned long now = 0, last = 0; // Micros() timers
-float deltat = 0;  // Loop time in seconds
+// Globals for AHRS loop timing.
+unsigned long now = 0, last = 0;   // Micros() timers
+float deltat = 0;                  // Loop time in seconds
 unsigned long now_ms, last_ms = 0; // Millis() timers
 
 // Vector to hold quaternion
@@ -85,7 +87,7 @@ static float q[4] = {1.0, 0.0, 0.0, 0.0};
 static float yaw, pitch, roll; // Euler angle output
 
 void setup() {
-  // Join I2C bus (I2Cdev library doesn't do this automatically) 
+  // Join I2C bus (I2Cdev library doesn't do this automatically)
   Wire.begin();
   bmp280.begin();
   mcuConn.begin(baudRate);
@@ -106,7 +108,7 @@ void loop() {
 
   // Correct for differing accelerometer and magnetometer alignment by circularly permuting mag axes
   MahonyQuaternionUpdate(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], Mxyz[1], Mxyz[0], -Mxyz[2], deltat);
-  
+
   // Standard orientation: X North, Y West, Z Up
   // Tait-Bryan angles as well as Euler angles are
   // non-commutative; that is, the get the correct orientation the rotations
@@ -114,29 +116,31 @@ void loop() {
   // pitch, and then roll.
   // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
   // which has additional links.
- 
-  // Strictly valid only for approximately level movement       
+
+  // Strictly valid only for approximately level movement
   // WARNING: This angular conversion is for DEMONSTRATION PURPOSES ONLY. It WILL
   // MALFUNCTION for certain combinations of angles! See https://en.wikipedia.org/wiki/Gimbal_lock
-  roll  = atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
+  roll = atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
   pitch = asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
-  yaw   = atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - ( q[2] * q[2] + q[3] * q[3]));
+  yaw = atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
   // To degrees
-  yaw   *= 180.0 / PI;
+  yaw *= 180.0 / PI;
   pitch *= 180.0 / PI;
   roll *= 180.0 / PI;
 
   // http://www.ngdc.noaa.gov/geomag-web/#declination
   // Conventional nav, yaw increases CW from North, corrected for local magnetic declination
   yaw = -yaw + 14.5;
-  if (yaw < 0) yaw += 360.0;
-  if (yaw > 360.0) yaw -= 360.0;
+  if (yaw < 0)
+    yaw += 360.0;
+  if (yaw > 360.0)
+    yaw -= 360.0;
   now_ms = millis(); // Time to send data?
   if (now_ms - last_ms >= sendMs) {
     last_ms = now_ms;
     // Get pressure value
     int32_t pressure = bmp280.getPressure(); // Pressure in Pa
-    int temp = bmp280.getTemperature(); // Temp in C
+    int temp = bmp280.getTemperature();      // Temp in C
 
     byte yawSend = yaw / 2;
     byte pressureSend = pressure / 500;
@@ -179,30 +183,32 @@ void get_MPU_scaled(void) {
   int i;
   accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
 
-  Gxyz[0] = ((float) gx - G_off[0]) * gscale; // 250 LSB(d/s) default to radians/s
-  Gxyz[1] = ((float) gy - G_off[1]) * gscale;
-  Gxyz[2] = ((float) gz - G_off[2]) * gscale;
+  Gxyz[0] = ((float)gx - G_off[0]) * gscale; // 250 LSB(d/s) default to radians/s
+  Gxyz[1] = ((float)gy - G_off[1]) * gscale;
+  Gxyz[2] = ((float)gz - G_off[2]) * gscale;
 
-  Axyz[0] = (float) ax;
-  Axyz[1] = (float) ay;
-  Axyz[2] = (float) az;
+  Axyz[0] = (float)ax;
+  Axyz[1] = (float)ay;
+  Axyz[2] = (float)az;
   // Apply offsets (bias) and scale factors from Magneto
-  for (i = 0; i < 3; i++) temp[i] = (Axyz[i] - A_B[i]);
+  for (i = 0; i < 3; i++)
+    temp[i] = (Axyz[i] - A_B[i]);
   Axyz[0] = A_Ainv[0][0] * temp[0] + A_Ainv[0][1] * temp[1] + A_Ainv[0][2] * temp[2];
   Axyz[1] = A_Ainv[1][0] * temp[0] + A_Ainv[1][1] * temp[1] + A_Ainv[1][2] * temp[2];
   Axyz[2] = A_Ainv[2][0] * temp[0] + A_Ainv[2][1] * temp[1] + A_Ainv[2][2] * temp[2];
   vector_normalize(Axyz);
 
-  Mxyz[0] = (float) mx;
-  Mxyz[1] = (float) my;
-  Mxyz[2] = (float) mz;
+  Mxyz[0] = (float)mx;
+  Mxyz[1] = (float)my;
+  Mxyz[2] = (float)mz;
   // Spply offsets and scale factors from Magneto
-  for (i = 0; i < 3; i++) temp[i] = (Mxyz[i] - M_B[i]);
+  for (i = 0; i < 3; i++)
+    temp[i] = (Mxyz[i] - M_B[i]);
   Mxyz[0] = M_Ainv[0][0] * temp[0] + M_Ainv[0][1] * temp[1] + M_Ainv[0][2] * temp[2];
   Mxyz[1] = M_Ainv[1][0] * temp[0] + M_Ainv[1][1] * temp[1] + M_Ainv[1][2] * temp[2];
   Mxyz[2] = M_Ainv[2][0] * temp[0] + M_Ainv[2][1] * temp[1] + M_Ainv[2][2] * temp[2];
   vector_normalize(Mxyz);
- }
+}
 
 // Mahony scheme uses proportional and integral filtering on
 // the error between estimated reference vectors and measured ones.
@@ -266,25 +272,25 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
   ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
   ez = (ax * vy - ay * vx) + (mx * wy - my * wx);
   if (Ki > 0.0f) {
-    eInt[0] += ex;      // accumulate integral error
+    eInt[0] += ex; // accumulate integral error
     eInt[1] += ey;
     eInt[2] += ez;
     // Apply I feedback
-    gx += Ki*eInt[0];
-    gy += Ki*eInt[1];
-    gz += Ki*eInt[2];
+    gx += Ki * eInt[0];
+    gy += Ki * eInt[1];
+    gz += Ki * eInt[2];
   }
 
   // Apply P feedback
-  gx = gx + Kp * ex; 
+  gx = gx + Kp * ex;
   gy = gy + Kp * ey;
   gz = gz + Kp * ez;
 
   // Integrate rate of change of quaternion
   // small correction 1/11/2022, see https://github.com/kriswiner/MPU9250/issues/447
-  gx = gx * (0.5*deltat); // pre-multiply common factors
-  gy = gy * (0.5*deltat);
-  gz = gz * (0.5*deltat);
+  gx = gx * (0.5 * deltat); // pre-multiply common factors
+  gy = gy * (0.5 * deltat);
+  gz = gz * (0.5 * deltat);
   float qa = q1;
   float qb = q2;
   float qc = q3;
