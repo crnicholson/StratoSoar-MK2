@@ -4,27 +4,31 @@
 // Code for a low-power autonomous glider.
 // https://github.com/crnicholson/StratoSoar-MK2/.
 
+// NOTE: For proper functionality, make sure the data transmission rate is more than the reading.
+// I.E. sendMs in autopilotIMU.vx.x is equal to 1500 and the combined delay in this sketch is equal to 1000 ms.
+
 // ***** Usage *****
 // 1. Change the values in "settings.h" to your liking. No values in "vars.h" have to be changed.
 // 2. Do the same to the program "autopilotIMU.ino".
 // 3. Upload the program "autopilot.ino" to the USB on the tracker board. Use the profile "Arduino Zero (Native USB Board)".
-// 4. Upload the program "autopilotIMU.ino" to the FTDI port on the tracker board.  Uee the profile "Arduino Pro Mini, 3.3v, 8MHz".
+// 4. Upload the program "autopilotIMU.ino" to the FTDI port on the tracker board. Use the profile "Arduino Pro Mini, 3.3v, 8MHz".
 
-// ***** Function **** 
-/// Work in progress, just comitting for fun
-/*That Arduino will be hooked up over SoftwareSerialUSB. It will be sending yaw, pitch, temp, and pressure data.
-The corresponding data can be used in calculations to move the servos accordingly.
-Two Arduinos are used so the master (this one) can go to sleep in the code and save power.
-Sleep in the program "autopilotIMU.vx.x" causes catasrpothic failure, but it is already low power enough so sleep is not needed.
-MOSFETs are used in this program to turn the servos on and off to save power. The one I use is the 30N06L, a logic level N-Channel FET.
-I also use an NPN BJT (2N3906) to power on and off the PWM line.
-I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino.
+// ***** Why Two MCUs? ****
+// There are two Arduinos (MCUs), an ATMega328P and a SAMD21G18A. The ATMega is sending is data over SoftwareSerial to the hardware serial of the SAMD.
+// The reason this is done is because the Mahony program is blocking and is made for AVR microcontrollers.
+// Blocking means that it doesn't allow the rest of the sketch to function. Delaying the rest of the sketch prevents low power modes, so that is not good.
+// Furthermore, the GPS library that is used requires more memory than what is available on the ATMega, so a SAMD with it's large memory is used.
+// The ATMega is low-power enough without sleep modes, so all is well, unlike the SAMD, which takes some more power.
 
-NOTE: For proper functionality, make sure the data transmission rate is more than the reading.
-I.E. sendMs in autopilotIMU.vx.x is equal to 1500 and the combined delay in this sketch is equal to 1000 ms.
+// ***** Calculations and Principles *****
+// Once data has been received over serial, calculations to move the servos are made. The first one tis
 
-NOTE: This error message does not effect the performance of the autopilot: "uint8_t requestFrom(uint8_t, uint8_t);".
-*/
+// ***** Servos *****
+// MOSFETs are used in this program to turn the servos on and off to save power.The one I use is the 30N06L, a logic level N - Channel FET.I also use an NPN BJT(2N3906) to power on and off the PWM line.I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino.
+
+// ***** Low-Power *****
+
+// ***** GPS + GPS Low-Power *****
 
 // ***** To-Do *****
 // Format code - add periods, capitalize, format above documentation
@@ -38,6 +42,7 @@ NOTE: This error message does not effect the performance of the autopilot: "uint
 // Do GPS config
 // Get SAMD low power working
 // Add a dump data function
+// Send a struct over serial to achieve more accurate data
 
 #include "headers/settings.h" // File with settings for the autopilot, change this instead of the code.
 #include "headers/vars.h"     // File with most of the variables.

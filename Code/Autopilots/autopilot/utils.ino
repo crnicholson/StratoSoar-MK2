@@ -1,7 +1,7 @@
 #include "headers/settings.h"
 #include <Arduino.h>
 
-double deg2rad(double deg) {
+double toRadians(double deg) {
   return deg * pi / 180.0;
 }
 
@@ -9,10 +9,10 @@ double toDegrees(double rad) {
   return rad * 180.0 / pi;
 }
 
-double turningAngle(double currentLat, double currentLon, double heading1, double targetLat, double targetLon) {
-  double a = azimuth(currentLat, currentLon, targetLat, targetLon);
-  double h = toRadians(heading1);
-  double angle = a - h;
+double turningAngle(double cLat, double cLon, double head, double tLat, double tLon) {
+  double a = azimuth(cLat, cLon, tLat, tLon);
+  double h = toRadians(h);
+  double angle = a - head;
   if (angle < -pi)
     angle += 2 * pi;
   if (angle > pi)
@@ -20,9 +20,9 @@ double turningAngle(double currentLat, double currentLon, double heading1, doubl
   return toDegrees(angle);
 }
 
-double azimuth(double currentLat, double currentLon, double targetLat, double targetLon) {
-  double dLon = deg2rad(targetLon - currentLon);
-  double dPhi = log(tan(deg2rad(targetLat) / 2 + pi / 4) / tan(deg2rad(currentLat) / 2 + pi / 4));
+double azimuth(double cLat, double cLon, double tLat, double tLon) {
+  double dLon = toRadians(tLon - cLon);
+  double dPhi = log(tan(toRadians(tLat) / 2 + pi / 4) / tan(toRadians(cLat) / 2 + pi / 4));
   if (fabs(dLon) > pi) {
     dLon = dLon > 0 ? -(2 * pi - dLon) : (2 * pi + dLon);
   }
@@ -30,12 +30,10 @@ double azimuth(double currentLat, double currentLon, double targetLat, double ta
 }
 
 // Haversine formula to calculate distance between two coordinates.
-double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-  double dLat = toRadians(lat2 - lat1);
-  double dLon = toRadians(lon2 - lon1);
-  double a = sin(dLat / 2) * sin(dLat / 2) +
-             cos(toRadians(lat1)) * cos(toRadians(lat2)) *
-                 sin(dLon / 2) * sin(dLon / 2);
+double calculateDistance(double cLat, double cLon, double tLat, double tLon) {
+  double dLat = toRadians(tLat - cLat);
+  double dLon = toRadians(tLon - cLon);
+  double a = sin(dLat / 2) * sin(dLat / 2) + cos(toRadians(tLat)) * cos(toRadians(tLat)) * sin(dLon / 2) * sin(dLon / 2);
   double c = 2 * atan2(sqrt(a), sqrt(1 - a));
   double distance = R * c;
   return distance;
@@ -101,20 +99,20 @@ void shortPulse() {
 }
 
 void receiveData() {
-  if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read
-    byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU.vx.x
+  if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
+    byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU.
     byte pitchReceive = Serial1.read();
     byte negativePitch = Serial1.read();
     byte tempReceive = Serial1.read();
     byte negativeTemp = Serial1.read();
     byte pressureReceive = Serial1.read();
 
-    yaw = int(yawReceive) * 2;             // Convert the received byte back to an integer
-    pitch = int(pitchReceive);             // Convert the received byte back to an integer
-    temp = int(tempReceive);               // Convert the received byte back to an integer
-    pressure = int(pressureReceive) * 500; // Convert the received byte back to an integer
+    yaw = int(yawReceive) * 2;             // Convert the received byte back to an integer.
+    pitch = int(pitchReceive);             // Convert the received byte back to an integer.
+    temp = int(tempReceive);               // Convert the received byte back to an integer.
+    pressure = int(pressureReceive) * 500; // Convert the received byte back to an integer.
 
-    if (negativePitch == 1) { // Making some things negative if needed
+    if (negativePitch == 1) { // Making some things negative if needed.
       pitch = pitch * -1;
     }
 
