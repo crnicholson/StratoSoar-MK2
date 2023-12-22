@@ -8,6 +8,16 @@
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
 // #define STALL_STOP // Land the glider by repeatedly stalling it.
+// #define NEED_PARACHUTE // Enable the parachute servo.
+#define NEED_ELEVATOR // Enable the elevator servo.
+#define NEED_RUDDER   // Enable the rudder servo.
+#define DIVE_STALL    // Dive down when speed gets too low.
+#define USE_EEPROM    // Toggle the usage of the EEPROM.
+
+// Other settings.
+#define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
+#define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
+#define SLEEP_TIME           // MS for sleep.
 
 // Pins.
 #define RUDDER_PIN 6
@@ -25,11 +35,6 @@ double targetLat = 42.36011635715412, targetLon = -71.09414503280355; // MIT coo
 // Testing coordinates.
 double testLat = 42.3165665, testLon = -71.33451619; // NEST coordinates.
 
-// Toggle the usage of the servos.
-bool needParachute = false;
-bool needElevator = true;
-bool needRudder = true;
-
 // Baud rates.
 #define SERIAL_BAUD_RATE 9600
 #define BAUD_RATE 9600
@@ -39,12 +44,15 @@ bool needRudder = true;
 #define EEPROM_I2C_ADDRESS 0x50 // I2C address of the EEPROM.
 
 // Servo names.
+#ifdef NEED_RUDDER
 Servo rudderServo;
+#endif
+#ifdef NEED_PARACHUTE
 Servo parachute;
+#endif
+#ifdef NEED_ELEVATOR
 Servo elevatorServo;
-
-// Desired pitch angle (in degrees).
-#define SETPOINT_ELEVATOR 10
+#endif
 
 // Constants for PID control.
 #define KP_RUDDER 1.0 // Proportional gain.

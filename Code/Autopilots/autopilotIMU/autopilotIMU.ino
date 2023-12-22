@@ -2,7 +2,7 @@
 // autopilotIMU.ino.
 // Charles Nicholson, 2023.
 // Code for a low-power autonomous glider.
-// https://github.com/crnicholson/littleLoRa/.
+// https://github.com/crnicholson/StratoSoar-MK2/.
 
 // Original work done by S.J. Remington 3/2020.
 // Adapted to work in an autopilot system by Charles Nicholson, 2023.

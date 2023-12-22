@@ -1,9 +1,18 @@
-/*
-StratoSoar, an autonomous glider project.
-Majortiy of this code was written by myself, Charles Nicholson, 2023. autopilotIMU.vx.x was mostly written by J. Remington.
-To use this program, change the values in "settings.h" to your liking. No values in "vars.h" have to be changed.
-Then, upload the program "autopilotIMU.vx.x" to a different Arduino.
-That Arduino will be hooked up over SoftwareSerialUSB. It will be sending yaw, pitch, temp, and pressure data.
+// Part of StratoSoar MK2.
+// autopilot.ino.
+// Charles Nicholson, 2023.
+// Code for a low-power autonomous glider.
+// https://github.com/crnicholson/StratoSoar-MK2/.
+
+// ***** Usage *****
+// 1. Change the values in "settings.h" to your liking. No values in "vars.h" have to be changed.
+// 2. Do the same to the program "autopilotIMU.ino".
+// 3. Upload the program "autopilot.ino" to the USB on the tracker board. Use the profile "Arduino Zero (Native USB Board)".
+// 4. Upload the program "autopilotIMU.ino" to the FTDI port on the tracker board.  Uee the profile "Arduino Pro Mini, 3.3v, 8MHz".
+
+// ***** Function **** 
+/// Work in progress, just comitting for fun
+/*That Arduino will be hooked up over SoftwareSerialUSB. It will be sending yaw, pitch, temp, and pressure data.
 The corresponding data can be used in calculations to move the servos accordingly.
 Two Arduinos are used so the master (this one) can go to sleep in the code and save power.
 Sleep in the program "autopilotIMU.vx.x" causes catasrpothic failure, but it is already low power enough so sleep is not needed.
@@ -12,19 +21,23 @@ I also use an NPN BJT (2N3906) to power on and off the PWM line.
 I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino.
 
 NOTE: For proper functionality, make sure the data transmission rate is more than the reading.
-      I.E. sendMs in autopilotIMU.vx.x is equal to 1500 and the combined delay in this sketch is equal to 1000 ms.
+I.E. sendMs in autopilotIMU.vx.x is equal to 1500 and the combined delay in this sketch is equal to 1000 ms.
 
-NOTE: this error message does not effect the performance of the autopilot: "uint8_t requestFrom(uint8_t, uint8_t);".
+NOTE: This error message does not effect the performance of the autopilot: "uint8_t requestFrom(uint8_t, uint8_t);".
 */
 
 // ***** To-Do *****
 // Format code - add periods, capitalize, format above documentation
 // Write documentation
-// Add DEVMODE
-// Capitalize #defines
 // Change comments
 // Update for SAMD
 // Make it good
+// Work on the CHANGE_TARGET to get it smarter
+// Get a GPS
+// Do GPS low power
+// Do GPS config
+// Get SAMD low power working
+// Add a dump data function
 
 #include "headers/settings.h" // File with settings for the autopilot, change this instead of the code.
 #include "headers/vars.h"     // File with most of the variables.
@@ -37,34 +50,34 @@ void setup() {
   pinMode(ELEVATOR_BJT, OUTPUT);
   pinMode(RUDDER_FET, OUTPUT);
   pinMode(ELEVATOR_FET, OUTPUT);
+  digitalWrite(LED, LOW);
+  digitalWrite(RUDDER_BJT, HIGH);
+  digitalWrite(ELEVATOR_BJT, HIGH);
+  digitalWrite(RUDDER_FET, LOW);
+  digitalWrite(ELEVATOR_FET, LOW);
   Wire.begin();
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
   Serial1.begin(BAUD_RATE);          // Hardware serial connection to the ATMega and the IMU.
   longPulse();                       // Pulse LED to show power up.
 
-  if (needRudder) {
-    rudderServo.attach(RUDDER_PIN);
-  }
-  if (needElevator) {
-    elevatorServo.attach(ELEVATOR_PIN);
-  }
-  if (needParachute) {
-    parachute.attach(PARACHUTE_PIN);
-  }
+#ifdef NEED_RUDDER
+  rudderServo.attach(RUDDER_PIN);
+#endif
+#ifdef NEED_ELEVATOR
+  elevatorServo.attach(ELEVATOR_PIN);
+#endif
+#ifdef NEED_PARACHUTE
+  parachute.attach(PARACHUTE_PIN);
+#endif
 
-  digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
-  digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
-  rudderServo.write(90);
-  delay(200);
-  digitalWrite(RUDDER_BJT, HIGH);
-  digitalWrite(RUDDER_FET, LOW);
+#ifdef NEED_RUDDER
+  moveRudder(90); // Move the rudder to 90 degrees.
+#endif
   delay(1000);
-  digitalWrite(ELEVATOR_FET, HIGH); // Turn servo on.
-  digitalWrite(ELEVATOR_BJT, LOW);  // Turn signal line on.
-  elevatorServo.write(90);
-  delay(200);
-  digitalWrite(ELEVATOR_BJT, HIGH);
-  digitalWrite(ELEVATOR_FET, LOW);
+#ifdef NEED_ELEVATOR
+  moveElevator(90); // Move the elevator to 90 degrees.
+#endif
+
 #ifdef DEVMODE
   SerialUSB.println("Everything has initialized and the script starts in 1 second!");
 #endif
@@ -88,15 +101,15 @@ void loop() {
     currentLon = testLon;
 #endif
 
-    double distanceMeters = calculateDistance(currentLat, currentLon, targetLat, targetLon);
+    double distanceMeters = calculateDistance(currentLat, currentLon, targetLat, targetLon); // Find the distance between the current location and the target.
 
 #ifdef CHANGE_TARGET
     if ((distanceMeters >= 10000) && (gps.altitude.feet() <= 1000)) {
-      targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far
+      targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far.
     }
 
     if ((distanceMeters >= 50000) && (gps.altitude.feet() <= 5000)) {
-      targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far
+      targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
     }
 #endif
 
@@ -114,12 +127,12 @@ void loop() {
     }
 #endif
 
-    if (needParachute) {
-      if ((distanceMeters <= 100) && gps.location.isValid() && gps.altitude.feet() <= 500) {
-        parachute.write(90); // Open the parachute under 500 feet to land
-        landed = true;
-      }
+#ifdef NEED_PARACHUTE
+    if ((distanceMeters <= 100) && gps.location.isValid() && gps.altitude.feet() <= 500) {
+      parachute.write(90); // Open the parachute under 500 feet to land
+      landed = true;
     }
+#endif
   }
 
   if (!spiral && !stall) {
@@ -130,19 +143,9 @@ void loop() {
     int servoPositionElevator = pidMagicElevator(); // Change PID values in "settings.h" if you want
     int servoPositionRudder = pidMagicRudder();     // Change PID values in "settings.h" if you want
 
-    digitalWrite(RUDDER_FET, HIGH); // Turning on the servo. servo.detach() saves ~75 mA per servo. MOSFET saves additional ~4 mA per servo.
-    digitalWrite(RUDDER_BJT, LOW);  // Turning on the servo PWM line
-    rudderServo.write(servoPositionRudder);
-    delay(200);
-    digitalWrite(RUDDER_BJT, HIGH); // Turning off the servo PWM line
-    digitalWrite(RUDDER_FET, LOW);  // Turning off the servo
-    delay(600);
-    digitalWrite(ELEVATOR_FET, HIGH); // Turning on the servo. servo.detach() saves ~75 mA per servo. MOSFET saves additional ~4 mA per servo.
-    digitalWrite(ELEVATOR_BJT, LOW);  // Turning on the servo PWM line
-    rudderServo.write(servoPositionElevator);
-    delay(200);
-    digitalWrite(ELEVATOR_BJT, HIGH); // Turning off the servo PWM line
-    digitalWrite(ELEVATOR_FET, LOW);  // Turning off the servo
+    moveRudder(servoPositionRudder);     // Move servo and turn it off.
+    delay(SLEEP_TIME);                   // Add sleep function here.
+    moveElevator(servoPositionElevator); // Move servo and turn it off.
 #ifdef DEVMODE
     SerialUSB.print("Turning Angle: ");
     SerialUSB.print(turnAngle);
@@ -156,13 +159,14 @@ void loop() {
     SerialUSB.println(servoPositionElevatorDegrees);
 #endif
 
-    if (needParachute) {
-      if (speedMPH <= 5) {
-        elevatorServo.write(115); // Dive down when stalled
-      }
+#ifdef DIVE_STALL
+    if (TOO_SLOW <= 5) {
+      elevatorServo.write(115); // Dive down when stalled.
     }
+#endif
 
-    // This saves to an external EEPROM (AT24Cx) so we can get some yummy data
+#ifdef USE_EEPROM
+    // This saves to an external EEPROM (AT24Cx) so we can get some data.
     if (runEEPROM) {
       writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(yaw / 2));
       delay(10);
@@ -180,5 +184,6 @@ void loop() {
         runEEPROM = false;
       }
     }
+#endif
   }
 }

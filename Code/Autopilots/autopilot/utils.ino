@@ -123,3 +123,21 @@ void receiveData() {
     }
   }
 }
+
+void moveRudder(degrees) {
+  digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
+  digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
+  rudderServo.write(degrees);
+  delay(200);
+  digitalWrite(RUDDER_BJT, HIGH);
+  digitalWrite(RUDDER_FET, LOW);
+}
+
+void moveElevator(degrees) {
+  digitalWrite(ELEVATOR_FET, HIGH); // Turn servo on.
+  digitalWrite(ELEVATOR_BJT, LOW);  // Turn signal line on.
+  elevatorServo.write(degrees);
+  delay(200);
+  digitalWrite(ELEVATOR_BJT, HIGH);
+  digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves additional ~4 mA per servo.
+}
