@@ -41,6 +41,8 @@ THE SOFTWARE.
 ===============================================
 */
 
+#pragma
+
 #ifndef _I2CDEV_H_
 #define _I2CDEV_H_
 

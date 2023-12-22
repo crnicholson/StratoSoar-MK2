@@ -1,13 +1,19 @@
+// Part of StratoSoar MK2.
+// autopilotIMU.ino.
+// Charles Nicholson, 2023.
+// Code for a low-power autonomous glider.
+// https://github.com/crnicholson/littleLoRa/.
+
 // Original work done by S.J. Remington 3/2020.
 // Adapted to work in an autopilot system by Charles Nicholson, 2023.
 
 // Use this code in conjuction with the autopilot sketch to obtain pitch, roll, and yaw values that can be used in the autopilot system.
 
 // Please read this repo over before using this code: https://github.com/jremington/MPU-9250-AHRS.
-// Also note that I take no credit for the AHRS, only the serial sender.
+// Also note that I take no credit for the AHRS, only the interfacing between the autopilot and this sketch.
 
-// NOTE: For the autopilot to work correctly, sendMs has to be greater than the total delay in the autopilot.
-// Right now, it is greater, as sendMs is 1500, and the total delay in autopilot.vx.x is equal to 1000 ms.
+// NOTE: For the autopilot to work correctly, SEND_MS has to be greater than the total delay in the autopilot.
+// Right now, it is greater, as SEND_MS is 1500, and the total delay in autopilot.vx.x is equal to 1000 ms.
 
 // ***** Calibration *****
 // Both the accelerometer and magnetometer MUST be properly calibrated for this program to work, and the gyro offset must be determined.
@@ -15,9 +21,9 @@
 // or in more detail, the tutorial https://thecavepearlproject.org/2015/05/22/calibrating-any-compass-or-accelerometer-for-arduino/.
 
 // To collect data for calibration, use the programs MPU9250_cal and Magneto 1.2 from sailboatinstruments.blogspot.com.
-// Magneto can be installed on all Window machines with a simple .exe file, and requires a .txt or .csv from MPU9250_cal.ino. 
+// Magneto can be installed on all Window machines with a simple .exe file, and requires a .txt or .csv from MPU9250_cal.ino.
 // The serial output from MPU9250_cal.ino can be copied and pasted into a spreadsheet, then downloaded and uploaded to Magneto.
-// The oupput from Magneto cannot be copied and pasted or downloaded, so you have to manually input the values to M_B, M_Ainv,
+// The output from Magneto cannot be copied and pasted or downloaded, so you have to manually input the values to M_B, M_Ainv,
 // A_B, and A
 
 // ***** To-Do *****
@@ -27,46 +33,26 @@
 // Capitalize #defines
 // Add MPU cal
 
-#include "Wire.h"
-#include "src/I2Cdev.cpp"  // Credit: https://github.com/jremington/MPU-9250-AHRS
-#include "src/MPU9250.cpp" // Credit: https://github.com/jremington/MPU-9250-AHRS
+#include "headers/settings.h" // Change settings here.
+#include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
+#include "src/MPU9250.h"      // Credit: https://github.com/jremington/MPU-9250-AHRS
 #include <BMP280.h>
-#include <Narcoleptic.h>
 #include <SoftwareSerial.h>
-#include <avr/sleep.h>
-#include <avr/wdt.h>
+#include <Wire.h> // Try "Wire.h" if doesn't work.
 
-// Settings:
-#define SerialRX 10
-#define SerialTX 11
-#define sendMs 1500   // Send data every "sendMs" milliseconds.
-#define baudRate 9600 // Baud rate for the mcuConn.
-#define DEVMODE       // Comment out to send data over serial to the autopilot.
+unsigned long now = 0, last = 0;   // Micros() timers.
+float deltat = 0;                  // Loop time in seconds.
+unsigned long now_ms, last_ms = 0; // Millis() timers.
 
-// Accel offsets and correction matrix:
-float A_B[3]{539.75, 218.36, 834.53};
-float A_Ainv[3][3]{
-    {0.51280, 0.00230, 0.00202},
-    {0.00230, 0.51348, -0.00126},
-    {0.00202, -0.00126, 0.50368}};
-
-// Mag offsets and correction matrix:
-float M_B[3]{18.15, 28.05, -36.09};
-float M_Ainv[3][3]{
-    {0.68093, 0.00084, 0.00923},
-    {0.00084, 0.69281, 0.00103},
-    {0.00923, 0.00103, 0.64073}};
-
-float G_off[3] = {-299.7, 113.2, 202.4}; // Raw offsets, determined for gyro at rest.
-// You don't need to change any other vars now.
+static float q[4] = {1.0, 0.0, 0.0, 0.0}; // Vector to hold quaternion.
+static float yaw, pitch, roll;            // Euler angle output.
 
 MPU9250 accelgyro;
 I2Cdev I2C_M;
 BMP280 bmp280;
-SoftwareSerial mcuConn(SerialRX, SerialTX); // RX, TX.
+SoftwareSerial mcuConn(RX, TX);
 
 char s[60]; // Snprintf buffer.
-// Raw data and scaled as vector.
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t mx, my, mz;
@@ -75,54 +61,34 @@ float Gxyz[3];
 float Mxyz[3];
 #define gscale (250. / 32768.0) * (PI / 180.0) // Gyro default 250 LSB per d/s -> rad/s.
 
-// These are the free parameters in the Mahony filter and fusion scheme, Kp for proportional feedback, Ki for integral.
-// With MPU-9250, angles start oscillating at Kp=40. Ki does not seem to help and is not required.
-#define Kp 30.0
-#define Ki 0.0
-
-// Globals for AHRS loop timing.
-unsigned long now = 0, last = 0;   // Micros() timers
-float deltat = 0;                  // Loop time in seconds
-unsigned long now_ms, last_ms = 0; // Millis() timers
-
-// Vector to hold quaternion
-static float q[4] = {1.0, 0.0, 0.0, 0.0};
-static float yaw, pitch, roll; // Euler angle output
-
 void setup() {
-  // Join I2C bus (I2Cdev library doesn't do this automatically)
   Wire.begin();
   bmp280.begin();
-  mcuConn.begin(baudRate);
-  // Serial.begin(9600);
-  // while(!Serial); // Wait for connection
-
-  // Initialize device
-  accelgyro.initialize();
-  // Verify connection
-  // Serial.println(accelgyro.testConnection() ? "MPU9250 is all good" : "MPU9250 is missing!");
+  mcuConn.begin(BAUD_RATE);
+  accelgyro.initialize(); // Initialize MPU9250.
+#ifdef DEVMODE
+  Serial.begin(SERIAL_BAUD_RATE);
+  while (!Serial) // Wait for connection.
+    ;
+  Serial.println(accelgyro.testConnection() ? "MPU9250 is all good" : "MPU9250 is missing!"); // Verify connection.
+#endif
 }
 
 void loop() {
   get_MPU_scaled();
   now = micros();
-  deltat = (now - last) * 1.0e-6; // Seconds since last update
+  deltat = (now - last) * 1.0e-6; // Seconds since last update.
   last = now;
 
-  // Correct for differing accelerometer and magnetometer alignment by circularly permuting mag axes
+  // Correct for differing accelerometer and magnetometer alignment by circularly permuting mag axes.
   MahonyQuaternionUpdate(Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], Mxyz[1], Mxyz[0], -Mxyz[2], deltat);
 
-  // Standard orientation: X North, Y West, Z Up
-  // Tait-Bryan angles as well as Euler angles are
-  // non-commutative; that is, the get the correct orientation the rotations
-  // must be applied in the correct order which for this configuration is yaw,
-  // pitch, and then roll.
-  // http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-  // which has additional links.
+  // Standard orientation: X North, Y West, Z Up.
+  // Tait-Bryan angles as well as Euler angles are non-commutative; that is, they get the correct orientation.
+  // The rotations must be applied in the correct order which for this configuration is yaw, pitch, and then roll.
+  // Some good reading: http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles.
 
-  // Strictly valid only for approximately level movement
-  // WARNING: This angular conversion is for DEMONSTRATION PURPOSES ONLY. It WILL
-  // MALFUNCTION for certain combinations of angles! See https://en.wikipedia.org/wiki/Gimbal_lock
+  // This will malfunction for certain combinations of angles! See https://en.wikipedia.org/wiki/Gimbal_lock.
   roll = atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
   pitch = asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
   yaw = atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
@@ -131,19 +97,16 @@ void loop() {
   pitch *= 180.0 / PI;
   roll *= 180.0 / PI;
 
-  // http://www.ngdc.noaa.gov/geomag-web/#declination
-  // Conventional nav, yaw increases CW from North, corrected for local magnetic declination
-  yaw = -yaw + 14.5;
+  yaw = -yaw + MAG_DEC;
   if (yaw < 0)
     yaw += 360.0;
   if (yaw > 360.0)
     yaw -= 360.0;
   now_ms = millis(); // Time to send data?
-  if (now_ms - last_ms >= sendMs) {
+  if (now_ms - last_ms >= SEND_MS) {
     last_ms = now_ms;
-    // Get pressure value
-    int32_t pressure = bmp280.getPressure(); // Pressure in Pa
-    int temp = bmp280.getTemperature();      // Temp in C
+    int32_t pressure = bmp280.getPressure(); // Pressure in Pa.
+    int temp = bmp280.getTemperature();      // Temp in C.
 
     byte yawSend = yaw / 2;
     byte pressureSend = pressure / 500;
@@ -152,17 +115,17 @@ void loop() {
     byte pitchSend;
     byte tempSend;
 
-    if (pitch < 0) { // Doing some encoding
+    if (pitch < 0) {
       pitchSend = pitch * -1;
       negativePitch = 1;
     }
 
-    if (temp < 0) { // Doing some encoding
+    if (temp < 0) {
       tempSend = temp * -1;
       negativeTemp = 1;
     }
 
-    /*
+#ifdef DEVMODE
     Serial.print(yaw);
     Serial.print(", ");
     Serial.print(pitch);
@@ -170,7 +133,7 @@ void loop() {
     Serial.print(temp);
     Serial.print(", ");
     Serial.println(pressure);
-    */
+#endif
 
     mcuConn.write(yawSend);
     mcuConn.write(pitchSend);
@@ -186,14 +149,14 @@ void get_MPU_scaled(void) {
   int i;
   accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
 
-  Gxyz[0] = ((float)gx - G_off[0]) * gscale; // 250 LSB(d/s) default to radians/s
+  Gxyz[0] = ((float)gx - G_off[0]) * gscale; // 250 LSB(d/s) default to radians/s.
   Gxyz[1] = ((float)gy - G_off[1]) * gscale;
   Gxyz[2] = ((float)gz - G_off[2]) * gscale;
 
   Axyz[0] = (float)ax;
   Axyz[1] = (float)ay;
   Axyz[2] = (float)az;
-  // Apply offsets (bias) and scale factors from Magneto
+  // Apply offsets (bias) and scale factors from Magneto.
   for (i = 0; i < 3; i++)
     temp[i] = (Axyz[i] - A_B[i]);
   Axyz[0] = A_Ainv[0][0] * temp[0] + A_Ainv[0][1] * temp[1] + A_Ainv[0][2] * temp[2];
@@ -204,7 +167,7 @@ void get_MPU_scaled(void) {
   Mxyz[0] = (float)mx;
   Mxyz[1] = (float)my;
   Mxyz[2] = (float)mz;
-  // Spply offsets and scale factors from Magneto
+  // Supply offsets and scale factors from Magneto.
   for (i = 0; i < 3; i++)
     temp[i] = (Mxyz[i] - M_B[i]);
   Mxyz[0] = M_Ainv[0][0] * temp[0] + M_Ainv[0][1] * temp[1] + M_Ainv[0][2] * temp[2];
@@ -213,12 +176,11 @@ void get_MPU_scaled(void) {
   vector_normalize(Mxyz);
 }
 
-// Mahony scheme uses proportional and integral filtering on
-// the error between estimated reference vectors and measured ones.
+// Mahony scheme uses proportional and integral filtering on the error between estimated reference vectors and measured ones.
 void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz, float deltat) {
-  // Vector to hold integral error for Mahony method
+  // Vector to hold integral error for Mahony method.
   static float eInt[3] = {0.0, 0.0, 0.0};
-  // short name local variable for readability
+  // Short name local variable for readability.
   float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];
   float norm;
   float hx, hy, bx, bz;
@@ -226,7 +188,7 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
   float ex, ey, ez;
   float pa, pb, pc;
 
-  // Auxiliary variables to avoid repeated arithmetic
+  // Auxiliary variables to avoid repeated arithmetic.
   float q1q1 = q1 * q1;
   float q1q2 = q1 * q2;
   float q1q3 = q1 * q3;
@@ -240,29 +202,29 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
   /*
     // Already done in loop()
 
-    // Normalise accelerometer measurement
+    // Normalise accelerometer measurement.
     norm = sqrt(ax * ax + ay * ay + az * az);
-    if (norm == 0.0f) return; // Handle NaN
-    norm = 1.0f / norm;       // Use reciprocal for division
+    if (norm == 0.0f) return; // Handle NaN.
+    norm = 1.0f / norm;       // Use reciprocal for division.
     ax *= norm;
     ay *= norm;
     az *= norm;
 
-    // Normalise magnetometer measurement
+    // Normalise magnetometer measurement.
     norm = sqrt(mx * mx + my * my + mz * mz);
-    if (norm == 0.0f) return; // Handle NaN
-    norm = 1.0f / norm;       // Use reciprocal for division
+    if (norm == 0.0f) return; // Handle NaN.
+    norm = 1.0f / norm;       // Use reciprocal for division.
     mx *= norm;
     my *= norm;
     mz *= norm;
   */
-  // Reference direction of Earth's magnetic field
+  // Reference direction of Earth's magnetic field.
   hx = 2.0f * mx * (0.5f - q3q3 - q4q4) + 2.0f * my * (q2q3 - q1q4) + 2.0f * mz * (q2q4 + q1q3);
   hy = 2.0f * mx * (q2q3 + q1q4) + 2.0f * my * (0.5f - q2q2 - q4q4) + 2.0f * mz * (q3q4 - q1q2);
   bx = sqrt((hx * hx) + (hy * hy));
   bz = 2.0f * mx * (q2q4 - q1q3) + 2.0f * my * (q3q4 + q1q2) + 2.0f * mz * (0.5f - q2q2 - q3q3);
 
-  // Estimated direction of gravity and magnetic field
+  // Estimated direction of gravity and magnetic field.
   vx = 2.0f * (q2q4 - q1q3);
   vy = 2.0f * (q1q2 + q3q4);
   vz = q1q1 - q2q2 - q3q3 + q4q4;
@@ -270,28 +232,28 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
   wy = 2.0f * bx * (q2q3 - q1q4) + 2.0f * bz * (q1q2 + q3q4);
   wz = 2.0f * bx * (q1q3 + q2q4) + 2.0f * bz * (0.5f - q2q2 - q3q3);
 
-  // Error is cross product between estimated direction and measured direction of the reference vectors
+  // Error is cross product between estimated direction and measured direction of the reference vectors.
   ex = (ay * vz - az * vy) + (my * wz - mz * wy);
   ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
   ez = (ax * vy - ay * vx) + (mx * wy - my * wx);
   if (Ki > 0.0f) {
-    eInt[0] += ex; // accumulate integral error
+    eInt[0] += ex; // Accumulate integral error.
     eInt[1] += ey;
     eInt[2] += ez;
-    // Apply I feedback
+    // Apply I feedback.
     gx += Ki * eInt[0];
     gy += Ki * eInt[1];
     gz += Ki * eInt[2];
   }
 
-  // Apply P feedback
+  // Apply P feedback.
   gx = gx + Kp * ex;
   gy = gy + Kp * ey;
   gz = gz + Kp * ez;
 
-  // Integrate rate of change of quaternion
-  // small correction 1/11/2022, see https://github.com/kriswiner/MPU9250/issues/447
-  gx = gx * (0.5 * deltat); // pre-multiply common factors
+  // Integrate rate of change of quaternion.
+  // Small correction 1/11/2022, see https://github.com/kriswiner/MPU9250/issues/447.
+  gx = gx * (0.5 * deltat); // Pre-multiply common factors.
   gy = gy * (0.5 * deltat);
   gz = gz * (0.5 * deltat);
   float qa = q1;
@@ -302,7 +264,7 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
   q3 += (qa * gy - qb * gz + q4 * gx);
   q4 += (qa * gz + qb * gy - qc * gx);
 
-  // Normalise quaternion
+  // Normalize quaternion.
   norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
   norm = 1.0f / norm;
   q[0] = q1 * norm;
