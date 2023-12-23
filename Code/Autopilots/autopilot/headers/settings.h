@@ -43,7 +43,7 @@ double testLat = 42.3165665, testLon = -71.33451619; // NEST coordinates.
 #define MAX_ADDRESS 5000        // This is how many times you want to write to the EEPROM.
 #define EEPROM_I2C_ADDRESS 0x50 // I2C address of the EEPROM.
 
-// Servo names.
+// Servo objects and names.
 #ifdef NEED_RUDDER
 Servo rudderServo;
 #endif

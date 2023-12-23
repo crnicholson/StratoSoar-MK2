@@ -14,7 +14,7 @@ double turningAngle(double cLat, double cLon, double head, double tLat, double t
   double h = toRadians(h);
   double angle = a - head;
   if (angle < -pi)
-    angle += 2 * pi;
+    `` angle += 2 * pi;
   if (angle > pi)
     angle -= 2 * pi;
   return toDegrees(angle);
@@ -48,38 +48,38 @@ void writeToEEPROM(byte EEPROMAddress, byte dataAddress, byte dataValue) {
 }
 
 int pidMagicElevator() {
-  errorElevator = SETPOINT_ELEVATOR - pitch; // Calculate the error.
+  errorElevator = SETPOINT_ELEVATOR - data.pitch; // Calculate the error.
 
   int outputElevator = KP_ELEVATOR * errorElevator + KI_ELEVATOR * integralElevator + KD_ELEVATOR * (errorElevator - prevErrorElevator); // Calculate the output.
 
-  servoPositionElevatorDegrees = 90 - outputElevator; // Adjust servo position based on the output.
+  servoPositionElevator2 = 90 - outputElevator; // Adjust servo position based on the output.
 
   // Update previous error and integral.
   prevErrorElevator = errorElevator;
   integralElevator += errorElevator;
 
-  int servoPositionElevatorNew = map(servoPositionElevatorDegrees, 0, 180, 750, 2250);
+  // int servoPositionElevatorNew = map(servoPositionElevator2, 0, 180, 750, 2250); // For servos that take time not degrees.
 
-  return servoPositionElevatorNew;
+  return servoPositionElevator2;
 }
 
 int pidMagicRudder() {
-  setpointRudder = yaw + turnAngle;
-  inputRudder = yaw;
+  setpointRudder = data.yaw + data.turnAngle;
+  inputRudder = data.yaw;
 
-  errorRudder = setpointRudder - yaw; // Calculate the error.
+  errorRudder = setpointRudder - data.yaw; // Calculate the error.
 
   int outputRudder = KP_RUDDER * errorRudder + KI_RUDDER * integralRudder + KD_RUDDER * (errorRudder - prevErrorRudder); // Calculate the output.
 
-  servoPositionRudderDegrees = 90 + outputRudder; // Adjust servo position based on the output.
+  int servoPositionRudder2 = 90 + outputRudder; // Adjust servo position based on the output.
 
   // Update previous error and integral.
   prevErrorRudder = errorRudder;
   integralRudder += errorRudder;
 
-  int servoPositionRudderNew = map(servoPositionRudderDegrees, 0, 180, 1250, 1750);
+  // int servoPositionRudderNew = map(servoPositionRudder2, 0, 180, 1250, 1750); // For servos that take time not degrees.
 
-  return servoPositionRudderNew;
+  return servoPositionRudder2;
 }
 
 void longPulse() {
@@ -98,30 +98,6 @@ void shortPulse() {
   digitalWrite(LED, LOW);
 }
 
-void receiveData() {
-  if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
-    byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU.
-    byte pitchReceive = Serial1.read();
-    byte negativePitch = Serial1.read();
-    byte tempReceive = Serial1.read();
-    byte negativeTemp = Serial1.read();
-    byte pressureReceive = Serial1.read();
-
-    yaw = int(yawReceive) * 2;             // Convert the received byte back to an integer.
-    pitch = int(pitchReceive);             // Convert the received byte back to an integer.
-    temp = int(tempReceive);               // Convert the received byte back to an integer.
-    pressure = int(pressureReceive) * 500; // Convert the received byte back to an integer.
-
-    if (negativePitch == 1) { // Making some things negative if needed.
-      pitch = pitch * -1;
-    }
-
-    if (negativeTemp == 1) {
-      temp = temp * -1;
-    }
-  }
-}
-
 void moveRudder(degrees) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
@@ -138,4 +114,115 @@ void moveElevator(degrees) {
   delay(200);
   digitalWrite(ELEVATOR_BJT, HIGH);
   digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves additional ~4 mA per servo.
+}
+
+void waitForFix() {
+  data.sats = 0;
+  data.fixType = 0;
+  while ((data.fixType < 3) && (data.sats < 5)) { // Make sure location is valid before continuing.
+    if (gps.getPVT()) {
+      getGPSData();
+#ifdef DEVMODE
+      displayData();
+#endif
+    } else {
+#ifdef DEVMODE
+      SerialUSB.println("No PVT data received. Retrying...");
+#endif
+    }
+  }
+}
+
+void getData() {
+  if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
+    byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU (the ATMega).
+    byte pitchReceive = Serial1.read();
+    byte negativePitch = Serial1.read();
+    byte tempReceive = Serial1.read();
+    byte negativeTemp = Serial1.read();
+    byte pressureReceive = Serial1.read();
+
+    data.yaw = int(yawReceive) * 2;             // Convert the received byte back to an integer.
+    data.pitch = int(pitchReceive);             // Convert the received byte back to an integer.
+    data.temp = int(tempReceive);               // Convert the received byte back to an integer.
+    data.pressure = int(pressureReceive) * 500; // Convert the received byte back to an integer.
+
+    if (negativePitch == 1) { // Making some things negative if needed.
+      data.pitch = data.pitch * -1;
+    }
+
+    if (negativeTemp == 1) {
+      data.temp = data.temp * -1;
+    }
+  }
+  getGPSData();
+  calculate();
+}
+
+void calculate() {
+  data.turnAngle = turningAngle(data.lat, data.lon, data.yaw, targetLat, targetLon);
+
+  data.servoPositionElevator = pidMagicElevator(); // Change PID values in "settings.h" if you want.
+  data.servoPositionRudder = pidMagicRudder();     // Change PID values in "settings.h" if you want.
+}
+
+void getGPSData() {
+  data.lat = gps.getLatitude();
+  data.lat = data.lat / 10000000;
+  data.lon = gps.getLongitude();
+  data.lon = data.lon / 10000000;
+  data.alt = gps.getAltitude();
+  data.alt = data.alt / 1000; // Convert to meters, I think?
+  data.sats = gps.getSIV();
+  data.fixType = gps.getFixType();
+  data.speed = gps.getGroundSpeed();
+  data.seconds = gps.getSecond();
+  data.minutes = gps.getMinute();
+  data.hours = gps.getHour();
+  data.day = gps.getDay();
+  data.month = gps.getDay();
+  data.year = gps.getYear();
+}
+
+void displayData() {
+  SerialUSB.print("Lat: ");
+  SerialUSB.print(data.lat, 9);
+  SerialUSB.print(" Lon: ");
+  SerialUSB.print(data.lon, 9);
+  SerialUSB.print(" Alt: ");
+  SerialUSB.print(data.alt);
+  SerialUSB.print(" Sats: ");
+  SerialUSB.print(data.sats);
+  SerialUSB.print(" Fix Type: ");
+  SerialUSB.print(data.fixType);
+  SerialUSB.print(" Speed: ");
+  SerialUSB.print(data.speed);
+  SerialUSB.print(" Date/Time: ");
+  SerialUSB.print(data.year);
+  SerialUSB.print("-");
+  SerialUSB.print(data.month);
+  SerialUSB.print("-");
+  SerialUSB.print(data.day);
+  SerialUSB.print(" ");
+  SerialUSB.print(data.hours);
+  SerialUSB.print(":");
+  SerialUSB.print(data.minutes);
+  SerialUSB.print(":");
+  SerialUSB.print(data.seconds);
+  SerialUSB.print(" Yaw: ");
+  SerialUSB.print(data.yaw);
+  SerialUSB.print(" Pitch: "); 
+  SerialUSB.print(data.pitch);
+  SerialUSB.print(" Temp: ");
+  SerialUSB.print(data.temp);
+  SerialUSB.print(" Pressure: ");
+  SerialUSB.print(data.pressure);
+  SerialUSB.print(" Elevator Pos: ");
+  SerialUSB.print(data.servoPositionElevator);
+  SerialUSB.print(" Rudder Pos: ");
+  SerialUSB.print(data.servoPositionRudder);
+  SerialUSB.print(" Turn Angle: ");
+  SerialUSB.print(data.turnAngle);
+  SerialUSB.print(" Voltage: ");
+  SerialUSB.println(data.volts);
 }

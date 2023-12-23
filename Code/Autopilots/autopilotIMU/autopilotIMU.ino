@@ -24,14 +24,15 @@
 // Magneto can be installed on all Window machines with a simple .exe file, and requires a .txt or .csv from MPU9250_cal.ino.
 // The serial output from MPU9250_cal.ino can be copied and pasted into a spreadsheet, then downloaded and uploaded to Magneto.
 // The output from Magneto cannot be copied and pasted or downloaded, so you have to manually input the values to M_B, M_Ainv,
-// A_B, and A
+// A_B, and A_Ainv. The values you input are in the format that is pretty much how you see them in Magneto.
+// You also have to input the G_off array, which is not determined by Magneto, but by MPU9250_Cal in the beginning of the program. 
 
 // ***** To-Do *****
 // Format code - add periods, capitalize, format above documentation
 // Write documentation
 // Add DEVMODE
 // Capitalize #defines
-// Add MPU cal
+// Add MPU cal sketch 
 
 #include "headers/settings.h" // Change settings here.
 #include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
