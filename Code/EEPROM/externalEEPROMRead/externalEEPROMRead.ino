@@ -1,38 +1,43 @@
-// For use with AT24Cx EEPROM
-// Connect SDA and SCL to EEPROM. Voltage does not matter. Tested with 3.3v and 5v.
-// Charles Nicholson, 2023
-// Use this code to read EEPROM data in conjuction with the StratoSoar autopilot
+// Part of StratoSoar MK2.
+// externalEEPROMRead.ino.
+// Charles Nicholson, 2023.
+// Used to read data from the autopilot's EEPROM.
+// https://github.com/crnicholson/StratoSoar-MK2/.
+
+// Simply upload this code to the main MCU (SAMD21G18A) to obtain data.
+
 #include <Wire.h>
+
 #define EEPROM_I2C_address 0x50
 #define maxAddress 5000
 
 int address = 0;
 bool runEEPROM = true;
 
-void setup() {                                                                     
-  Serial.begin(9600);
-  Serial.println("Beginning reading...");
+void setup() {
+  SerialUSB.begin(9600);
+  SerialUSB.println("Beginning reading...");
   delay(250);
-  Serial.println("Yaw, pitch, temperature (C), pressure (Pa)");
+  SerialUSB.println("Yaw, pitch, temperature (C), pressure (Pa)");
   Wire.begin();
 }
 
 void loop() {
-  if (runEEPROM) { 
-    Serial.print("Yaw: ");
-    Serial.print(int(readFromEEPROM(EEPROM_I2C_address, address)) * 2);
+  if (runEEPROM) {
+    SerialUSB.print("Yaw: ");
+    SerialUSB.print(int(readFromEEPROM(EEPROM_I2C_address, address)) * 2);
     delay(10);
     address++;
-    Serial.print(", Pitch: ");
-    Serial.print(readFromEEPROM(EEPROM_I2C_address, address));
+    SerialUSB.print(", Pitch: ");
+    SerialUSB.print(readFromEEPROM(EEPROM_I2C_address, address));
     delay(10);
     address++;
-    Serial.print(", Temp: ");
-    Serial.print(readFromEEPROM(EEPROM_I2C_address, address));
+    SerialUSB.print(", Temp: ");
+    SerialUSB.print(readFromEEPROM(EEPROM_I2C_address, address));
     delay(10);
     address++;
-    Serial.print(", Pressure: ");
-    Serial.println(int(readFromEEPROM(EEPROM_I2C_address, address)) * 500);
+    SerialUSB.print(", Pressure: ");
+    SerialUSB.println(int(readFromEEPROM(EEPROM_I2C_address, address)) * 500);
     delay(10);
     address++;
     if (address >= maxAddress) {
@@ -48,6 +53,7 @@ byte readFromEEPROM(byte EEPROMAddress, byte dataAddress) {
   Wire.endTransmission();
   delay(5);
   Wire.requestFrom(EEPROMAddress, 1);
-  if(Wire.available()) return Wire.read();
+  if (Wire.available())
+    return Wire.read();
   return 0;
 }

@@ -1,17 +1,22 @@
-// For use with AT24CX EEPROM
-// Connect SDA and SCL to EEPROM. Voltage does not matter. Tested with 3.3v and 5v.
-// Charles Nicholson, 2023
-// Use this code to clear the EEPROM to use in conjunction with the StratoSoar autopilot
+// Part of StratoSoar MK2.
+// externalEEPROMClear.ino.
+// Charles Nicholson, 2023.
+// Used to clear data from the autopilot's EEPROM.
+// https://github.com/crnicholson/StratoSoar-MK2/.
+
+// Simply upload this code to the main MCU (SAMD21G18A) to clear data registers.
+
 #include <Wire.h>
+
 #define EEPROM_I2C_address 0x50
 #define maxAddress 5000
 
-int address = 0;
+    int address = 0;
 bool runCode = true;
 
 void setup() {                                                                     
-  Serial.begin(9600);
-  Serial.println("Clearing the EEPROM...");
+  SerialUSB.begin(9600);
+  SerialUSB.println("Clearing the EEPROM...");
   Wire.begin();
   delay(5000);
 }
@@ -23,6 +28,7 @@ void loop() {
     address++;
     if (address >= maxAddress) {
       runCode = false;
+      SerialUSB.println("Done.");
     }
   }
 }
