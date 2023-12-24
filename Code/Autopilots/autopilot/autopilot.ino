@@ -45,18 +45,19 @@
 // Add a dump data function
 // Send a struct over serial to achieve more accurate data
 // Maybe implement a voltage reader?
+// Add parachute FETs and BJTs and parachute functions in general
 
-#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code.
+#include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
+#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code.
 
 #define pi 3.14159265358979323846
 
-int eepromAddress;
+int eepromAddress, counter;
 bool spiral = false;
 bool stall = false;
-bool landed = false;
 bool runEEPROM = true;
 
 // Setpoint and input variables.
@@ -97,6 +98,7 @@ struct __attribute__((packed)) dataStruct {
   int servoPositionRudder;
   int volts;
   float turnAngle;
+  float distanceMeters;
 } data;
 
 SFE_UBLOX_GNSS gps; // Init GPS.
@@ -107,11 +109,13 @@ void setup() {
   pinMode(ELEVATOR_BJT, OUTPUT);
   pinMode(RUDDER_FET, OUTPUT);
   pinMode(ELEVATOR_FET, OUTPUT);
+  pinMode(WAKEUP_PIN, OUTPUT);
   digitalWrite(LED, LOW);
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(ELEVATOR_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
   digitalWrite(ELEVATOR_FET, LOW);
+  digitalWrite(WAKEUP_PIN, LOW);
   Wire.begin();
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
   Serial1.begin(BAUD_RATE);          // Hardware serial connection to the ATMega and the IMU.
@@ -179,102 +183,91 @@ void setup() {
 }
 
 void loop() {
-  if (!landed) {
-    /*
-    if (gps.location.isValid()) {
-      currentLat = gps.location.lat();
-      currentLon = gps.location.lng();
-    } else {
-      currentLat = testLat;
-      currentLon = testLon;
-    }
-    */
+#ifndef TEST_COORD
+  if (counter == 6) {
+    waitForFix(); // Wait for a fix to get data from the GPS, and put the received data into the struct.
+    counter = 0;
+
+    // powerOff uses the 8-byte version of RXM-PMREQ - supported by older (M8) modules, like so:
+    // gps.powerOff(sleepForSecs * 1000);
+
+    // powerOffWithInterrupt uses the 16-byte version of RXM-PMREQ - supported by the M10 etc. powerOffWithInterrupt allows us to set the force flag.
+    // The M10 integration manual states: "The "force" flag must be set in UBX-RXM-PMREQ to enter software standby mode."
+    gps.powerOffWithInterrupt(SLEEP_TIME * 12, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // No (additional) wakeup sources. force = true.
+  }
+  counter++;
+#endif
 
 #ifdef TEST_COORD
-    currentLat = testLat;
-    currentLon = testLon;
+  data.lat = testLat;
+  data.lon = testLon;
 #endif
 
-    double distanceMeters = calculateDistance(currentLat, currentLon, targetLat, targetLon); // Find the distance between the current location and the target.
-
-#ifdef CHANGE_TARGET
-    if ((distanceMeters >= 10000) && (gps.altitude.feet() <= 1000)) {
-      targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far.
-    }
-
-    if ((distanceMeters >= 50000) && (gps.altitude.feet() <= 5000)) {
-      targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
-    }
-#endif
+  calculate(); // Find distance and other things.
 
 #ifdef SPIN_STOP
-    if ((distanceMeters <= 100) && gps.location.isValid() && gps.altitude.feet() >= 5000) {
-      spiral = true;
-      rudderServo.write(145); // Sends into a spin to safely make it's way down.
-    }
+  if ((data.distanceMeters <= 100) && (data.alt > 600)) {
+    spiral = true;
+    moveRudder(145); // Sends into a spin to safely make it's way down.
+    // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute or to stall the plane.
+  }
 #endif
 
 #ifdef STALL_STOP
-    if ((distanceMeters <= 100) && gps.location.isValid() && gps.altitude.feet() <= 600) {
-      stall = true;
-      elevatorServo.write(145); // Sends into a spin to safely make it's way down.
-    }
+  if ((distanceMeters <= 100) && (data.alt <= 600)) {
+    stall = true;
+    spiral = false;    // Make this false so it now wakes up every seconds instead of every 5 seconds.
+    moveElevator(145); // Sends into a stall to "safely" make it's way down.
+    moveRudder(90);
+    // Once stalling, skip the main sketch and only wakeup every 1 second to see if it's time to open the parachute.
+  }
 #endif
 
 #ifdef NEED_PARACHUTE
-    if ((distanceMeters <= 100) && gps.location.isValid() && gps.altitude.feet() <= 500) {
-      parachute.write(90); // Open the parachute under 500 feet to land
-      landed = true;
+  if ((distanceMeters <= 100) && (data.alt <= 500)) {
+    parachute.write(90); // Open the parachute under 500 feet to land.
+    // Once the parachute is open, this script skips over the moving servos function and instead goes to an infinite sleep.
+    gps.powerOffWithInterrupt(0, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // Only wakeup with an interrupt (I think).
+    int pin = 10;                                                           // Change this pin to a non-used one.
+    LowPower.attachInterruptWakeup(pin, onWake, CHANGE);
+    LowPower.sleep(); // No way to wakeup now!
+  }
+#endif
+
+  if (!spiral && !stall) {
+#ifdef CHANGE_TARGET
+    if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
+      targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far.
+    }
+    if ((distanceMeters >= 50000) && (data.alt <= 1000)) {
+      targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
     }
 #endif
-  }
-
-  if (!spiral | !stall) {
-    receiveData(); // Get data from the ATMega, put it in the data struct.
-    getGPSData();  // Get data from the GPS, put it in the data struct.
-    calculate();   // Calculate the turning angle and the servo positions.
-
-    data.turnAngle = turningAngle(data.lat, data.lon, data.yaw, targetLat, targetLon);
-
-    data.servoPositionElevator = pidMagicElevator(); // Change PID values in "settings.h" if you want.
-    data.servoPositionRudder = pidMagicRudder();     // Change PID values in "settings.h" if you want.
-
-    moveRudder(servoPositionRudder);     // Move servo and turn it off.
-    delay(SLEEP_TIME);                   // Add sleep function here.
-    moveElevator(servoPositionElevator); // Move servo and turn it off.
+    getIMUData();                         // Get data from the IMU.
+    moveRudder(data.servoPositionRudder); // Move servo and turn it off.
+    LowPower.deepSleep(SLEEP_TIME);
+    moveElevator(data.servoPositionElevator); // Move servo and turn it off.
 #ifdef DEVMODE
     displayData();
-    SerialUSB.print("Turning Angle: ");
-    SerialUSB.print(turnAngle);
-    SerialUSB.print(", Heading: ");
-    SerialUSB.print(yaw);
-    SerialUSB.print(", Pitch: ");
-    SerialUSB.print(pitch);
-    SerialUSB.print(", Rudder Servo position: ");
-    SerialUSB.print(servoPositionRudder);
-    SerialUSB.print(", Elevator Servo position: ");
-    SerialUSB.println(servoPositionElevator);
 #endif
-
 #ifdef DIVE_STALL
     if (TOO_SLOW <= 5) {
       elevatorServo.write(115); // Dive down when stalled.
     }
 #endif
-
 #ifdef USE_EEPROM
     // This saves to an external EEPROM (AT24Cx) so we can get some data.
     if (runEEPROM) {
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(yaw / 2));
+      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2)); // Making some things a byte to save space.
       delay(10);
       eepromAddress++;
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, pitch);
+      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pitch));
       delay(10);
       eepromAddress++;
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(temp));
+      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.temp));
       delay(10);
       eepromAddress++;
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(pressure / 500));
+      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pressure / 500));
       delay(10);
       eepromAddress++;
       if (eepromAddress >= MAX_ADDRESS) {
@@ -282,5 +275,12 @@ void loop() {
       }
     }
 #endif
+  } else {
+    if (spiral) {
+      LowPower.deepSleep(5000); // If spiraling, skip above section and wakeup every 5 seconds.
+    } else {
+      LowPower.deepSleep(1000); // If purposefully stalling, skip above section and wakeup every 1 second.
+    }
   }
+  gpsWakeup(); // Wakeup GPS.
 }

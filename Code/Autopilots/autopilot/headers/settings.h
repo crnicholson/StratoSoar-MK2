@@ -17,7 +17,7 @@
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
-#define SLEEP_TIME           // MS for sleep.
+#define SLEEP_TIME 10000     // MS for sleep.
 
 // Pins.
 #define RUDDER_PIN 6
@@ -28,6 +28,7 @@
 #define RUDDER_BJT 2
 #define ELEVATOR_BJT 3
 #define LED 13
+#define WAKEUP_PIN 9
 
 // Target destination.
 double targetLat = 42.36011635715412, targetLon = -71.09414503280355; // MIT coordinates.

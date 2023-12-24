@@ -14,7 +14,7 @@ double turningAngle(double cLat, double cLon, double head, double tLat, double t
   double h = toRadians(h);
   double angle = a - head;
   if (angle < -pi)
-    `` angle += 2 * pi;
+    angle += 2 * pi;
   if (angle > pi)
     angle -= 2 * pi;
   return toDegrees(angle);
@@ -35,7 +35,7 @@ double calculateDistance(double cLat, double cLon, double tLat, double tLon) {
   double dLon = toRadians(tLon - cLon);
   double a = sin(dLat / 2) * sin(dLat / 2) + cos(toRadians(tLat)) * cos(toRadians(tLat)) * sin(dLon / 2) * sin(dLon / 2);
   double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  double distance = R * c;
+  double distance = 6371000 * c;
   return distance;
 }
 
@@ -52,7 +52,7 @@ int pidMagicElevator() {
 
   int outputElevator = KP_ELEVATOR * errorElevator + KI_ELEVATOR * integralElevator + KD_ELEVATOR * (errorElevator - prevErrorElevator); // Calculate the output.
 
-  servoPositionElevator2 = 90 - outputElevator; // Adjust servo position based on the output.
+  int servoPositionElevator2 = 90 - outputElevator; // Adjust servo position based on the output.
 
   // Update previous error and integral.
   prevErrorElevator = errorElevator;
@@ -98,20 +98,20 @@ void shortPulse() {
   digitalWrite(LED, LOW);
 }
 
-void moveRudder(degrees) {
+void moveRudder(int degrees) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
   rudderServo.write(degrees);
-  delay(200);
+  LowPower.deepSleep(200);
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
 }
 
-void moveElevator(degrees) {
+void moveElevator(int degrees) {
   digitalWrite(ELEVATOR_FET, HIGH); // Turn servo on.
   digitalWrite(ELEVATOR_BJT, LOW);  // Turn signal line on.
   elevatorServo.write(degrees);
-  delay(200);
+  LowPower.deepSleep(200);
   digitalWrite(ELEVATOR_BJT, HIGH);
   digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves additional ~4 mA per servo.
 }
@@ -123,6 +123,7 @@ void waitForFix() {
     if (gps.getPVT()) {
       getGPSData();
 #ifdef DEVMODE
+      SerialUSB.println("Waiting for fix...");
       displayData();
 #endif
     } else {
@@ -133,7 +134,7 @@ void waitForFix() {
   }
 }
 
-void getData() {
+void getIMUData() {
   if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
     byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU (the ATMega).
     byte pitchReceive = Serial1.read();
@@ -155,12 +156,12 @@ void getData() {
       data.temp = data.temp * -1;
     }
   }
-  getGPSData();
-  calculate();
 }
 
 void calculate() {
   data.turnAngle = turningAngle(data.lat, data.lon, data.yaw, targetLat, targetLon);
+
+  data.distanceMeters = calculateDistance(data.lat, data.lon, targetLat, targetLon); // Find the distance between the current location and the target.
 
   data.servoPositionElevator = pidMagicElevator(); // Change PID values in "settings.h" if you want.
   data.servoPositionRudder = pidMagicRudder();     // Change PID values in "settings.h" if you want.
@@ -211,7 +212,7 @@ void displayData() {
   SerialUSB.print(data.seconds);
   SerialUSB.print(" Yaw: ");
   SerialUSB.print(data.yaw);
-  SerialUSB.print(" Pitch: "); 
+  SerialUSB.print(" Pitch: ");
   SerialUSB.print(data.pitch);
   SerialUSB.print(" Temp: ");
   SerialUSB.print(data.temp);
@@ -223,6 +224,20 @@ void displayData() {
   SerialUSB.print(data.servoPositionRudder);
   SerialUSB.print(" Turn Angle: ");
   SerialUSB.print(data.turnAngle);
+  SerialUSB.print(" Distance to Target: ");
+  SerialUSB.print(data.distanceMeters);
   SerialUSB.print(" Voltage: ");
   SerialUSB.println(data.volts);
+}
+
+void onWake() {
+  // Do nothing, as this will never happen.
+}
+
+void gpsWakeup() {
+  digitalWrite(WAKEUP_PIN, LOW);
+  delay(1000);
+  digitalWrite(WAKEUP_PIN, HIGH);
+  delay(1000);
+  digitalWrite(WAKEUP_PIN, LOW);
 }
