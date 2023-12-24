@@ -11,10 +11,10 @@
 #define EEPROM_I2C_address 0x50
 #define maxAddress 5000
 
-    int address = 0;
+int address = 0;
 bool runCode = true;
 
-void setup() {                                                                     
+void setup() {
   SerialUSB.begin(9600);
   SerialUSB.println("Clearing the EEPROM...");
   Wire.begin();
@@ -22,7 +22,7 @@ void setup() {
 }
 
 void loop() {
-  if (runCode) { 
+  if (runCode) {
     writeToEEPROM(EEPROM_I2C_address, address, 0);
     delay(10);
     address++;
