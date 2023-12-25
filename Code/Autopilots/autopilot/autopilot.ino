@@ -51,7 +51,7 @@
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
-#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code.
+#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 
 #define pi 3.14159265358979323846
 
@@ -153,33 +153,10 @@ void setup() {
   waitForFix();
 #endif
 
-  // Following commented out code allows for use of PSMOO (or PSMCT with some edits).
-  // PSMOO allows for predefined periodic wakeup of the GPS receiver to get a fix, then go into backup mode.
-  // PSMCT allows for the GPS to get a fix, then go into Power Efficient Tracking (POT) state. This is good for trackers that transmit a lot.
-  // To use either PSMCT or PSMOO, you can remove the wait-for-fix code and the software backup part. Uncomment the lines below, too.
-  // You may need to do more editing of the code to achieve your desired outcome, as this has not been tested yet.
-  /*
-    gpsConfig();
-
-    uint8_t PSM;
-
-    if (gps.getVal8(UBLOX_CFG_PM_OPERATEMODE, &PSM) ==
-        true) { // Test if the GPS config worked correctly.
-  #ifdef DEVMODE
-      if (PSM == 1) {
-        SerialUSB.println("Power save mode set correctly!");
-      } else {
-        SerialUSB.println("Power save mode configuration failed!");
-      }
-    } else {
-      SerialUSB.println("VALGET failed!");
-    }
-  */
-
 #ifdef DEVMODE
-  SerialUSB.println("Everything has initialized and the script starts in 1 second!");
+  SerialUSB.println("Everything has initialized and the script starts in 10 seconds!");
 #endif
-  delay(1000);
+  delay(10000);
 }
 
 void loop() {
@@ -235,6 +212,7 @@ void loop() {
 #endif
 
   if (!spiral && !stall) {
+    shortPulse(); // Pulse LED to show we are running.
 #ifdef CHANGE_TARGET
     if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
       targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far.
@@ -244,6 +222,7 @@ void loop() {
     }
 #endif
     getIMUData();                         // Get data from the IMU.
+    readVoltage();                        // May be useful for something in the future.
     moveRudder(data.servoPositionRudder); // Move servo and turn it off.
     LowPower.deepSleep(SLEEP_TIME);
     moveElevator(data.servoPositionElevator); // Move servo and turn it off.

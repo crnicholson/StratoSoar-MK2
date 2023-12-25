@@ -116,6 +116,12 @@ void moveElevator(int degrees) {
   digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves additional ~4 mA per servo.
 }
 
+void readVoltage() {
+  int rawVolt = analogRead(BAT_VOLTAGE_PIN);
+  rawVolt = rawVolt * 2;
+  data.volts = rawVolt * (3.3 / 1023.0) * 100;
+}
+
 void waitForFix() {
   data.sats = 0;
   data.fixType = 0;
@@ -165,6 +171,8 @@ void calculate() {
 
   data.servoPositionElevator = pidMagicElevator(); // Change PID values in "settings.h" if you want.
   data.servoPositionRudder = pidMagicRudder();     // Change PID values in "settings.h" if you want.
+
+  read
 }
 
 void getGPSData() {
@@ -241,3 +249,4 @@ void gpsWakeup() {
   delay(1000);
   digitalWrite(WAKEUP_PIN, LOW);
 }
+
