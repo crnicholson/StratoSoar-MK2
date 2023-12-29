@@ -38,14 +38,9 @@
 // Update for SAMD
 // Make it good
 // Work on the CHANGE_TARGET to get it smarter
-// Get a GPS
-// Do GPS low power
-// Do GPS config
-// Get SAMD low power working
-// Add a dump data function
 // Send a struct over serial to achieve more accurate data
-// Maybe implement a voltage reader?
 // Add parachute FETs and BJTs and parachute functions in general
+// Test if millis() is reset during sleep
 
 #include <ArduinoLowPower.h>
 #include <Servo.h>
@@ -55,10 +50,11 @@
 
 #define pi 3.14159265358979323846
 
-int eepromAddress, counter;
+int eepromAddress, counter, now, start, ms;
 bool spiral = false;
 bool stall = false;
 bool runEEPROM = true;
+bool firstFive = false;
 
 // Setpoint and input variables.
 double setpointRudder = 0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
@@ -107,14 +103,19 @@ void setup() {
   pinMode(LED, OUTPUT);
   pinMode(RUDDER_BJT, OUTPUT);
   pinMode(ELEVATOR_BJT, OUTPUT);
+  pinMode(PARACHUTE_BJT, OUTPUT);
   pinMode(RUDDER_FET, OUTPUT);
   pinMode(ELEVATOR_FET, OUTPUT);
+  pinMode(PARACHUTE_FET, OUTPUT);
   pinMode(WAKEUP_PIN, OUTPUT);
+  pinMode(BAT_VOLTAGE_PIN, INPUT);
   digitalWrite(LED, LOW);
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(ELEVATOR_BJT, HIGH);
+  digitalWrite(PARACHUTE_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
   digitalWrite(ELEVATOR_FET, LOW);
+  digitalWrite(PARACHUTE_FET, LOW);
   digitalWrite(WAKEUP_PIN, LOW);
   Wire.begin();
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
@@ -157,24 +158,30 @@ void setup() {
   SerialUSB.println("Everything has initialized and the script starts in 10 seconds!");
 #endif
   delay(10000);
+  start = millis();
 }
 
 void loop() {
+
 #ifndef TEST_COORD
-  if (counter == 6) {
-    waitForFix(); // Wait for a fix to get data from the GPS, and put the received data into the struct.
-    counter = 0;
+  if (!firstFive) {
+    if (counter == 6) {
+      waitForFix(); // Wait for a fix to get data from the GPS, and put the received data into the struct.
+      counter = 0;
 
-    // powerOff uses the 8-byte version of RXM-PMREQ - supported by older (M8) modules, like so:
-    // gps.powerOff(sleepForSecs * 1000);
+      // powerOff uses the 8-byte version of RXM-PMREQ - supported by older (M8) modules, like so:
+      // gps.powerOff(sleepForSecs * 1000);
 
-    // powerOffWithInterrupt uses the 16-byte version of RXM-PMREQ - supported by the M10 etc. powerOffWithInterrupt allows us to set the force flag.
-    // The M10 integration manual states: "The "force" flag must be set in UBX-RXM-PMREQ to enter software standby mode."
-    gps.powerOffWithInterrupt(SLEEP_TIME * 12, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // No (additional) wakeup sources. force = true.
+      // powerOffWithInterrupt uses the 16-byte version of RXM-PMREQ - supported by the M10 etc. powerOffWithInterrupt allows us to set the force flag.
+      // The M10 integration manual states: "The "force" flag must be set in UBX-RXM-PMREQ to enter software standby mode."
+      gps.powerOffWithInterrupt(SLEEP_TIME * 12, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // No (additional) wakeup sources. force = true.
+    }
+    counter++;
+  } else {
+    waitForFix();
   }
-  counter++;
 #endif
-
+ 
 #ifdef TEST_COORD
   data.lat = testLat;
   data.lon = testLon;
@@ -222,9 +229,16 @@ void loop() {
     }
 #endif
     getIMUData();                         // Get data from the IMU.
-    readVoltage();                        // May be useful for something in the future.
     moveRudder(data.servoPositionRudder); // Move servo and turn it off.
-    LowPower.deepSleep(SLEEP_TIME);
+    now = millis();
+    ms = start - now;
+    if (ms < 300000) { // If less than 5 minutes into the flight, update every second.
+      LowPower.deepSleep(1000);
+      firstFive = true;
+    } else {
+      LowPower.deepSleep(SLEEP_TIME);
+      firstFive = false;
+    }
     moveElevator(data.servoPositionElevator); // Move servo and turn it off.
 #ifdef DEVMODE
     displayData();

@@ -172,7 +172,7 @@ void calculate() {
   data.servoPositionElevator = pidMagicElevator(); // Change PID values in "settings.h" if you want.
   data.servoPositionRudder = pidMagicRudder();     // Change PID values in "settings.h" if you want.
 
-  read
+  readVoltage();
 }
 
 void getGPSData() {
