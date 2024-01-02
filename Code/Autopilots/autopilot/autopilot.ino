@@ -41,6 +41,10 @@
 // Send a struct over serial to achieve more accurate data
 // Add parachute FETs and BJTs and parachute functions in general
 // Test if millis() is reset during sleep
+// Heading drift function (wake up every 500 ms to see how much the glider has moved from target heading)
+// Have the GPS not based on wakeups but on time
+// Update GPIOs on autopilot
+// Work on the wireless function 
 
 #include <ArduinoLowPower.h>
 #include <Servo.h>
@@ -162,7 +166,6 @@ void setup() {
 }
 
 void loop() {
-
 #ifndef TEST_COORD
   if (!firstFive) {
     if (counter == 6) {
@@ -229,7 +232,7 @@ void loop() {
     }
 #endif
     getIMUData();                         // Get data from the IMU.
-    moveRudder(data.servoPositionRudder); // Move servo and turn it off.
+    moveRudder(data.servoPositionRudder); // Move servo and turn it off. Have the sleep in between to make sure there is minimal draw on the power supply. 
     now = millis();
     ms = start - now;
     if (ms < 300000) { // If less than 5 minutes into the flight, update every second.

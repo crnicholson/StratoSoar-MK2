@@ -4,7 +4,7 @@
 
 // Enables.
 #define DEVMODE // Toggle the serial monitor on and off.
-// #define TEST_COORD // Use testing coordinates.
+#define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
 // #define STALL_STOP // Land the glider by repeatedly stalling it.
@@ -12,7 +12,8 @@
 #define NEED_ELEVATOR // Enable the elevator servo.
 #define NEED_RUDDER   // Enable the rudder servo.
 // #define DIVE_STALL    // Dive down when speed gets too low.
-#define USE_EEPROM // Toggle the usage of the EEPROM.
+// #define USE_EEPROM // Toggle the usage of the EEPROM.
+// #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
@@ -23,22 +24,23 @@
 // SPI is available (unused) on hardware pins 19-22. This will be on the GPIO header of the autopilot.
 // I2C is used on hardware pins 31 and 32. Also on GPIO header of autopilot.
 // Serial is used on 15 and 16 (pins 1 and 0 respectively).
-#define RUDDER_PIN 2     // Hardware pin 23. Servo signal pin that attaches to "input" of BJT.
-#define ELEVATOR_PIN 3   // Hardware pin 14. Servo signal pin that attaches to "input" of BJT.
-#define PARACHUTE_PIN 4  // Hardware pin 13. Servo signal pin that attaches to "input" of BJT.
-#define RUDDER_FET 5     // Hardware pin 24. Pin that attaches to switching part of FET. This allows the servo to be turned on.
-#define ELEVATOR_FET 6   // Hardware pin 29. Pin that attaches to switching part of FET. This allows the servo to be turned on.
-#define PARACHUTE_FET 7  // Hardware pin 30. Pin that attaches to switching part of FET. This allows the servo to be turned on.
-#define RUDDER_BJT 8     // Hardware pin 11. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
-#define ELEVATOR_BJT 9   // Hardware pin 12. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
-#define WAKEUP_PIN 10    // Hardware pin 27. Pin that attaches to the EXTINT of ublox module.
-// #define GPIO 11 // Unused GPIO on autopilot.
+#define RUDDER_PIN 2    // Hardware pin 23. Servo signal pin that attaches to "input" of BJT.
+#define ELEVATOR_PIN 3  // Hardware pin 14. Servo signal pin that attaches to "input" of BJT.
+#define PARACHUTE_PIN 4 // Hardware pin 13. Servo signal pin that attaches to "input" of BJT.
+#define RUDDER_FET 5    // Hardware pin 24. Pin that attaches to switching part of FET. This allows the servo to be turned on.
+#define ELEVATOR_FET 6  // Hardware pin 29. Pin that attaches to switching part of FET. This allows the servo to be turned on.
+#define PARACHUTE_FET 7 // Hardware pin 30. Pin that attaches to switching part of FET. This allows the servo to be turned on.
+#define RUDDER_BJT 8    // Hardware pin 11. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define PARACHUTE_BJT 9 // Hardware pin ?. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define ELEVATOR_BJT 10 // Hardware pin ?. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define WAKEUP_PIN 11   // Hardware pin ?. Pin that attaches to the EXTINT of ublox module.
 // #define GPIO 12 // Unused GPIO on autopilot.
 #define LED 13
 #define BAT_VOLTAGE_PIN A0 // Pin for battery voltage measurement.
 // #define GPIO A1 // Unused GPIO on autopilot.
 // #define GPIO A2 // Unused GPIO on autopilot.
-#define PARACHUTE_BJT A4 // Hardware pin 10. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define WIRELESS_RX A4   // Pin that connects to the HCO5. More info in the docs.
+#define WIRELESS_TX A5   // Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
 double targetLat = 42.36011635715412, targetLon = -71.09414503280355; // MIT coordinates.
