@@ -6,6 +6,7 @@
 #define Kp 30.0               // These are the free parameters in the Mahony filter and fusion scheme, Kp for proportional feedback, Ki for integral.
 #define Ki 0.0                // With MPU-9250, angles start oscillating at Kp = 0. Ki does not seem to help and is not required.
 #define MAG_DEC 14.5          // Conventional nav, yaw increases CW from North, corrected for local magnetic declination. Find yours here: http://www.ngdc.noaa.gov/geomag-web/#declination.
+#define BME_ADDRESS 0x76      // Address of the BME280 sensor.
 // #define DEVMODE            // Comment out to use the serial monitor.
 
 // Accel offsets and correction matrix.

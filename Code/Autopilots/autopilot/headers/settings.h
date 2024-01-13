@@ -31,9 +31,9 @@
 #define ELEVATOR_FET 6  // Hardware pin 29. Pin that attaches to switching part of FET. This allows the servo to be turned on.
 #define PARACHUTE_FET 7 // Hardware pin 30. Pin that attaches to switching part of FET. This allows the servo to be turned on.
 #define RUDDER_BJT 8    // Hardware pin 11. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
-#define PARACHUTE_BJT 9 // Hardware pin ?. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
-#define ELEVATOR_BJT 10 // Hardware pin ?. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
-#define WAKEUP_PIN 11   // Hardware pin ?. Pin that attaches to the EXTINT of ublox module.
+#define PARACHUTE_BJT 9 // Hardware pin 12. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define ELEVATOR_BJT 10 // Hardware pin 27. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define WAKEUP_PIN 11   // Hardware pin 25. Pin that attaches to the EXTINT of ublox module.
 // #define GPIO 12 // Unused GPIO on autopilot.
 #define LED 13
 #define BAT_VOLTAGE_PIN A0 // Pin for battery voltage measurement.

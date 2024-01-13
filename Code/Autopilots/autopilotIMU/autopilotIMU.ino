@@ -25,20 +25,20 @@
 // The serial output from MPU9250_cal.ino can be copied and pasted into a spreadsheet, then downloaded and uploaded to Magneto.
 // The output from Magneto cannot be copied and pasted or downloaded, so you have to manually input the values to M_B, M_Ainv,
 // A_B, and A_Ainv. The values you input are in the format that is pretty much how you see them in Magneto.
-// You also have to input the G_off array, which is not determined by Magneto, but by MPU9250_Cal in the beginning of the program. 
+// You also have to input the G_off array, which is not determined by Magneto, but by MPU9250_Cal in the beginning of the program.
 
 // ***** To-Do *****
 // Format code - add periods, capitalize, format above documentation
 // Write documentation
 // Add DEVMODE
 // Capitalize #defines
-// Add MPU cal sketch 
+// Add MPU cal sketch
 
 #include "headers/settings.h" // Change settings here.
 #include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
 #include "src/MPU9250.h"      // Credit: https://github.com/jremington/MPU-9250-AHRS
-#include <BMP280.h>
 #include <SoftwareSerial.h>
+#include <TinyBME280.h>
 #include <Wire.h> // Try "Wire.h" if doesn't work.
 
 unsigned long now = 0, last = 0;   // Micros() timers.
@@ -46,11 +46,18 @@ float deltat = 0;                  // Loop time in seconds.
 unsigned long now_ms, last_ms = 0; // Millis() timers.
 
 static float q[4] = {1.0, 0.0, 0.0, 0.0}; // Vector to hold quaternion.
-static float yaw, pitch, roll;            // Euler angle output.
+
+struct __attribute__((packed)) dataStruct {
+  float pitch;
+  float roll;
+  float yaw;
+  int16_t temp;
+  int32_t pressure;
+  int16_t humidity;
+} data;
 
 MPU9250 accelgyro;
 I2Cdev I2C_M;
-BMP280 bmp280;
 SoftwareSerial mcuConn(RX, TX);
 
 char s[60]; // Snprintf buffer.
@@ -64,7 +71,8 @@ float Mxyz[3];
 
 void setup() {
   Wire.begin();
-  bmp280.begin();
+  BME280setI2Caddress(BME_ADDRESS);
+  BME280setup();
   mcuConn.begin(BAUD_RATE);
   accelgyro.initialize(); // Initialize MPU9250.
 #ifdef DEVMODE
@@ -90,25 +98,30 @@ void loop() {
   // Some good reading: http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles.
 
   // This will malfunction for certain combinations of angles! See https://en.wikipedia.org/wiki/Gimbal_lock.
-  roll = atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
-  pitch = asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
-  yaw = atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
-  // To degrees
-  yaw *= 180.0 / PI;
-  pitch *= 180.0 / PI;
-  roll *= 180.0 / PI;
+  data.roll = atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
+  data.pitch = asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
+  data.yaw = atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
 
-  yaw = -yaw + MAG_DEC;
-  if (yaw < 0)
-    yaw += 360.0;
-  if (yaw > 360.0)
-    yaw -= 360.0;
+  // To degrees.
+  data.yaw *= 180.0 / PI;
+  data.pitch *= 180.0 / PI;
+  data.roll *= 180.0 / PI;
+
+  data.yaw = -data.yaw + MAG_DEC;
+  if (data.yaw < 0)
+    data.yaw += 360.0;
+  if (data.yaw > 360.0)
+    data.yaw -= 360.0;
   now_ms = millis(); // Time to send data?
   if (now_ms - last_ms >= SEND_MS) {
     last_ms = now_ms;
-    int32_t pressure = bmp280.getPressure(); // Pressure in Pa.
-    int temp = bmp280.getTemperature();      // Temp in C.
+    data.pressure = BME280pressure(); // Pressure in Pa.
+    data.temp = BME280temperature();  // Temp in C.
+    data.humidity = BME280humidity();  // Humidity in %RH.
 
+    mcuConn.write((byte *)&data, sizeof(data));
+
+    /*
     byte yawSend = yaw / 2;
     byte pressureSend = pressure / 500;
     byte negativePitch = 0;
@@ -126,6 +139,14 @@ void loop() {
       negativeTemp = 1;
     }
 
+    mcuConn.write(yawSend);
+    mcuConn.write(pitchSend);
+    mcuConn.write(negativePitch);
+    mcuConn.write(tempSend);
+    mcuConn.write(negativeTemp);
+    mcuConn.write(pressureSend);
+    */
+
 #ifdef DEVMODE
     Serial.print(yaw);
     Serial.print(", ");
@@ -135,13 +156,6 @@ void loop() {
     Serial.print(", ");
     Serial.println(pressure);
 #endif
-
-    mcuConn.write(yawSend);
-    mcuConn.write(pitchSend);
-    mcuConn.write(negativePitch);
-    mcuConn.write(tempSend);
-    mcuConn.write(negativeTemp);
-    mcuConn.write(pressureSend);
   }
 }
 

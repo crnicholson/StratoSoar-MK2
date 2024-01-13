@@ -141,6 +141,16 @@ void waitForFix() {
 }
 
 void getIMUData() {
+  if (Serial1.available() >= sizeof(receivedData)) {
+    Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
+    data.yaw = int(receivedData.yaw);
+    data.pitch = int(receivedData.pitch);
+    data.roll = int(receivedData.roll);
+    data.temp = int(receivedData.temp);
+    data.humidity = int(receivedData.humidity);
+    data.pressure = int(receivedData.pressure);
+  }
+  /*
   if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
     byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU (the ATMega).
     byte pitchReceive = Serial1.read();
@@ -162,6 +172,7 @@ void getIMUData() {
       data.temp = data.temp * -1;
     }
   }
+  */
 }
 
 void calculate() {
@@ -222,10 +233,14 @@ void displayData() {
   SerialUSB.print(data.yaw);
   SerialUSB.print(" Pitch: ");
   SerialUSB.print(data.pitch);
+  SerialUSB.print(" Roll: ");
+  SerialUSB.print(data.roll);
   SerialUSB.print(" Temp: ");
   SerialUSB.print(data.temp);
   SerialUSB.print(" Pressure: ");
   SerialUSB.print(data.pressure);
+  SerialUSB.print(" Humidity: ");
+  SerialUSB.print(data.humidity);
   SerialUSB.print(" Elevator Pos: ");
   SerialUSB.print(data.servoPositionElevator);
   SerialUSB.print(" Rudder Pos: ");
@@ -249,4 +264,3 @@ void gpsWakeup() {
   delay(1000);
   digitalWrite(WAKEUP_PIN, LOW);
 }
-

@@ -58,11 +58,11 @@ int eepromAddress, counter, now, start, ms;
 bool spiral = false;
 bool stall = false;
 bool runEEPROM = true;
-bool firstFive = false;
+bool firstFive = false;  
 
 // Setpoint and input variables.
-double setpointRudder = 0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
-double inputRudder = 0.0;  // Current measured turn angle, also gibberish.
+double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.  
+double inputRudder = 0.0;
 
 // Variables for PID control.
 double errorRudder = 0.0;     // Error (difference between setpoint and input).
@@ -92,14 +92,25 @@ struct __attribute__((packed)) dataStruct {
   int year;
   int temp;
   int pressure;
+  int humidity;
   int yaw;
   int pitch;
+  int roll;
   int servoPositionElevator;
   int servoPositionRudder;
   int volts;
   float turnAngle;
   float distanceMeters;
 } data;
+
+struct __attribute__((packed)) dataStructIMU {
+  float pitch;
+  float roll;
+  float yaw;
+  int16_t temp;
+  int32_t pressure;
+  int16_t humidity;
+} receivedData;
 
 SFE_UBLOX_GNSS gps; // Init GPS.
 
