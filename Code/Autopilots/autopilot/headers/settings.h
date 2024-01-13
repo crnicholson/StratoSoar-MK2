@@ -20,6 +20,12 @@
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
 #define YAW_DFR_THRESHOLD -5 // The threshold needed to move the servos. Make sure it is a negative number.
 
+// Threshold for parachute and spiraling.
+#define PARACHUTE_ALT_THRESHOLD 500 // If the glider is under this, and the distance is less than PARACHUTE_DST_THRESHOLD, open the parachute.
+#define PARACHUTE_DST_THRESHOLD 100 // If the glider is under PARACHUTE_ALT_THRESHOLD, and the distance is less than this, open the parachute.
+#define SPIRAL_ALT_THRESHOLD 600 // If the glider is above this, and the distance is less than SPIRAL_DST_THRESHOLD, spiral the glider down.
+#define SPIRAL_DST_THRESHOLD 100 // If the glider is above SPIRAL_ALT_THRESHOLD, and the distance is less than this, spiral the glider down.    
+
 // Pins.
 // SPI is available (unused) on hardware pins 19-22. This will be on the GPIO header of the autopilot.
 // I2C is used on hardware pins 31 and 32. Also on GPIO header of autopilot.

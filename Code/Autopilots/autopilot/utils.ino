@@ -264,3 +264,16 @@ void gpsWakeup() {
   delay(1000);
   digitalWrite(WAKEUP_PIN, LOW);
 }
+
+void gpsConfig() {
+  gps.factoryDefault();                                                        // Clear any saved configuration.
+  if (gps.setDynamicModel(DYN_MODEL_AIRBORNE1g, VAL_LAYER_RAM_BBR) == false) { // Set the dynamic model to airborne mode with one g of thrust allowance.
+#ifdef DEVMODE
+    SerialUSB.println(F("*** Warning: setDynamicModel failed ***"));
+#endif
+  } else {
+#ifdef DEVMODE
+    SerialUSB.println(F("Dynamic platform model changed successfully!"));
+#endif
+  }
+}

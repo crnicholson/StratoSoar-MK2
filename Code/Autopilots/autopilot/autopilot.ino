@@ -165,6 +165,8 @@ void setup() {
 
   // gps.hardReset(); // Hard reset - force a cold start.
 
+  gpsConfig();
+
 #ifndef TEST_COORD
   waitForFix();
 #endif
@@ -219,7 +221,7 @@ void loop() {
   calculate(); // Calculate again to get updated variables if the target has changed.
 
 #ifdef SPIN_STOP
-  if ((data.distanceMeters <= 100) && (data.alt > 600)) {
+  if ((data.distanceMeters <= SPIRAL_DST_THRESHOLD) && (data.alt > SPIRAL_ALT_THRESHOLD)) {
     spiral = true;
     moveRudder(145); // Sends into a spin to safely make it's way down.
     // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute.
@@ -227,7 +229,7 @@ void loop() {
 #endif
 
 #ifdef NEED_PARACHUTE
-  if ((distanceMeters <= 100) && (data.alt <= 500)) {
+  if ((distanceMeters <= PARACHUTE_DST_THRESHOLD) && (data.alt <= PARACHUTE_ALT_THRESHOLD)) {
     parachute.write(90); // Open the parachute under 500 feet to land.
     // Once the parachute is open, this script skips over the moving servos function and instead goes to an infinite sleep.
     gps.powerOffWithInterrupt(0, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // Only wakeup with an interrupt (I think).
