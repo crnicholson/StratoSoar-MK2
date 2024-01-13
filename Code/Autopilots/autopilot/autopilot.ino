@@ -192,7 +192,7 @@ void loop() {
 
       // powerOffWithInterrupt uses the 16-byte version of RXM-PMREQ - supported by the M10 etc. powerOffWithInterrupt allows us to set the force flag.
       // The M10 integration manual states: "The "force" flag must be set in UBX-RXM-PMREQ to enter software standby mode."
-      gps.powerOffWithInterrupt(SLEEP_TIME * 12, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // No (additional) wakeup sources. force = true.
+      gps.powerOffWithInterrupt(60000, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // No (additional) wakeup sources. force = true.
     }
   } else {
     waitForFix();
@@ -205,7 +205,7 @@ void loop() {
 #endif
 
   getIMUData(); // Get data from the ATMega.
-  calculate(); // Find distance, turning angle, and more.
+  calculate();  // Find distance, turning angle, and more.
 
 #ifdef CHANGE_TARGET
   if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
@@ -215,6 +215,8 @@ void loop() {
     targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
   }
 #endif
+
+  calculate(); // Calculate again to get updated variables if the target has changed.
 
 #ifdef SPIN_STOP
   if ((data.distanceMeters <= 100) && (data.alt > 600)) {
@@ -230,28 +232,28 @@ void loop() {
     // Once the parachute is open, this script skips over the moving servos function and instead goes to an infinite sleep.
     gps.powerOffWithInterrupt(0, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // Only wakeup with an interrupt (I think).
     LowPower.attachInterruptWakeup(pin, onWake, CHANGE);
-    LowPower.sleep(); // No way to wakeup now!
+    LowPower.deepSleep(); // No way to wakeup now!
   }
 #endif
 
   if (lastYaw != 361) {
     yawDifference = lastYaw - data.yaw;
-    lastYaw = data.yaw;
   } else {
     yawDifference = YAW_DFR_THRESHOLD + 1;
   }
 
-  if (yawDifference > YAW_DFR_THRESHOLD | firstFive) {
-    if (!spiral) {
-      shortPulse(); // Pulse LED to show we are running.
+  if (!spiral) {
+    if (yawDifference < YAW_DFR_THRESHOLD | firstFive | yawDifference > abs(YAW_DFR_THRESHOLD)) {
+      shortPulse();                         // Pulse LED to show we are running.
       moveRudder(data.servoPositionRudder); // Move servo and turn it off. Have the sleep in between to make sure there is minimal draw on the power supply.
       now = millis();
       ms = start - now;
-      if (ms < 300000) { // If less than 5 minutes into the flight, update every second.
-        LowPower.deepSleep(1000);
+      lastYaw = data.yaw;
+      if (ms < 300000) {
+        LowPower.deepSleep(500);
         firstFive = true;
       } else {
-        LowPower.deepSleep(SLEEP_TIME);
+        LowPower.deepSleep(500);
         firstFive = false;
       }
       moveElevator(data.servoPositionElevator); // Move servo and turn it off.
@@ -284,11 +286,9 @@ void loop() {
       }
 #endif
     } else {
-      if (spiral) {
-        LowPower.deepSleep(5000); // If spiraling, skip above section and wakeup every 5 seconds.
-      }
+      LowPower.deepSleep(500); // If the heading drift is below the threshold, sleep for 500 ms and repeat the cycle until the heading drift is above threshold. 
     }
   } else {
-    LowPower.deepSleep(500);
+    LowPower.deepSleep(500); // If spiraling, skip above section and wakeup every 500 ms only to check GPS to see if it's time to open the parachute.
   }
-} 
+}

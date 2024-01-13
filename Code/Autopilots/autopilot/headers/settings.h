@@ -18,7 +18,7 @@
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
-#define SLEEP_TIME 10000     // MS for sleep.
+#define YAW_DFR_THRESHOLD -5 // The threshold needed to move the servos. Make sure it is a negative number.
 
 // Pins.
 // SPI is available (unused) on hardware pins 19-22. This will be on the GPIO header of the autopilot.
@@ -39,8 +39,8 @@
 #define BAT_VOLTAGE_PIN A0 // Pin for battery voltage measurement.
 // #define GPIO A1 // Unused GPIO on autopilot.
 // #define GPIO A2 // Unused GPIO on autopilot.
-#define WIRELESS_RX A4   // Pin that connects to the HCO5. More info in the docs.
-#define WIRELESS_TX A5   // Pin that connects to the HCO5. More info in the docs.
+#define WIRELESS_RX A4 // Pin that connects to the HCO5. More info in the docs.
+#define WIRELESS_TX A5 // Pin that connects to the HCO5. More info in the docs.
 
 int pin = 10; // Change this pin to a non-used one.
 
