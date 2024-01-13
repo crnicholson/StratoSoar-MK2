@@ -44,24 +44,24 @@
 // Heading drift function (wake up every 500 ms to see how much the glider has moved from target heading)
 // Have the GPS not based on wakeups but on time
 // Update GPIOs on autopilot
-// Work on the wireless function 
+// Work on the wireless function
 
+#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 #include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
-#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 
 #define pi 3.14159265358979323846
 
-int eepromAddress, counter, now, start, ms;
+int eepromAddress, counter, now, start, ms, last, yawDifference;
+int lastYaw = 361;
 bool spiral = false;
-bool stall = false;
 bool runEEPROM = true;
-bool firstFive = false;  
+bool firstFive = true;
 
 // Setpoint and input variables.
-double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.  
+double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
 double inputRudder = 0.0;
 
 // Variables for PID control.
@@ -174,14 +174,18 @@ void setup() {
 #endif
   delay(10000);
   start = millis();
+  last = millis();
 }
 
 void loop() {
 #ifndef TEST_COORD
-  if (!firstFive) {
-    if (counter == 6) {
+  if (!firstFive | !spiral) {
+    now = millis();
+    ms = now - last;
+    if (ms > 30000) {
+      gpsWakeup();  // Wakeup GPS.
       waitForFix(); // Wait for a fix to get data from the GPS, and put the received data into the struct.
-      counter = 0;
+      last = millis();
 
       // powerOff uses the 8-byte version of RXM-PMREQ - supported by older (M8) modules, like so:
       // gps.powerOff(sleepForSecs * 1000);
@@ -190,34 +194,33 @@ void loop() {
       // The M10 integration manual states: "The "force" flag must be set in UBX-RXM-PMREQ to enter software standby mode."
       gps.powerOffWithInterrupt(SLEEP_TIME * 12, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // No (additional) wakeup sources. force = true.
     }
-    counter++;
   } else {
     waitForFix();
   }
 #endif
- 
+
 #ifdef TEST_COORD
   data.lat = testLat;
   data.lon = testLon;
 #endif
 
-  calculate(); // Find distance and other things.
+  getIMUData(); // Get data from the ATMega.
+  calculate(); // Find distance, turning angle, and more.
+
+#ifdef CHANGE_TARGET
+  if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
+    targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far.
+  }
+  if ((distanceMeters >= 50000) && (data.alt <= 1000)) {
+    targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
+  }
+#endif
 
 #ifdef SPIN_STOP
   if ((data.distanceMeters <= 100) && (data.alt > 600)) {
     spiral = true;
     moveRudder(145); // Sends into a spin to safely make it's way down.
-    // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute or to stall the plane.
-  }
-#endif
-
-#ifdef STALL_STOP
-  if ((distanceMeters <= 100) && (data.alt <= 600)) {
-    stall = true;
-    spiral = false;    // Make this false so it now wakes up every seconds instead of every 5 seconds.
-    moveElevator(145); // Sends into a stall to "safely" make it's way down.
-    moveRudder(90);
-    // Once stalling, skip the main sketch and only wakeup every 1 second to see if it's time to open the parachute.
+    // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute.
   }
 #endif
 
@@ -226,68 +229,66 @@ void loop() {
     parachute.write(90); // Open the parachute under 500 feet to land.
     // Once the parachute is open, this script skips over the moving servos function and instead goes to an infinite sleep.
     gps.powerOffWithInterrupt(0, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // Only wakeup with an interrupt (I think).
-    int pin = 10;                                                           // Change this pin to a non-used one.
     LowPower.attachInterruptWakeup(pin, onWake, CHANGE);
     LowPower.sleep(); // No way to wakeup now!
   }
 #endif
 
-  if (!spiral && !stall) {
-    shortPulse(); // Pulse LED to show we are running.
-#ifdef CHANGE_TARGET
-    if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
-      targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far.
-    }
-    if ((distanceMeters >= 50000) && (data.alt <= 1000)) {
-      targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
-    }
-#endif
-    getIMUData();                         // Get data from the IMU.
-    moveRudder(data.servoPositionRudder); // Move servo and turn it off. Have the sleep in between to make sure there is minimal draw on the power supply. 
-    now = millis();
-    ms = start - now;
-    if (ms < 300000) { // If less than 5 minutes into the flight, update every second.
-      LowPower.deepSleep(1000);
-      firstFive = true;
-    } else {
-      LowPower.deepSleep(SLEEP_TIME);
-      firstFive = false;
-    }
-    moveElevator(data.servoPositionElevator); // Move servo and turn it off.
+  if (lastYaw != 361) {
+    yawDifference = lastYaw - data.yaw;
+    lastYaw = data.yaw;
+  } else {
+    yawDifference = YAW_DFR_THRESHOLD + 1;
+  }
+
+  if (yawDifference > YAW_DFR_THRESHOLD | firstFive) {
+    if (!spiral) {
+      shortPulse(); // Pulse LED to show we are running.
+      moveRudder(data.servoPositionRudder); // Move servo and turn it off. Have the sleep in between to make sure there is minimal draw on the power supply.
+      now = millis();
+      ms = start - now;
+      if (ms < 300000) { // If less than 5 minutes into the flight, update every second.
+        LowPower.deepSleep(1000);
+        firstFive = true;
+      } else {
+        LowPower.deepSleep(SLEEP_TIME);
+        firstFive = false;
+      }
+      moveElevator(data.servoPositionElevator); // Move servo and turn it off.
 #ifdef DEVMODE
-    displayData();
+      displayData();
 #endif
 #ifdef DIVE_STALL
-    if (TOO_SLOW <= 5) {
-      elevatorServo.write(115); // Dive down when stalled.
-    }
+      if (TOO_SLOW <= 5) {
+        elevatorServo.write(115); // Dive down when stalled.
+      }
 #endif
 #ifdef USE_EEPROM
-    // This saves to an external EEPROM (AT24Cx) so we can get some data.
-    if (runEEPROM) {
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2)); // Making some things a byte to save space.
-      delay(10);
-      eepromAddress++;
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pitch));
-      delay(10);
-      eepromAddress++;
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.temp));
-      delay(10);
-      eepromAddress++;
-      writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pressure / 500));
-      delay(10);
-      eepromAddress++;
-      if (eepromAddress >= MAX_ADDRESS) {
-        runEEPROM = false;
+      // This saves to an external EEPROM (AT24Cx) so we can get some data.
+      if (runEEPROM) {
+        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2)); // Making some things a byte to save space.
+        delay(10);
+        eepromAddress++;
+        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pitch));
+        delay(10);
+        eepromAddress++;
+        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.temp));
+        delay(10);
+        eepromAddress++;
+        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pressure / 500));
+        delay(10);
+        eepromAddress++;
+        if (eepromAddress >= MAX_ADDRESS) {
+          runEEPROM = false;
+        }
+      }
+#endif
+    } else {
+      if (spiral) {
+        LowPower.deepSleep(5000); // If spiraling, skip above section and wakeup every 5 seconds.
       }
     }
-#endif
   } else {
-    if (spiral) {
-      LowPower.deepSleep(5000); // If spiraling, skip above section and wakeup every 5 seconds.
-    } else {
-      LowPower.deepSleep(1000); // If purposefully stalling, skip above section and wakeup every 1 second.
-    }
+    LowPower.deepSleep(500);
   }
-  gpsWakeup(); // Wakeup GPS.
-}
+} 

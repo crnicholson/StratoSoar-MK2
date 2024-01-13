@@ -1,0 +1,41 @@
+bool firstFive = true;
+bool spiral = false;
+
+void loop() {
+    if (!firstFive | !spiral) {
+        // Check if it is time to get fix.
+        if (ms > 30000) {
+            // Wakeup GPS.
+            // If it's been more than 30 seconds, get gps position and then set the gps to sleep.
+        }
+    } else {
+        // If it is the first five minutes, or the glider is spiraling down, get GPS position and do not set gps to sleep.
+    }
+
+    // Get IMU data.
+    // Calculate turning angle and distance.
+
+    if (distance < 100 && alt > 600) {
+        // If distance is less than 100 meters, but altitude is greater than 600 meters, spiral down.
+        spiral = true;
+    }
+
+    if (distance < 100 && alt < 600) {
+        // If distance is less than 100 meters, but altitude is less than 600 meters, open the parachute.
+        // Set the MCU into poweroff with interrupt so it will never power on again.
+    }
+
+    // Find heading drift based off last heading and current received heading.
+
+    // If heading drift is greater than threshold or it is the first five minutes, go onto the main sketch.
+    if (headingDrift > threshold | firstFive) {
+        // If the glider is not spiraling, go onto the main sketch.
+        // If the glider is spiraling, skip the main sketch and go to sleep for 1000 ms. Then wakeup, check GPS and get IMU data and calculate, and then if the right distance to ground, open parachute. 
+        if (!spiral) {
+            // Pulse LED to show awakeness.
+            
+        }
+    }
+
+
+}

@@ -4,7 +4,7 @@
 
 // Enables.
 #define DEVMODE // Toggle the serial monitor on and off.
-#define TEST_COORD // Use testing coordinates.
+// #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
 // #define STALL_STOP // Land the glider by repeatedly stalling it.
@@ -41,6 +41,8 @@
 // #define GPIO A2 // Unused GPIO on autopilot.
 #define WIRELESS_RX A4   // Pin that connects to the HCO5. More info in the docs.
 #define WIRELESS_TX A5   // Pin that connects to the HCO5. More info in the docs.
+
+int pin = 10; // Change this pin to a non-used one.
 
 // Target destination.
 double targetLat = 42.36011635715412, targetLon = -71.09414503280355; // MIT coordinates.
