@@ -1,6 +1,6 @@
 #define RX 10                 // TX pin of the mcuConn.
-#define TX 11                 // RX pin of the mcuConn.
-#define SEND_MS 6000          // Send data every "SEND_MS" milliseconds.
+#define TX 9                  // RX pin of the mcuConn.
+#define SEND_MS 500          // Send data every "SEND_MS" milliseconds.
 #define BAUD_RATE 9600        // Baud rate for the mcuConn.
 #define SERIAL_BAUD_RATE 9600 // Baud rate for the serial monitor.
 #define Kp 30.0               // These are the free parameters in the Mahony filter and fusion scheme, Kp for proportional feedback, Ki for integral.

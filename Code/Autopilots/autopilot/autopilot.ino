@@ -46,11 +46,11 @@
 // Update GPIOs on autopilot
 // Work on the wireless function
 
-#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 #include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
+#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 
 #define pi 3.14159265358979323846
 
@@ -107,15 +107,16 @@ struct __attribute__((packed)) dataStructIMU {
   float pitch;
   float roll;
   float yaw;
-  int16_t temp;
-  int32_t pressure;
-  int16_t humidity;
+  long temp;
+  // int32_t pressure;
+  long humidity;
 } receivedData;
 
 SFE_UBLOX_GNSS gps; // Init GPS.
 
 void setup() {
   pinMode(LED, OUTPUT);
+  pinMode(ERR_LED, OUTPUT);
   pinMode(RUDDER_BJT, OUTPUT);
   pinMode(ELEVATOR_BJT, OUTPUT);
   pinMode(PARACHUTE_BJT, OUTPUT);
@@ -123,8 +124,10 @@ void setup() {
   pinMode(ELEVATOR_FET, OUTPUT);
   pinMode(PARACHUTE_FET, OUTPUT);
   pinMode(WAKEUP_PIN, OUTPUT);
+  pinMode(FALSE_WAKEUP_PIN, INPUT);
   pinMode(BAT_VOLTAGE_PIN, INPUT);
   digitalWrite(LED, LOW);
+  digitalWrite(ERR_LED, LOW);
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(ELEVATOR_BJT, HIGH);
   digitalWrite(PARACHUTE_BJT, HIGH);
@@ -133,9 +136,15 @@ void setup() {
   digitalWrite(PARACHUTE_FET, LOW);
   digitalWrite(WAKEUP_PIN, LOW);
   Wire.begin();
+#ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
-  Serial1.begin(BAUD_RATE);          // Hardware serial connection to the ATMega and the IMU.
-  longPulse();                       // Pulse LED to show power up.
+  while (!SerialUSB) {
+    ; // Wait for serial to connect
+  }
+#endif
+  Serial1.begin(BAUD_RATE); // Hardware serial connection to the ATMega and the IMU.
+  longPulse(LED);           // Pulse LED to show power up.
+  longPulse(ERR_LED);
 
 #ifdef NEED_RUDDER
   rudderServo.attach(RUDDER_PIN);
@@ -155,6 +164,7 @@ void setup() {
   moveElevator(90); // Move the elevator to 90 degrees.
 #endif
 
+#ifndef TEST_COORD
   if (gps.begin() == false) { // Connect to the u-blox module using Wire port.
 #ifdef DEVMODE
     SerialUSB.println(F("u-blox GNSS not detected at default I2C address. Please check wiring. Freezing."));
@@ -167,14 +177,15 @@ void setup() {
 
   gpsConfig();
 
-#ifndef TEST_COORD
   waitForFix();
 #endif
 
+  delay(1000);
+
 #ifdef DEVMODE
-  SerialUSB.println("Everything has initialized and the script starts in 10 seconds!");
+  SerialUSB.println("Everything has initialized and the script starts in 20 seconds!");
 #endif
-  delay(10000);
+  delay(20000);
   start = millis();
   last = millis();
 }
@@ -216,9 +227,8 @@ void loop() {
   if ((distanceMeters >= 50000) && (data.alt <= 1000)) {
     targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
   }
-#endif
-
   calculate(); // Calculate again to get updated variables if the target has changed.
+#endif
 
 #ifdef SPIN_STOP
   if ((data.distanceMeters <= SPIRAL_DST_THRESHOLD) && (data.alt > SPIRAL_ALT_THRESHOLD)) {
@@ -233,7 +243,7 @@ void loop() {
     parachute.write(90); // Open the parachute under 500 feet to land.
     // Once the parachute is open, this script skips over the moving servos function and instead goes to an infinite sleep.
     gps.powerOffWithInterrupt(0, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // Only wakeup with an interrupt (I think).
-    LowPower.attachInterruptWakeup(pin, onWake, CHANGE);
+    LowPower.attachInterruptWakeup(FALSE_WAKEUP_PIN, onWake, CHANGE);
     LowPower.deepSleep(); // No way to wakeup now!
   }
 #endif
@@ -245,23 +255,25 @@ void loop() {
   }
 
   if (!spiral) {
-    if (yawDifference < YAW_DFR_THRESHOLD | firstFive | yawDifference > abs(YAW_DFR_THRESHOLD)) {
-      shortPulse();                         // Pulse LED to show we are running.
+    if (yawDifference<YAW_DFR_THRESHOLD | firstFive | yawDifference> abs(YAW_DFR_THRESHOLD)) {
+      shortPulse(LED);                      // Pulse LED to show we are running.
+#ifdef DEVMODE
+      displayData();
+      delay(100);
+#endif
       moveRudder(data.servoPositionRudder); // Move servo and turn it off. Have the sleep in between to make sure there is minimal draw on the power supply.
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
       if (ms < 300000) {
-        LowPower.deepSleep(500);
+        // LowPower.deepSleep(500);
+        delay(500);
         firstFive = true;
       } else {
         LowPower.deepSleep(500);
         firstFive = false;
       }
       moveElevator(data.servoPositionElevator); // Move servo and turn it off.
-#ifdef DEVMODE
-      displayData();
-#endif
 #ifdef DIVE_STALL
       if (TOO_SLOW <= 5) {
         elevatorServo.write(115); // Dive down when stalled.
@@ -288,7 +300,7 @@ void loop() {
       }
 #endif
     } else {
-      LowPower.deepSleep(500); // If the heading drift is below the threshold, sleep for 500 ms and repeat the cycle until the heading drift is above threshold. 
+      LowPower.deepSleep(500); // If the heading drift is below the threshold, sleep for 500 ms and repeat the cycle until the heading drift is above threshold.
     }
   } else {
     LowPower.deepSleep(500); // If spiraling, skip above section and wakeup every 500 ms only to check GPS to see if it's time to open the parachute.

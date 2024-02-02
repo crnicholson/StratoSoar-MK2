@@ -51,9 +51,9 @@ struct __attribute__((packed)) dataStruct {
   float pitch;
   float roll;
   float yaw;
-  int16_t temp;
-  int32_t pressure;
-  int16_t humidity;
+  long temp;
+  // int32_t pressure;
+  long humidity;
 } data;
 
 MPU9250 accelgyro;
@@ -81,6 +81,7 @@ void setup() {
     ;
   Serial.println(accelgyro.testConnection() ? "MPU9250 is all good" : "MPU9250 is missing!"); // Verify connection.
 #endif
+  delay(10000);
 }
 
 void loop() {
@@ -115,11 +116,12 @@ void loop() {
   now_ms = millis(); // Time to send data?
   if (now_ms - last_ms >= SEND_MS) {
     last_ms = now_ms;
-    data.pressure = BME280pressure(); // Pressure in Pa.
+    // data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
     data.humidity = BME280humidity();  // Humidity in %RH.
 
     mcuConn.write((byte *)&data, sizeof(data));
+    mcuConn.write(0x01);
 
     /*
     byte yawSend = yaw / 2;

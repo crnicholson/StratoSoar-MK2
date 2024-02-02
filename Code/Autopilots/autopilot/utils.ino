@@ -82,20 +82,20 @@ int pidMagicRudder() {
   return servoPositionRudder2;
 }
 
-void longPulse() {
-  digitalWrite(LED, HIGH);
+void longPulse(int pin) {
+  digitalWrite(pin, HIGH);
   delay(250);
-  digitalWrite(LED, LOW);
+  digitalWrite(pin, LOW);
   delay(500);
-  digitalWrite(LED, HIGH);
+  digitalWrite(pin, HIGH);
   delay(250);
-  digitalWrite(LED, LOW);
+  digitalWrite(pin, LOW);
 }
 
-void shortPulse() {
-  digitalWrite(LED, HIGH);
+void shortPulse(int pin) {
+  digitalWrite(pin, HIGH);
   delay(250);
-  digitalWrite(LED, LOW);
+  digitalWrite(pin, LOW);
 }
 
 void moveRudder(int degrees) {
@@ -141,14 +141,30 @@ void waitForFix() {
 }
 
 void getIMUData() {
-  if (Serial1.available() >= sizeof(receivedData)) {
-    Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
-    data.yaw = int(receivedData.yaw);
-    data.pitch = int(receivedData.pitch);
-    data.roll = int(receivedData.roll);
-    data.temp = int(receivedData.temp);
-    data.humidity = int(receivedData.humidity);
-    data.pressure = int(receivedData.pressure);
+  if (Serial1.available() >= (sizeof(receivedData) + 1)) {
+    byte firstByte = Serial.read();
+    if (firstByte == 0x01) {
+      Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
+      /*
+      data.yaw = int(receivedData.yaw);
+      data.pitch = int(receivedData.pitch);
+      data.roll = int(receivedData.roll);
+      data.temp = int(receivedData.temp);
+      data.humidity = int(receivedData.humidity);
+      data.pressure = int(receivedData.pressure);
+      */
+      data.yaw = receivedData.yaw;
+      data.pitch = receivedData.pitch;
+      data.roll = receivedData.roll;
+      data.temp = receivedData.temp;
+      data.humidity = receivedData.humidity;
+      // data.pressure = receivedData.pressure;
+      data.pressure = 9;
+    } else {
+      while (Serial1.available() > 0) { // Clear the buffer.
+        char t = Serial.read();
+      }
+    }
   }
   /*
   if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
