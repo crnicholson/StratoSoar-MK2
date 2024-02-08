@@ -1,3 +1,6 @@
+// WARNING:
+// This is still a work in progress! Code may not work!
+
 // Part of StratoSoar MK2.
 // autopilotIMU.ino.
 // Charles Nicholson, 2023.
@@ -34,12 +37,12 @@
 // Capitalize #defines
 // Add MPU cal sketch
 
-#include "headers/settings.h" // Change settings here.
-#include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
-#include "src/MPU9250.h"      // Credit: https://github.com/jremington/MPU-9250-AHRS
 #include <SoftwareSerial.h>
 #include <TinyBME280.h>
 #include <Wire.h> // Try "Wire.h" if doesn't work.
+#include "headers/settings.h" // Change settings here.
+#include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
+#include "src/MPU9250.h"      // Credit: https://github.com/jremington/MPU-9250-AHRS
 
 unsigned long now = 0, last = 0;   // Micros() timers.
 float deltat = 0;                  // Loop time in seconds.
@@ -56,6 +59,15 @@ struct __attribute__((packed)) dataStruct {
   long humidity;
 } data;
 
+struct __attribute__((packed)) testStruct {
+  float pitch = 90.9;
+  float roll = 63.2;
+  float yaw = 45;
+  long temp = 6123;
+  // int32_t pressure;
+  long humidity = 5613;
+} test;
+
 MPU9250 accelgyro;
 I2Cdev I2C_M;
 SoftwareSerial mcuConn(RX, TX);
@@ -70,6 +82,7 @@ float Mxyz[3];
 #define gscale (250. / 32768.0) * (PI / 180.0) // Gyro default 250 LSB per d/s -> rad/s.
 
 void setup() {
+  pinMode(2, INPUT);
   Wire.begin();
   BME280setI2Caddress(BME_ADDRESS);
   BME280setup();
@@ -114,14 +127,15 @@ void loop() {
   if (data.yaw > 360.0)
     data.yaw -= 360.0;
   now_ms = millis(); // Time to send data?
-  if (now_ms - last_ms >= SEND_MS) {
+  // if (now_ms - last_ms >= SEND_MS) {
+  if (digitalRead(2)) {
+    delay(10);
     last_ms = now_ms;
     // data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
     data.humidity = BME280humidity();  // Humidity in %RH.
 
-    mcuConn.write((byte *)&data, sizeof(data));
-    mcuConn.write(0x01);
+    mcuConn.write((byte *)&test, sizeof(test));
 
     /*
     byte yawSend = yaw / 2;

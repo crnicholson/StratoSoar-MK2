@@ -140,30 +140,81 @@ void waitForFix() {
   }
 }
 
-void getIMUData() {
-  if (Serial1.available() >= (sizeof(receivedData) + 1)) {
-    byte firstByte = Serial.read();
-    if (firstByte == 0x01) {
-      Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
-      /*
-      data.yaw = int(receivedData.yaw);
-      data.pitch = int(receivedData.pitch);
-      data.roll = int(receivedData.roll);
-      data.temp = int(receivedData.temp);
-      data.humidity = int(receivedData.humidity);
-      data.pressure = int(receivedData.pressure);
-      */
-      data.yaw = receivedData.yaw;
-      data.pitch = receivedData.pitch;
-      data.roll = receivedData.roll;
-      data.temp = receivedData.temp;
-      data.humidity = receivedData.humidity;
-      // data.pressure = receivedData.pressure;
-      data.pressure = 9;
-    } else {
-      while (Serial1.available() > 0) { // Clear the buffer.
-        char t = Serial.read();
+void I2CScan() {
+  int nDevices = 0;
+
+  SerialUSB.println("Scanning...");
+
+  for (byte address = 1; address < 127; ++address) {
+    // The i2c_scanner uses the return value of
+    // the Wire.endTransmission to see if
+    // a device did acknowledge to the address.
+    Wire.beginTransmission(address);
+    byte error = Wire.endTransmission();
+
+    if (error == 0) {
+      SerialUSB.print("I2C device found at address 0x");
+      if (address < 16) {
+        SerialUSB.print("0");
       }
+      SerialUSB.print(address, HEX);
+      SerialUSB.println("  !");
+
+      ++nDevices;
+    } else if (error == 4) {
+      SerialUSB.print("Unknown error at address 0x");
+      if (address < 16) {
+        SerialUSB.print("0");
+      }
+      SerialUSB.println(address, HEX);
+    }
+  }
+  if (nDevices == 0) {
+    SerialUSB.println("No I2C devices found\n");
+  } else {
+    SerialUSB.println("done\n");
+  }
+}
+
+void streamData() {
+  int available = Serial1.available();
+  SerialUSB.print(available);
+  SerialUSB.print(" available bytes ");
+  while (Serial1.available() > 0) {
+    SerialUSB.print(Serial1.read());
+  }
+}
+
+void getIMUData() {
+  while (Serial1.available() > 0) { // Clear the buffer.
+    byte t = Serial1.read();
+    SerialUSB.println(t);
+  }
+  digitalWrite(A2, HIGH);
+  delay(5);
+  digitalWrite(A2, LOW);
+  delay(30); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bytes. 9600/200 =~ 20 ms. Add 10 ms for safety.
+  if (Serial1.available() == sizeof(receivedData)) {
+    Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
+    /*
+    data.yaw = int(receivedData.yaw);
+    data.pitch = int(receivedData.pitch);
+    data.roll = int(receivedData.roll);
+    data.temp = int(receivedData.temp);
+    data.humidity = int(receivedData.humidity);
+    data.pressure = int(receivedData.pressure);
+    */
+    data.yaw = receivedData.yaw;
+    data.pitch = receivedData.pitch;
+    data.roll = receivedData.roll;
+    data.temp = receivedData.temp;
+    data.humidity = receivedData.humidity;
+    // data.pressure = receivedData.pressure;
+    data.pressure = 9;
+  } else {
+    while (Serial1.available() > 0) { // Clear the buffer.
+      byte t = Serial1.read();
+      SerialUSB.println(t);
     }
   }
   /*

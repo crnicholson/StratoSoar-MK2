@@ -1,3 +1,6 @@
+// WARNING: 
+// This is still a work in progress! Code may not work!
+
 // Part of StratoSoar MK2.
 // autopilot.ino.
 // Charles Nicholson, 2023.
@@ -126,6 +129,7 @@ void setup() {
   pinMode(WAKEUP_PIN, OUTPUT);
   pinMode(FALSE_WAKEUP_PIN, INPUT);
   pinMode(BAT_VOLTAGE_PIN, INPUT);
+  pinMode(A2, OUTPUT);
   digitalWrite(LED, LOW);
   digitalWrite(ERR_LED, LOW);
   digitalWrite(RUDDER_BJT, HIGH);
@@ -135,6 +139,7 @@ void setup() {
   digitalWrite(ELEVATOR_FET, LOW);
   digitalWrite(PARACHUTE_FET, LOW);
   digitalWrite(WAKEUP_PIN, LOW);
+  digitalWrite(A2, LOW);
   Wire.begin();
 #ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
@@ -145,6 +150,8 @@ void setup() {
   Serial1.begin(BAUD_RATE); // Hardware serial connection to the ATMega and the IMU.
   longPulse(LED);           // Pulse LED to show power up.
   longPulse(ERR_LED);
+
+  I2CScan();
 
 #ifdef NEED_RUDDER
   rudderServo.attach(RUDDER_PIN);
@@ -256,8 +263,9 @@ void loop() {
 
   if (!spiral) {
     if (yawDifference<YAW_DFR_THRESHOLD | firstFive | yawDifference> abs(YAW_DFR_THRESHOLD)) {
-      shortPulse(LED);                      // Pulse LED to show we are running.
+      shortPulse(LED); // Pulse LED to show we are running.
 #ifdef DEVMODE
+      // streamData();
       displayData();
       delay(100);
 #endif
