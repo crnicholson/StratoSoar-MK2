@@ -158,7 +158,7 @@ void I2CScan() {
         SerialUSB.print("0");
       }
       SerialUSB.print(address, HEX);
-      SerialUSB.println("  !");
+      SerialUSB.println("!");
 
       ++nDevices;
     } else if (error == 4) {
@@ -172,7 +172,7 @@ void I2CScan() {
   if (nDevices == 0) {
     SerialUSB.println("No I2C devices found\n");
   } else {
-    SerialUSB.println("done\n");
+    SerialUSB.println("Done\n");
   }
 }
 
@@ -193,30 +193,30 @@ void getIMUData() {
   digitalWrite(A2, HIGH);
   delay(5);
   digitalWrite(A2, LOW);
-  delay(30); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bytes. 9600/200 =~ 20 ms. Add 10 ms for safety.
-  if (Serial1.available() == sizeof(receivedData)) {
-    Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
-    /*
-    data.yaw = int(receivedData.yaw);
-    data.pitch = int(receivedData.pitch);
-    data.roll = int(receivedData.roll);
-    data.temp = int(receivedData.temp);
-    data.humidity = int(receivedData.humidity);
-    data.pressure = int(receivedData.pressure);
-    */
-    data.yaw = receivedData.yaw;
-    data.pitch = receivedData.pitch;
-    data.roll = receivedData.roll;
-    data.temp = receivedData.temp;
-    data.humidity = receivedData.humidity;
-    // data.pressure = receivedData.pressure;
-    data.pressure = 9;
-  } else {
-    while (Serial1.available() > 0) { // Clear the buffer.
-      byte t = Serial1.read();
-      SerialUSB.println(t);
-    }
+  delay(100); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
+              // if (Serial1.available() == sizeof(receivedData)) {
+  SerialUSB.println("We got something!");
+  Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
+  /*
+  data.yaw = int(receivedData.yaw);
+  data.pitch = int(receivedData.pitch);
+  data.roll = int(receivedData.roll);
+  data.temp = int(receivedData.temp);
+  data.humidity = int(receivedData.humidity);
+  data.pressure = int(receivedData.pressure);
+  */
+  data.yaw = receivedData.yaw;
+  data.pitch = receivedData.pitch;
+  data.roll = receivedData.roll;
+  data.temp = receivedData.temp;
+  data.humidity = receivedData.humidity;
+  // data.pressure = receivedData.pressure;
+  // } else {
+  while (Serial1.available() > 0) { // Clear the buffer.
+    byte t = Serial1.read();
+    SerialUSB.println(t);
   }
+  // }
   /*
   if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
     byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU (the ATMega).

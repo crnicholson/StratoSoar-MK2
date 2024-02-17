@@ -262,12 +262,12 @@ void loop() {
   }
 
   if (!spiral) {
-    if (yawDifference<YAW_DFR_THRESHOLD | firstFive | yawDifference> abs(YAW_DFR_THRESHOLD)) {
+    if (yawDifference < YAW_DFR_THRESHOLD | firstFive | yawDifference > abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
 #ifdef DEVMODE
       // streamData();
       displayData();
-      delay(100);
+      delay(25);
 #endif
       moveRudder(data.servoPositionRudder); // Move servo and turn it off. Have the sleep in between to make sure there is minimal draw on the power supply.
       now = millis();

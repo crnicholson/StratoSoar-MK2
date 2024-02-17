@@ -84,7 +84,7 @@ float Mxyz[3];
 void setup() {
   pinMode(2, INPUT);
   Wire.begin();
-  BME280setI2Caddress(BME_ADDRESS);
+  // BME280setI2Caddress(BME_ADDRESS); This gave me many issues in testing, don't do it!
   BME280setup();
   mcuConn.begin(BAUD_RATE);
   accelgyro.initialize(); // Initialize MPU9250.
@@ -94,7 +94,11 @@ void setup() {
     ;
   Serial.println(accelgyro.testConnection() ? "MPU9250 is all good" : "MPU9250 is missing!"); // Verify connection.
 #endif
-  delay(10000);
+  delay(1000);
+  #ifdef DEVMODE
+  I2CScan();
+  #endif
+  delay(5000);
 }
 
 void loop() {
@@ -135,7 +139,7 @@ void loop() {
     data.temp = BME280temperature();  // Temp in C.
     data.humidity = BME280humidity();  // Humidity in %RH.
 
-    mcuConn.write((byte *)&test, sizeof(test));
+    mcuConn.write((byte *)&data, sizeof(data));
 
     /*
     byte yawSend = yaw / 2;
@@ -162,17 +166,19 @@ void loop() {
     mcuConn.write(negativeTemp);
     mcuConn.write(pressureSend);
     */
-
-#ifdef DEVMODE
-    Serial.print(yaw);
-    Serial.print(", ");
-    Serial.print(pitch);
-    Serial.print(", ");
-    Serial.print(temp);
-    Serial.print(", ");
-    Serial.println(pressure);
-#endif
   }
+#ifdef DEVMODE
+  data.temp = BME280temperature();  // Temp in C.
+  data.humidity = BME280humidity(); // Humidity in %RH.
+
+  Serial.print(data.yaw);
+  Serial.print(", ");
+  Serial.print(data.pitch);
+  Serial.print(", ");
+  Serial.print(data.temp);
+  Serial.print(", ");
+  Serial.println(data.humidity);
+#endif
 }
 
 void get_MPU_scaled(void) {
@@ -313,4 +319,40 @@ void vector_normalize(float a[3]) {
   a[0] /= mag;
   a[1] /= mag;
   a[2] /= mag;
+}
+
+void I2CScan() {
+  int nDevices = 0;
+
+  Serial.println("Scanning...");
+
+  for (byte address = 1; address < 127; ++address) {
+    // The i2c_scanner uses the return value of
+    // the Wire.endTransmission to see if
+    // a device did acknowledge to the address.
+    Wire.beginTransmission(address);
+    byte error = Wire.endTransmission();
+
+    if (error == 0) {
+      Serial.print("I2C device found at address 0x");
+      if (address < 16) {
+        Serial.print("0");
+      }
+      Serial.print(address, HEX);
+      Serial.println("!");
+
+      ++nDevices;
+    } else if (error == 4) {
+      Serial.print("Unknown error at address 0x");
+      if (address < 16) {
+        Serial.print("0");
+      }
+      Serial.println(address, HEX);
+    }
+  }
+  if (nDevices == 0) {
+    Serial.println("No I2C devices found\n");
+  } else {
+    Serial.println("Done\n");
+  }
 }
