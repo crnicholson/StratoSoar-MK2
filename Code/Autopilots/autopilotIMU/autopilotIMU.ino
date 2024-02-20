@@ -15,9 +15,6 @@
 // Please read this repo over before using this code: https://github.com/jremington/MPU-9250-AHRS.
 // Also note that I take no credit for the AHRS, only the interfacing between the autopilot and this sketch.
 
-// NOTE: For the autopilot to work correctly, SEND_MS has to be greater than the total delay in the autopilot.
-// Right now, it is greater, as SEND_MS is 1500, and the total delay in autopilot.vx.x is equal to 1000 ms.
-
 // ***** Calibration *****
 // Both the accelerometer and magnetometer MUST be properly calibrated for this program to work, and the gyro offset must be determined.
 // Follow the procedure described in http://sailboatinstruments.blogspot.com/2011/08/improved-magnetometer-calibration.html.
@@ -78,7 +75,10 @@ float Mxyz[3];
 #define gscale (250. / 32768.0) * (PI / 180.0) // Gyro default 250 LSB per d/s -> rad/s.
 
 void setup() {
-  pinMode(2, INPUT);
+  pinMode(LED, OUTPUT);
+  pinMode(WRITE_PIN, INPUT);
+  digitalWrite(LED, LOW);
+  longPulse(LED);
   Wire.begin();
   // BME280setI2Caddress(BME_ADDRESS); // This gave me many issues in testing, don't do it!
   BME280setup();
@@ -94,6 +94,7 @@ void setup() {
   #ifdef DEVMODE
   I2CScan();
   #endif
+  longPulse(LED);
   delay(5000);
 }
 
@@ -126,7 +127,7 @@ void loop() {
     data.yaw += 360.0;
   if (data.yaw > 360.0)
     data.yaw -= 360.0;
-  if (digitalRead(2)) {
+  if (digitalRead(WRITE_PIN)) {
     delay(10);
     data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
@@ -322,4 +323,20 @@ void I2CScan() {
   } else {
     Serial.println("Done\n");
   }
+}
+
+void longPulse(int pin) {
+  digitalWrite(pin, HIGH);
+  delay(250);
+  digitalWrite(pin, LOW);
+  delay(500);
+  digitalWrite(pin, HIGH);
+  delay(250);
+  digitalWrite(pin, LOW);
+}
+
+void shortPulse(int pin) {
+  digitalWrite(pin, HIGH);
+  delay(250);
+  digitalWrite(pin, LOW);
 }

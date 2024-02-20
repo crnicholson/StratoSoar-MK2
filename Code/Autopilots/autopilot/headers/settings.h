@@ -3,7 +3,7 @@
 // Change this file to match your needs.
 
 // Enables.
-#define DEVMODE // Toggle the serial monitor on and off.
+#define DEVMODE    // Toggle the serial monitor on and off.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
@@ -44,9 +44,9 @@
 #define LED 13              // Hardware pin 26. Pin that is connected to the main green LED.
 #define ERR_LED A0          // Hardware pin 3. Pin that connects ot the red error LED.
 #define BAT_VOLTAGE_PIN A1  // Hardware pin 7. Pin for battery voltage measurement.
-// #define GPIO A2 // Hardware pin 8. Unused GPIO on autopilot.
+#define WRITE_PIN A2        // Hardware pin 8. Pin that is driven high to receive serial data from the ATMega.
 // #define GPIO A3 // Hardware pin 9. Unused GPIO on autopilot.
-#define WIRELESS_RX A4 // Hardware oin 10. Pin that connects to the HCO5. More info in the docs.
+#define WIRELESS_RX A4 // Hardware pin 10. Pin that connects to the HCO5. More info in the docs.
 #define WIRELESS_TX A5 // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
@@ -56,8 +56,8 @@ double targetLat = 42.36011635715412, targetLon = -71.09414503280355; // MIT coo
 double testLat = 42.3165665, testLon = -71.33451619; // NEST coordinates.
 
 // Baud rates.
-#define SERIAL_BAUD_RATE 115200
-#define BAUD_RATE 9600
+#define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
+#define BAUD_RATE 9600          // Serial link to the ATMega.
 
 // EEPROM.
 #define MAX_ADDRESS 5000        // This is how many times you want to write to the EEPROM.

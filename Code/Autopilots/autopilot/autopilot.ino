@@ -7,10 +7,6 @@
 // Code for a low-power autonomous glider.
 // https://github.com/crnicholson/StratoSoar-MK2/.
 
-// ***** NOTE *****
-// For proper functionality, make sure the data transmission rate is more than the reading.
-// I.E. sendMs in autopilotIMU.vx.x is equal to 1500 and the combined delay in this sketch is equal to 1000 ms.
-
 // ***** Usage *****
 // 1. Change the values in "settings.h" to your liking. No values in "vars.h" have to be changed.
 // 2. Do the same to the program "autopilotIMU.ino".
@@ -38,15 +34,6 @@
 // Format code - add periods, capitalize, format above documentation
 // Write documentation
 // Change comments
-// Update for SAMD
-// Make it good
-// Work on the CHANGE_TARGET to get it smarter
-// Send a struct over serial to achieve more accurate data
-// Add parachute FETs and BJTs and parachute functions in general
-// Test if millis() is reset during sleep
-// Heading drift function (wake up every 500 ms to see how much the glider has moved from target heading)
-// Have the GPS not based on wakeups but on time
-// Update GPIOs on autopilot
 // Work on the wireless function
 
 #include <ArduinoLowPower.h>
@@ -129,7 +116,7 @@ void setup() {
   pinMode(WAKEUP_PIN, OUTPUT);
   pinMode(FALSE_WAKEUP_PIN, INPUT);
   pinMode(BAT_VOLTAGE_PIN, INPUT);
-  pinMode(A2, OUTPUT);
+  pinMode(WRITE_PIN, OUTPUT);
   digitalWrite(LED, LOW);
   digitalWrite(ERR_LED, LOW);
   digitalWrite(RUDDER_BJT, HIGH);
@@ -139,7 +126,7 @@ void setup() {
   digitalWrite(ELEVATOR_FET, LOW);
   digitalWrite(PARACHUTE_FET, LOW);
   digitalWrite(WAKEUP_PIN, LOW);
-  digitalWrite(A2, LOW);
+  digitalWrite(WRITE_PIN, LOW);
   Wire.begin();
 #ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.

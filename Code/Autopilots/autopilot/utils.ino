@@ -190,9 +190,9 @@ void getIMUData() {
     byte t = Serial1.read();
     SerialUSB.println(t);
   }
-  digitalWrite(A2, HIGH);
+  digitalWrite(WRITE_PIN, HIGH);
   delay(5);
-  digitalWrite(A2, LOW);
+  digitalWrite(WRITE_PIN, LOW);
   delay(100); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
   // if (Serial1.available() == sizeof(receivedData)) {
 #ifdef DEVMODE
