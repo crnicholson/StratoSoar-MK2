@@ -194,53 +194,24 @@ void getIMUData() {
   delay(5);
   digitalWrite(A2, LOW);
   delay(100); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
-              // if (Serial1.available() == sizeof(receivedData)) {
-  SerialUSB.println("We got something!");
-  Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
-  /*
-  data.yaw = int(receivedData.yaw);
-  data.pitch = int(receivedData.pitch);
-  data.roll = int(receivedData.roll);
-  data.temp = int(receivedData.temp);
-  data.humidity = int(receivedData.humidity);
-  data.pressure = int(receivedData.pressure);
-  */
-  data.yaw = receivedData.yaw;
-  data.pitch = receivedData.pitch;
-  data.roll = receivedData.roll;
-  data.temp = receivedData.temp;
-  data.humidity = receivedData.humidity;
-  // data.pressure = receivedData.pressure;
-  // } else {
-  while (Serial1.available() > 0) { // Clear the buffer.
-    byte t = Serial1.read();
-    SerialUSB.println(t);
-  }
-  // }
-  /*
-  if (Serial1.available() >= 6) {     // Check to see how many bytes we have to read.
-    byte yawReceive = Serial1.read(); // Read the transmitted bytes from autopilotIMU (the ATMega).
-    byte pitchReceive = Serial1.read();
-    byte negativePitch = Serial1.read();
-    byte tempReceive = Serial1.read();
-    byte negativeTemp = Serial1.read();
-    byte pressureReceive = Serial1.read();
-
-    data.yaw = int(yawReceive) * 2;             // Convert the received byte back to an integer.
-    data.pitch = int(pitchReceive);             // Convert the received byte back to an integer.
-    data.temp = int(tempReceive);               // Convert the received byte back to an integer.
-    data.pressure = int(pressureReceive) * 500; // Convert the received byte back to an integer.
-
-    if (negativePitch == 1) { // Making some things negative if needed.
-      data.pitch = data.pitch * -1;
-    }
-
-    if (negativeTemp == 1) {
-      data.temp = data.temp * -1;
+  // if (Serial1.available() == sizeof(receivedData)) {
+#ifdef DEVMODE
+    SerialUSB.println("We got something!");
+#endif
+    Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
+    data.yaw = receivedData.yaw;
+    data.pitch = receivedData.pitch;
+    data.roll = receivedData.roll;
+    data.temp = receivedData.temp / 100;         // In Celsius.
+    data.humidity = receivedData.humidity / 100; // In relative humidity.
+    data.pressure = receivedData.pressure / 100; // In hPa.
+    // } else {
+    while (Serial1.available() > 0) { // Clear the buffer.
+      byte t = Serial1.read();
+      SerialUSB.println(t);
     }
   }
-  */
-}
+// }
 
 void calculate() {
   data.turnAngle = turningAngle(data.lat, data.lon, data.yaw, targetLat, targetLon);

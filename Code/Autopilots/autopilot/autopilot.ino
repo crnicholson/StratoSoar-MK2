@@ -93,9 +93,9 @@ struct __attribute__((packed)) dataStruct {
   int day;
   int month;
   int year;
-  int temp;
-  int pressure;
-  int humidity;
+  float temp; // In Celsius.
+  float pressure; // In hPa.
+  float humidity; // In relative humidity.
   int yaw;
   int pitch;
   int roll;
@@ -111,7 +111,7 @@ struct __attribute__((packed)) dataStructIMU {
   float roll;
   float yaw;
   long temp;
-  // int32_t pressure;
+  int32_t pressure;
   long humidity;
 } receivedData;
 

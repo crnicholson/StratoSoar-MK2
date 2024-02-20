@@ -33,20 +33,16 @@
 // ***** To-Do *****
 // Format code - add periods, capitalize, format above documentation
 // Write documentation
-// Add DEVMODE
-// Capitalize #defines
-// Add MPU cal sketch
 
 #include <SoftwareSerial.h>
 #include <TinyBME280.h>
-#include <Wire.h> // Try "Wire.h" if doesn't work.
+#include <Wire.h>
 #include "headers/settings.h" // Change settings here.
 #include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
 #include "src/MPU9250.h"      // Credit: https://github.com/jremington/MPU-9250-AHRS
 
 unsigned long now = 0, last = 0;   // Micros() timers.
 float deltat = 0;                  // Loop time in seconds.
-unsigned long now_ms, last_ms = 0; // Millis() timers.
 
 static float q[4] = {1.0, 0.0, 0.0, 0.0}; // Vector to hold quaternion.
 
@@ -55,7 +51,7 @@ struct __attribute__((packed)) dataStruct {
   float roll;
   float yaw;
   long temp;
-  // int32_t pressure;
+  int32_t pressure;
   long humidity;
 } data;
 
@@ -84,7 +80,7 @@ float Mxyz[3];
 void setup() {
   pinMode(2, INPUT);
   Wire.begin();
-  // BME280setI2Caddress(BME_ADDRESS); This gave me many issues in testing, don't do it!
+  // BME280setI2Caddress(BME_ADDRESS); // This gave me many issues in testing, don't do it!
   BME280setup();
   mcuConn.begin(BAUD_RATE);
   accelgyro.initialize(); // Initialize MPU9250.
@@ -130,42 +126,13 @@ void loop() {
     data.yaw += 360.0;
   if (data.yaw > 360.0)
     data.yaw -= 360.0;
-  now_ms = millis(); // Time to send data?
-  // if (now_ms - last_ms >= SEND_MS) {
   if (digitalRead(2)) {
     delay(10);
-    last_ms = now_ms;
-    // data.pressure = BME280pressure(); // Pressure in Pa.
+    data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
     data.humidity = BME280humidity();  // Humidity in %RH.
 
     mcuConn.write((byte *)&data, sizeof(data));
-
-    /*
-    byte yawSend = yaw / 2;
-    byte pressureSend = pressure / 500;
-    byte negativePitch = 0;
-    byte negativeTemp = 0;
-    byte pitchSend;
-    byte tempSend;
-
-    if (pitch < 0) {
-      pitchSend = pitch * -1;
-      negativePitch = 1;
-    }
-
-    if (temp < 0) {
-      tempSend = temp * -1;
-      negativeTemp = 1;
-    }
-
-    mcuConn.write(yawSend);
-    mcuConn.write(pitchSend);
-    mcuConn.write(negativePitch);
-    mcuConn.write(tempSend);
-    mcuConn.write(negativeTemp);
-    mcuConn.write(pressureSend);
-    */
   }
 #ifdef DEVMODE
   data.temp = BME280temperature();  // Temp in C.
