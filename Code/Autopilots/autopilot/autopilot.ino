@@ -311,6 +311,6 @@ void loop() {
       LowPower.deepSleep(500); // If the heading drift is below the threshold, sleep for 500 ms and repeat the cycle until the heading drift is above threshold.
     }
   } else {
-    LowPower.deepSleep(500); // If spiraling, skip above section and wakeup every 500 ms only to check GPS to see if it's time to open the parachute.
+    LowPower.deepSleep(SPIRAL_SLEEP); // If spiraling, skip above section and wakeup every "SPIRAL_SLEEP" ms only to check GPS to see if it's time to open the parachute.
   }
 }

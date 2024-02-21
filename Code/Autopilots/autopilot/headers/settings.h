@@ -17,7 +17,7 @@
 
 // Sleep time settings.
 #define SPIRAL_SLEEP 500 // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
-#define 
+#define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before
 
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
