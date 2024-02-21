@@ -1,4 +1,4 @@
-// WARNING: 
+// WARNING:
 // This is still a work in progress! Code may not work!
 
 // Part of StratoSoar MK2.
@@ -44,7 +44,8 @@
 
 #define pi 3.14159265358979323846
 
-int eepromAddress, counter, now, start, ms, last, yawDifference;
+int eepromAddress, counter, now, start, ms, last, yawDifference, nowEEPROM;
+int lastEEPROM = 123456;
 int lastYaw = 361;
 bool spiral = false;
 bool runEEPROM = true;
@@ -80,7 +81,7 @@ struct __attribute__((packed)) dataStruct {
   int day;
   int month;
   int year;
-  float temp; // In Celsius.
+  float temp;     // In Celsius.
   float pressure; // In hPa.
   float humidity; // In relative humidity.
   int yaw;
@@ -248,21 +249,20 @@ void loop() {
     yawDifference = YAW_DFR_THRESHOLD + 1;
   }
 
+  // If the glider is in the fist five minutes of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
   if (!spiral) {
-    if (yawDifference < YAW_DFR_THRESHOLD | firstFive | yawDifference > abs(YAW_DFR_THRESHOLD)) {
+    if (yawDifference<YAW_DFR_THRESHOLD | firstFive | yawDifference> abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
 #ifdef DEVMODE
-      // streamData();
       displayData();
       delay(25);
 #endif
-      moveRudder(data.servoPositionRudder); // Move servo and turn it off. Have the sleep in between to make sure there is minimal draw on the power supply.
+      moveRudder(data.servoPositionRudder); // Move servo and turn it off.
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
-      if (ms < 300000) {
-        // LowPower.deepSleep(500);
-        delay(500);
+      if (ms < 300000) { // Check if it is still the first five.
+        LowPower.deepSleep(500);
         firstFive = true;
       } else {
         LowPower.deepSleep(500);
@@ -276,21 +276,34 @@ void loop() {
 #endif
 #ifdef USE_EEPROM
       // This saves to an external EEPROM (AT24Cx) so we can get some data.
-      if (runEEPROM) {
-        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2)); // Making some things a byte to save space.
-        delay(10);
-        eepromAddress++;
-        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pitch));
-        delay(10);
-        eepromAddress++;
-        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.temp));
-        delay(10);
-        eepromAddress++;
-        writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pressure / 500));
-        delay(10);
-        eepromAddress++;
-        if (eepromAddress >= MAX_ADDRESS) {
-          runEEPROM = false;
+      // EEPROM calculations:
+      // 512 kilobits, with one byte written at a time. 512,000 / 8 = 64,000. We write four different data points, so 64,000 / 4 = 16,000. There are 21,600 seconds in a six hour flight, so 21,600 / 16,000 = 1.35. We can round that up to 1.5 seconds.
+      // If we write to the EEPROM every 1.5 seconds, we won't fill up over a six hour flight.
+      if (eepromAddress < MAX_ADDRESS - 200) {
+        nowEEPROM = millis();
+        lastEEPROM - nowEEPROM = msEEPROM;
+        if (msEEPROM > WRITE_TIME) {
+          lastEEPROM = nowEEPROM;
+          if (sizeof(int(data.yaw / 2)) == 1) {
+            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2));
+            delay(10);
+            eepromAddress++;
+          }
+          if (sizeof(int(data.pitch) == 1) {
+            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pitch));
+            delay(10);
+            eepromAddress++;
+          }
+          if (sizeof(int(data.temp) == 1) {
+            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.temp));
+            delay(10);
+            eepromAddress++;
+          }
+          if (sizeof(int(data.pressure / 500) == 1) {
+            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pressure / 500));
+            delay(10);
+            eepromAddress++;
+          }
         }
       }
 #endif

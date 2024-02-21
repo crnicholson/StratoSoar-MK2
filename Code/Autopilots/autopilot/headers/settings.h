@@ -15,6 +15,10 @@
 // #define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 
+// Sleep time settings.
+#define SPIRAL_SLEEP 500 // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
+#define 
+
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
@@ -60,8 +64,9 @@ double testLat = 42.3165665, testLon = -71.33451619; // NEST coordinates.
 #define BAUD_RATE 9600          // Serial link to the ATMega.
 
 // EEPROM.
-#define MAX_ADDRESS 5000        // This is how many times you want to write to the EEPROM.
+#define MAX_ADDRESS 64000       // This is how many 8 bit pages your EEPROM has, 64,000 for a 512 kilobit EEPROM.
 #define EEPROM_I2C_ADDRESS 0x50 // I2C address of the EEPROM.
+#define WRITE_TIME 1.5          // The seconds between EEPROM writings as calculated previously.
 
 // Servo objects and names.
 #ifdef NEED_RUDDER
