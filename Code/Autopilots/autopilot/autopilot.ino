@@ -36,11 +36,11 @@
 // Change comments
 // Work on the wireless function
 
+#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 #include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
-#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 
 #define pi 3.14159265358979323846
 
@@ -190,7 +190,7 @@ void loop() {
   if (!firstFive | !spiral) {
     now = millis();
     ms = now - last;
-    if (ms > 30000) {
+    if (ms > GPS_SLEEP) {
       gpsWakeup();  // Wakeup GPS.
       waitForFix(); // Wait for a fix to get data from the GPS, and put the received data into the struct.
       last = millis();
@@ -258,17 +258,18 @@ void loop() {
       delay(25);
 #endif
       moveRudder(data.servoPositionRudder); // Move servo and turn it off.
+      LowPower.deepSleep(200); // Have a small delay to release the draw on the power supply.
+      moveElevator(data.servoPositionElevator); // Move servo and turn it off.
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
       if (ms < 300000) { // Check if it is still the first five.
-        LowPower.deepSleep(500);
+        LowPower.deepSleep(ABV_THRS_FRST_FVE_SLP-200);
         firstFive = true;
       } else {
-        LowPower.deepSleep(500);
+        LowPower.deepSleep(ABOVE_THRESHOLD_SLEEP-200);
         firstFive = false;
       }
-      moveElevator(data.servoPositionElevator); // Move servo and turn it off.
 #ifdef DIVE_STALL
       if (TOO_SLOW <= 5) {
         elevatorServo.write(115); // Dive down when stalled.
@@ -308,7 +309,7 @@ void loop() {
       }
 #endif
     } else {
-      LowPower.deepSleep(500); // If the heading drift is below the threshold, sleep for 500 ms and repeat the cycle until the heading drift is above threshold.
+      LowPower.deepSleep(BELOW_THRESHOLD_SLEEP); // If the heading drift is below the threshold, sleep for 500 ms and repeat the cycle until the heading drift is above threshold.
     }
   } else {
     LowPower.deepSleep(SPIRAL_SLEEP); // If spiraling, skip above section and wakeup every "SPIRAL_SLEEP" ms only to check GPS to see if it's time to open the parachute.

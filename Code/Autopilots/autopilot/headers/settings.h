@@ -16,8 +16,11 @@
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 
 // Sleep time settings.
+#define GPS_SLEEP 30000 // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. 
 #define SPIRAL_SLEEP 500 // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
-#define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before
+#define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
+#define ABOVE_THRESHOLD_SLEEP 500 // If the yaw is above the threshold, the glider will sleep for this long. Note that 200 will be subtracted from this because there was a 200 ms delay in between moving servos.
+#define ABV_THRS_FRST_FVE_SLP 500 // If the yaw is above the threshold and if the glider is in the first five minutes of flight, the glider will for this long. Same note as above, too. 
 
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
