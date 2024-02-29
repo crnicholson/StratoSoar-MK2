@@ -189,4 +189,4 @@ Reach out to me at [charlienicholsonr@gmail.com](mailto:charlienicholsonr@gmail.
 
 ## License
 
-Both the software and documentation are under the MIT license. The hardware is under Solderpad v2.0. The 3D files are currently unlicensed. The media is unlicensed for logo protection. 
+Both the software and documentation are under the GNU GPL v3 license. The hardware and the 3D files are under the CERN Open Hardware Licence Version 2 - Strongly Reciprocal. The media is under the CC BY 4.0 DEED. 
