@@ -189,4 +189,4 @@ Reach out to me at [charlienicholsonr@gmail.com](mailto:charlienicholsonr@gmail.
 
 ## License
 
-Both the software and documentation are under the GNU GPL v3 license. The hardware and the 3D files are under the CERN Open Hardware Licence Version 2 - Strongly Reciprocal. The media is under the CC BY 4.0 DEED. 
+Both the software and documentation are under the [GNU GPL v3 license](https://choosealicense.com/licenses/gpl-3.0/). The hardware and the 3D files are under the [CERN Open Hardware Licence Version 2 - Strongly Reciprocal](https://choosealicense.com/licenses/cern-ohl-s-2.0/). The media is under the [CC BY 4.0 DEED](https://creativecommons.org/licenses/by/4.0/). 
