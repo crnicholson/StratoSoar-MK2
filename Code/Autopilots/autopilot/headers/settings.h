@@ -1,6 +1,6 @@
 /*
 settings.h, part of StratoSoar MK2, for an autonomous glider.
-Copyright (C) 2023 Charles Nicholson
+Copyright (C) 2024 Charles Nicholson
 
 This program is free software: you can redistribute it and/or modify 
 it under the terms of the GNU General Public License as published by
