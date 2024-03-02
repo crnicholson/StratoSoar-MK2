@@ -157,7 +157,7 @@ If you don't want to wait, you can order all the parts for the PCB from the BOM,
 ## Funding 
 We currently have very limited funding to complete this project. We would love any outside support we could get to elevate (no pun intended) this project to the next level. Reach out to me if you have interest at:
 
-- [newbsballoons@gmail.com](mailto:newbsballoons@gmail.com)  (orginization email, recommended).
+- [newbsballoons@gmail.com](mailto:newbsballoons@gmail.com)  (organization email, recommended).
 - [charlienicholsonr@gmail.com](mailto:charlienicholsonr@gmail.com)  (personal email).
 
 ## Special Thanks
