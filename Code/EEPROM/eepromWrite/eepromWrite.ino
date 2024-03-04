@@ -16,16 +16,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// Simply upload this code to the main MCU (SAMD21G18A) to write data
+// Simply upload this code to the main MCU (SAMD21G18A) to write data to the EEPROM.
 
-
-// IMPORTANT: settings.h must be the same file as in the autopilot directory.
+// IMPORTANT: copy and paste pin definitions from main settings.h if you've changed the pins and aren't using the PCB.
 // Stupid Arduino doesn't allow for relative paths...
 
-#include "settings.h"
-#include <Wire.h>
+#define RUDDER_PIN 2        // Hardware pin 23. Servo signal pin that attaches to "input" of BJT.
+#define ELEVATOR_PIN 3      // Hardware pin 14. Servo signal pin that attaches to "input" of BJT.
+#define PARACHUTE_PIN 4     // Hardware pin 13. Servo signal pin that attaches to "input" of BJT.
+#define RUDDER_FET 5        // Hardware pin 24. Pin that attaches to switching part of FET. This allows the servo to be turned on.
+#define ELEVATOR_FET 6      // Hardware pin 29. Pin that attaches to switching part of FET. This allows the servo to be turned on.
+#define PARACHUTE_FET 7     // Hardware pin 30. Pin that attaches to switching part of FET. This allows the servo to be turned on.
+#define RUDDER_BJT 8        // Hardware pin 11. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define PARACHUTE_BJT 9     // Hardware pin 12. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define ELEVATOR_BJT 10     // Hardware pin 27. Pin that attaches to switching part of BJT. This allows the signal to pass to the servo.
+#define WAKEUP_PIN 11       // Hardware pin 25. Pin that attaches to the EXTINT of ublox module.
+#define FALSE_WAKEUP_PIN 12 // Hardware pin 28. Pin that is used for the interrupt that puts the glider into deep sleep. Do not connect anything.
+#define LED 13              // Hardware pin 26. Pin that is connected to the main green LED.
+#define ERR_LED A0          // Hardware pin 3. Pin that connects ot the red error LED.
+#define BAT_VOLTAGE_PIN A1  // Hardware pin 7. Pin for battery voltage measurement.
+#define WRITE_PIN A2        // Hardware pin 8. Pin that is driven high to receive serial data from the ATMega.
+// #define GPIO A3 // Hardware pin 9. Unused GPIO on autopilot.
+#define WIRELESS_RX A4 // Hardware pin 10. Pin that connects to the HCO5. More info in the docs.
+#define WIRELESS_TX A5 // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
-#define WRITE_TIME 10 // How many ms before writing a byte to the EEPROM?
+// IMPORTANT: include EEPROM settings from main settings.h file. Delete WRITE_TIME line.
+#define MAX_ADDRESS 64000       // This is how many 8 bit pages your EEPROM has, 64,000 for a 512 kilobit EEPROM.
+#define EEPROM_I2C_ADDRESS 0x50 // I2C address of the EEPROM.
+
+// Other settings.
+#define WRITE_TIME 10           // Milliseconds between writing a byte.
+#define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
+
+#include <Wire.h>
 
 long address, start;
 
@@ -57,7 +80,7 @@ void setup() {
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
 
-  SerialUSB.begin(9600);
+  SerialUSB.begin(SERIAL_BAUD_RATE);
   SerialUSB.print("Time estimate in seconds: ");
   SerialUSB.println(timeEstimate);
   SerialUSB.println("Beginning writing in ten seconds...");
@@ -72,6 +95,7 @@ void loop() {
       writeToEEPROM(EEPROM_I2C_ADDRESS, address, counter);
       counter++;
       address++;
+      delay(WRITE_TIME);
     } else {
       counter = 0;
     }
