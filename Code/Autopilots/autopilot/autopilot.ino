@@ -21,10 +21,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // https://github.com/crnicholson/StratoSoar-MK2/.
 
+// ***** Writing below is a bit outdated, I'm working on it. *****
+
 // ***** Usage *****
 // 1. Change the values in "settings.h" to your liking. No values in "vars.h" have to be changed.
 // 2. Do the same to the program "autopilotIMU.ino".
-// 3. Upload the program "autopilot.ino" to the USB on the tracker board. Use the profile "Arduino Zero (Native USB Board)".
+// 3. Upload the program "autopilot.ino" to the USB on the autopilot board. Use the profile "Arduino Zero (Native USB Board)".
 // 4. Upload the program "autopilotIMU.ino" to the FTDI port on the tracker board. Use the profile "Arduino Pro Mini, 3.3v, 8MHz".
 
 // ***** Why Two MCUs? ****
@@ -35,10 +37,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // The ATMega is low-power enough without sleep modes, so all is well, unlike the SAMD, which takes some more power.
 
 // ***** Calculations and Principles *****
-// Once data has been received over serial, calculations to move the servos are made. The first one tis
 
 // ***** Servos *****
-// MOSFETs are used in this program to turn the servos on and off to save power.The one I use is the 30N06L, a logic level N - Channel FET.I also use an NPN BJT(2N3906) to power on and off the PWM line.I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino.
+// MOSFETs are used in this program to turn the servos on and off to save power. 
+// The one I use is the 30N06L, a logic level N - Channel FET. 
+// I also use an NPN BJT(2N3906) to power on and off the PWM line.
+// I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino.
 
 // ***** Low-Power *****
 
@@ -50,7 +54,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change comments
 // Work on the wireless function
 
-#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
+#include "settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 #include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
@@ -58,12 +62,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #define pi 3.14159265358979323846
 
-int eepromAddress, counter, now, start, ms, last, yawDifference, nowEEPROM;
-int lastEEPROM = 123456;
+int yawDifference, nowEEPROM;
+long lastEEPROM = 123456;
 int lastYaw = 361;
 bool spiral = false;
 bool runEEPROM = true;
 bool firstFive = true;
+long eepromAddress, start, now, ms, last
 
 // Setpoint and input variables.
 double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
@@ -295,10 +300,8 @@ void loop() {
       // 512 kilobits, with one byte written at a time. 512,000 / 8 = 64,000. We write four different data points, so 64,000 / 4 = 16,000. There are 21,600 seconds in a six hour flight, so 21,600 / 16,000 = 1.35. We can round that up to 1.5 seconds.
       // If we write to the EEPROM every 1.5 seconds, we won't fill up over a six hour flight.
       if (eepromAddress < MAX_ADDRESS - 200) {
-        nowEEPROM = millis();
-        lastEEPROM - nowEEPROM = msEEPROM;
-        if (msEEPROM > WRITE_TIME) {
-          lastEEPROM = nowEEPROM;
+        if (lastEEPROM - millis() > WRITE_TIME) {
+          lastEEPROM = millis();
           if (sizeof(int(data.yaw / 2)) == 1) {
             writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2));
             delay(10);

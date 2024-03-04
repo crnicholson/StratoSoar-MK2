@@ -51,7 +51,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define SPIRAL_ALT_THRESHOLD 600    // If the glider is above this, and the distance is less than SPIRAL_DST_THRESHOLD, spiral the glider down.
 #define SPIRAL_DST_THRESHOLD 100    // If the glider is above SPIRAL_ALT_THRESHOLD, and the distance is less than this, spiral the glider down.
 
-// Pins (checked with breadboard, code, and schematic on Feb 1st, 2024. Last change to pins was before Feb 1st.)
+// Pins. NOTE do not change these if you are using the PCB.
+// (checked with breadboard, code, and schematic on Feb 1st, 2024. Last change to pins was before Feb 1st.)
 // SPI is available (unused) on hardware pins 19-22. This will be on the GPIO header of the autopilot.
 // I2C is used on hardware pins 31 and 32. Also on GPIO header of autopilot.
 // Serial1 is used on 15 and 16 (Arduino pins 1 and 0 respectively).
