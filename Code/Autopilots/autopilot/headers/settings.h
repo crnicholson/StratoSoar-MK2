@@ -30,7 +30,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define NEED_ELEVATOR // Enable the elevator servo.
 #define NEED_RUDDER   // Enable the rudder servo.
 // #define DIVE_STALL    // Dive down when speed gets too low.
-// #define USE_EEPROM // Toggle the usage of the EEPROM.
+#define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 
 // Sleep time settings.

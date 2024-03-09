@@ -315,22 +315,22 @@ if (yawDifference<YAW_DFR_THRESHOLD) {
       if (eepromAddress < MAX_ADDRESS - 200) {
         if (lastEEPROM - millis() > WRITE_TIME) {
           lastEEPROM = millis();
-          if (sizeof(int(data.yaw / 2)) == 1) {
+          if (sizeof(int(data.yaw / 2)) <= 1) {
             writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2));
             delay(10);
             eepromAddress++;
           }
-          if (sizeof(int(data.pitch) == 1) {
+          if (sizeof(int(data.pitch)) <= 1) {
             writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pitch));
             delay(10);
             eepromAddress++;
           }
-          if (sizeof(int(data.temp) == 1) {
+          if (sizeof(int(data.temp)) <= 1) {
             writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.temp));
             delay(10);
             eepromAddress++;
           }
-          if (sizeof(int(data.pressure / 500) == 1) {
+          if (sizeof(int(data.pressure / 500)) <= 1) {
             writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pressure / 500));
             delay(10);
             eepromAddress++;
