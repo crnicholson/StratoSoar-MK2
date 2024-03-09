@@ -29,8 +29,8 @@ double toDegrees(double rad) {
 
 double turningAngle(double cLat, double cLon, double head, double tLat, double tLon) {
   double a = azimuth(cLat, cLon, tLat, tLon);
-  double h = toRadians(h);
-  double angle = a - head;
+  double h = toRadians(head);
+  double angle = a - h;
   if (angle < -pi)
     angle += 2 * pi;
   if (angle > pi)
@@ -120,7 +120,7 @@ void moveRudder(int degrees) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
   rudderServo.write(degrees);
-  LowPower.deepSleep(200);
+  delay(300);
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
 }
@@ -129,9 +129,9 @@ void moveElevator(int degrees) {
   digitalWrite(ELEVATOR_FET, HIGH); // Turn servo on.
   digitalWrite(ELEVATOR_BJT, LOW);  // Turn signal line on.
   elevatorServo.write(degrees);
-  LowPower.deepSleep(200);
+  delay(300);
   digitalWrite(ELEVATOR_BJT, HIGH);
-  digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves additional ~4 mA per servo.
+  digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves an  additional ~4 mA per servo.
 }
 
 void readVoltage() {
@@ -213,9 +213,6 @@ void getIMUData() {
   digitalWrite(WRITE_PIN, LOW);
   delay(100); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
   // if (Serial1.available() == sizeof(receivedData)) {
-#ifdef DEVMODE
-    SerialUSB.println("We got something!");
-#endif
     Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
     data.yaw = receivedData.yaw;
     data.pitch = receivedData.pitch;

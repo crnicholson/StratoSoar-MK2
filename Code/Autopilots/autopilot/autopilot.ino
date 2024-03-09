@@ -13,7 +13,7 @@ the Free Software Foundation, either version 3 of the License, or
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU General Public License for more details.                                                                                        
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
@@ -54,11 +54,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change comments
 // Work on the wireless function
 
-#include "settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
+
 #include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
+#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 
 #define pi 3.14159265358979323846
 
@@ -68,7 +69,7 @@ int lastYaw = 361;
 bool spiral = false;
 bool runEEPROM = true;
 bool firstFive = true;
-long eepromAddress, start, now, ms, last
+long eepromAddress, start, now, ms, last;
 
 // Setpoint and input variables.
 double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
@@ -153,7 +154,10 @@ void setup() {
   while (!SerialUSB) {
     ; // Wait for serial to connect
   }
+
+  SerialUSB.println("StratoSoar MK2.0 Flight Controller");
 #endif
+
   Serial1.begin(BAUD_RATE); // Hardware serial connection to the ATMega and the IMU.
   longPulse(LED);           // Pulse LED to show power up.
   longPulse(ERR_LED);
@@ -258,7 +262,7 @@ void loop() {
     // Once the parachute is open, this script skips over the moving servos function and instead goes to an infinite sleep.
     gps.powerOffWithInterrupt(0, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // Only wakeup with an interrupt (I think).
     LowPower.attachInterruptWakeup(FALSE_WAKEUP_PIN, onWake, CHANGE);
-    LowPower.deepSleep(); // No way to wakeup now!
+    delay(); // No way to wakeup now!
   }
 #endif
 
@@ -268,25 +272,34 @@ void loop() {
     yawDifference = YAW_DFR_THRESHOLD + 1;
   }
 
+#ifdef DEVMODE
+if (yawDifference<YAW_DFR_THRESHOLD) {
+  SerialUSB.println("Within threshold.");
+  displayData();
+  delay(25);
+}
+#endif
+
   // If the glider is in the fist five minutes of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
   if (!spiral) {
-    if (yawDifference<YAW_DFR_THRESHOLD | firstFive | yawDifference> abs(YAW_DFR_THRESHOLD)) {
+    if (firstFive | yawDifference> abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
 #ifdef DEVMODE
+      SerialUSB.println("Out of threshold.");
       displayData();
       delay(25);
 #endif
       moveRudder(data.servoPositionRudder); // Move servo and turn it off.
-      LowPower.deepSleep(200); // Have a small delay to release the draw on the power supply.
+      delay(100); // Have a small delay to release the draw on the power supply.
       moveElevator(data.servoPositionElevator); // Move servo and turn it off.
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
       if (ms < 300000) { // Check if it is still the first five.
-        LowPower.deepSleep(ABV_THRS_FRST_FVE_SLP-200);
+        delay(ABV_THRS_FRST_FVE_SLP-200);
         firstFive = true;
       } else {
-        LowPower.deepSleep(ABOVE_THRESHOLD_SLEEP-200);
+        delay(ABOVE_THRESHOLD_SLEEP-200);
         firstFive = false;
       }
 #ifdef DIVE_STALL
@@ -326,9 +339,9 @@ void loop() {
       }
 #endif
     } else {
-      LowPower.deepSleep(BELOW_THRESHOLD_SLEEP); // If the heading drift is below the threshold, sleep for 500 ms and repeat the cycle until the heading drift is above threshold.
+      delay(BELOW_THRESHOLD_SLEEP); // If the heading drift is below the threshold, sleep and repeat the cycle until the heading drift is above threshold.
     }
   } else {
-    LowPower.deepSleep(SPIRAL_SLEEP); // If spiraling, skip above section and wakeup every "SPIRAL_SLEEP" ms only to check GPS to see if it's time to open the parachute.
+    delay(SPIRAL_SLEEP); // If spiraling, skip above section and wakeup every "SPIRAL_SLEEP" ms only to check GPS to see if it's time to open the parachute.
   }
 }

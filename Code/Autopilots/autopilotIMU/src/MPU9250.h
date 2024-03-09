@@ -53,7 +53,7 @@ THE SOFTWARE.
 
 #define MPU9250_ADDRESS_AD0_LOW     0x68 // address pin low (GND), default for InvenSense evaluation board
 #define MPU9250_ADDRESS_AD0_HIGH    0x69 // address pin high (VCC)
-#define MPU9250_DEFAULT_ADDRESS     MPU9250_ADDRESS_AD0_HIGH
+#define MPU9250_DEFAULT_ADDRESS     MPU9250_ADDRESS_AD0_LOW
 
 #define MPU9250_RA_XG_OFFS_TC       0x00 //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU9250_RA_YG_OFFS_TC       0x01 //[7] PWR_MODE, [6:1] YG_OFFS_TC, [0] OTP_BNK_VLD
