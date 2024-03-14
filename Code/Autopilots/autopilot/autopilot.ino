@@ -5,7 +5,7 @@
 autopilot.ino, part of StratoSoar MK2, for an autonomous glider.
 Copyright (C) 2024 Charles Nicholson
 
-This program is free software: you can redistribute it and/or modify 
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -13,7 +13,7 @@ the Free Software Foundation, either version 3 of the License, or
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.                                                                                        
+GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
@@ -39,10 +39,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // ***** Calculations and Principles *****
 
 // ***** Servos *****
-// MOSFETs are used in this program to turn the servos on and off to save power. 
-// The one I use is the 30N06L, a logic level N - Channel FET. 
-// I also use an NPN BJT(2N3906) to power on and off the PWM line.
-// I do this so when the FET is low, ground can't go through the servo PWM (signal) line, which would damage the servo and the Arduino.
+// MOSFETs are used in this program to turn the servos on and off to save power.
+// I also use an NPN BJT (2N3906) to power on and off the PWM line.
+// I do this so when the FET is low, ground can't go through the servo PWM (signal) line,
+// which would damage the servo and the SAMD.
 
 // ***** Low-Power *****
 
@@ -53,7 +53,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Write documentation
 // Change comments
 // Work on the wireless function
-
 
 #include <ArduinoLowPower.h>
 #include <Servo.h>
@@ -149,13 +148,14 @@ void setup() {
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
   Wire.begin();
+
 #ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
   while (!SerialUSB) {
     ; // Wait for serial to connect
   }
 
-  SerialUSB.println("StratoSoar MK2.0 Flight Controller");
+  SerialUSB.println("StratoSoar MK2.x Flight Controller");
 #endif
 
   Serial1.begin(BAUD_RATE); // Hardware serial connection to the ATMega and the IMU.
@@ -205,7 +205,7 @@ void setup() {
 #endif
   delay(20000);
   start = millis();
-  last = millis();
+  last = start;
 }
 
 void loop() {
@@ -273,33 +273,33 @@ void loop() {
   }
 
 #ifdef DEVMODE
-if (yawDifference<YAW_DFR_THRESHOLD) {
-  SerialUSB.println("Within threshold.");
-  displayData();
-  delay(25);
-}
+  if (yawDifference < YAW_DFR_THRESHOLD) {
+    SerialUSB.println("Within threshold.");
+    displayData();
+    delay(25);
+  }
 #endif
 
   // If the glider is in the fist five minutes of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
   if (!spiral) {
-    if (firstFive | yawDifference> abs(YAW_DFR_THRESHOLD)) {
+    if (firstFive | yawDifference > abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
 #ifdef DEVMODE
       SerialUSB.println("Out of threshold.");
       displayData();
       delay(25);
 #endif
-      moveRudder(data.servoPositionRudder); // Move servo and turn it off.
-      delay(100); // Have a small delay to release the draw on the power supply.
+      moveRudder(data.servoPositionRudder);     // Move servo and turn it off.
+      delay(100);                               // Have a small delay to release the draw on the power supply.
       moveElevator(data.servoPositionElevator); // Move servo and turn it off.
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
       if (ms < 300000) { // Check if it is still the first five.
-        delay(ABV_THRS_FRST_FVE_SLP-200);
+        delay(ABV_THRS_FRST_FVE_SLP - 200);
         firstFive = true;
       } else {
-        delay(ABOVE_THRESHOLD_SLEEP-200);
+        delay(ABOVE_THRESHOLD_SLEEP - 200);
         firstFive = false;
       }
 #ifdef DIVE_STALL

@@ -2,7 +2,7 @@
 utils.ino, part of StratoSoar MK2, for an autonomous glider.
 Copyright (C) 2024 Charles Nicholson
 
-This program is free software: you can redistribute it and/or modify 
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -100,36 +100,86 @@ int pidMagicRudder() {
   return servoPositionRudder2;
 }
 
-void longPulse(int pin) {
+void longPulse(int pin, int sleep = 1) {
   digitalWrite(pin, HIGH);
-  delay(250);
+  if (sleep == 1) {
+#ifdef LOW_POWER
+    LowPower.sleep(250);
+#endif
+#ifndef LOW_POWER
+    delay(250);
+#endif
+  } else {
+    delay(250);
+  }
   digitalWrite(pin, LOW);
-  delay(500);
+  if (sleep == 1) {
+#ifdef LOW_POWER
+    LowPower.sleep(250);
+#endif
+#ifndef LOW_POWER
+    delay(500);
+#endif
+  } else {
+    delay(500);
+  }
   digitalWrite(pin, HIGH);
-  delay(250);
+  if (sleep == 1) {
+#ifdef LOW_POWER
+    LowPower.sleep(250);
+#endif
+#ifndef LOW_POWER
+    delay(250);
+#endif
+  } else {
+    delay(250);
+  }
   digitalWrite(pin, LOW);
 }
 
 void shortPulse(int pin) {
   digitalWrite(pin, HIGH);
-  delay(250);
+#ifdef LOW_POWER
+    LowPower.sleep(250);
+#endif
+#ifndef LOW_POWER
+    delay(250);
+#endif
   digitalWrite(pin, LOW);
 }
 
-void moveRudder(int degrees) {
+void moveRudder(int degrees, int sleep = 1) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
   rudderServo.write(degrees);
-  delay(300);
+  if (sleep == 1) {
+#ifdef LOW_POWER
+    LowPower.sleep(300);
+#endif
+#ifndef LOW_POWER
+    delay(300);
+#endif
+  } else {
+    delay(300);
+  }
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
 }
 
-void moveElevator(int degrees) {
+void moveElevator(int degrees, int sleep = 1) {
   digitalWrite(ELEVATOR_FET, HIGH); // Turn servo on.
   digitalWrite(ELEVATOR_BJT, LOW);  // Turn signal line on.
   elevatorServo.write(degrees);
-  delay(300);
+  if (sleep == 1) {
+#ifdef LOW_POWER
+    LowPower.sleep(300);
+#endif
+#ifndef LOW_POWER
+    delay(300);
+#endif
+  } else {
+    delay(300);
+  }
   digitalWrite(ELEVATOR_BJT, HIGH);
   digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves an  additional ~4 mA per servo.
 }
@@ -212,20 +262,20 @@ void getIMUData() {
   delay(5);
   digitalWrite(WRITE_PIN, LOW);
   delay(100); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
-  // if (Serial1.available() == sizeof(receivedData)) {
-    Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
-    data.yaw = receivedData.yaw;
-    data.pitch = receivedData.pitch;
-    data.roll = receivedData.roll;
-    data.temp = receivedData.temp / 100;         // In Celsius.
-    data.humidity = receivedData.humidity / 100; // In relative humidity.
-    data.pressure = receivedData.pressure / 100; // In hPa.
-    // } else {
-    while (Serial1.available() > 0) { // Clear the buffer.
-      byte t = Serial1.read();
-      SerialUSB.println(t);
-    }
+              // if (Serial1.available() == sizeof(receivedData)) {
+  Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
+  data.yaw = receivedData.yaw;
+  data.pitch = receivedData.pitch;
+  data.roll = receivedData.roll;
+  data.temp = receivedData.temp / 100;         // In Celsius.
+  data.humidity = receivedData.humidity / 100; // In relative humidity.
+  data.pressure = receivedData.pressure / 100; // In hPa.
+  // } else {
+  while (Serial1.available() > 0) { // Clear the buffer.
+    byte t = Serial1.read();
+    SerialUSB.println(t);
   }
+}
 // }
 
 void calculate() {
