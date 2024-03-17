@@ -58,9 +58,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
-#include "headers/settings.h" // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
+
+#include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
+#include "headers/settings.h"         // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
 
 #define pi 3.14159265358979323846
+
+ExternalEEPROM myMem;
 
 int yawDifference, nowEEPROM;
 long lastEEPROM = 123456;
@@ -159,10 +163,22 @@ void setup() {
 #endif
 
   Serial1.begin(BAUD_RATE); // Hardware serial connection to the ATMega and the IMU.
-  longPulse(LED);           // Pulse LED to show power up.
-  longPulse(ERR_LED);
+  longPulse(LED, 0);        // Pulse LED to show power up.
+  longPulse(ERR_LED, 0);
 
   I2CScan();
+
+  myMem.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
+
+  if (myMem.begin() == false) {
+    SerialUSB.println("No memory detected. Freezing.");
+    while (1)
+      ;
+  }
+
+  SerialUSB.println("EEPROM detected!");
+  SerialUSB.print("EEPROM size in bytes: ");
+  SerialUSB.println(myMem.length());
 
 #ifdef NEED_RUDDER
   rudderServo.attach(RUDDER_PIN);
@@ -175,11 +191,11 @@ void setup() {
 #endif
 
 #ifdef NEED_RUDDER
-  moveRudder(90); // Move the rudder to 90 degrees.
+  moveRudder(90, 0); // Move the rudder to 90 degrees.
 #endif
   delay(1000);
 #ifdef NEED_ELEVATOR
-  moveElevator(90); // Move the elevator to 90 degrees.
+  moveElevator(90, 0); // Move the elevator to 90 degrees.
 #endif
 
 #ifndef TEST_COORD
@@ -262,7 +278,7 @@ void loop() {
     // Once the parachute is open, this script skips over the moving servos function and instead goes to an infinite sleep.
     gps.powerOffWithInterrupt(0, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // Only wakeup with an interrupt (I think).
     LowPower.attachInterruptWakeup(FALSE_WAKEUP_PIN, onWake, CHANGE);
-    delay(); // No way to wakeup now!
+    LowPower.deepSleep();
   }
 #endif
 
@@ -276,7 +292,12 @@ void loop() {
   if (yawDifference < YAW_DFR_THRESHOLD) {
     SerialUSB.println("Within threshold.");
     displayData();
+#ifdef LOW_POWER
+    LowPower.sleep(25);
+#endif
+#ifndef LOW_POWER
     delay(25);
+#endif
   }
 #endif
 
@@ -287,19 +308,39 @@ void loop() {
 #ifdef DEVMODE
       SerialUSB.println("Out of threshold.");
       displayData();
+#ifdef LOW_POWER
+      LowPower.sleep(25);
+#endif
+#ifndef LOW_POWER
       delay(25);
 #endif
-      moveRudder(data.servoPositionRudder);     // Move servo and turn it off.
-      delay(100);                               // Have a small delay to release the draw on the power supply.
+#endif
+      moveRudder(data.servoPositionRudder); // Move servo and turn it off.
+#ifdef LOW_POWER
+      LowPower.sleep(100);
+#endif
+#ifndef LOW_POWER
+      delay(100); // Have a small delay to release the draw on the power supply.
+#endif
       moveElevator(data.servoPositionElevator); // Move servo and turn it off.
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
       if (ms < 300000) { // Check if it is still the first five.
+#ifdef LOW_POWER
+        LowPower.sleep(ABV_THRS_FRST_FVE_SLP - 200);
+#endif
+#ifndef LOW_POWER
         delay(ABV_THRS_FRST_FVE_SLP - 200);
+#endif
         firstFive = true;
       } else {
+#ifdef LOW_POWER
+        LowPower.sleep(ABOVE_THRESHOLD_SLEEP - 200);
+#endif
+#ifndef LOW_POWER
         delay(ABOVE_THRESHOLD_SLEEP - 200);
+#endif
         firstFive = false;
       }
 #ifdef DIVE_STALL
@@ -313,35 +354,65 @@ void loop() {
       // 512 kilobits, with one byte written at a time. 512,000 / 8 = 64,000. We write four different data points, so 64,000 / 4 = 16,000. There are 21,600 seconds in a six hour flight, so 21,600 / 16,000 = 1.35. We can round that up to 1.5 seconds.
       // If we write to the EEPROM every 1.5 seconds, we won't fill up over a six hour flight.
       if (eepromAddress < MAX_ADDRESS - 200) {
-        if (lastEEPROM - millis() > WRITE_TIME) {
+        if ((millis() - lastEEPROM) > WRITE_TIME) {
           lastEEPROM = millis();
           if (sizeof(int(data.yaw / 2)) <= 1) {
-            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.yaw / 2));
-            delay(10);
-            eepromAddress++;
+            myMem.write(eepromAddress, int(data.yaw / 2));
+#ifdef LOW_POWER
+            LowPower.sleep(WRITE_TIME_BYTES);
+#endif
+#ifndef LOW_POWER
+            delay(WRITE_TIME_BYTES);
+#endif
           }
+          eepromAddress++;
           if (sizeof(int(data.pitch)) <= 1) {
-            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pitch));
-            delay(10);
-            eepromAddress++;
+            myMem.write(eepromAddress, int(data.pitch));
+#ifdef LOW_POWER
+            LowPower.sleep(WRITE_TIME_BYTES);
+#endif
+#ifndef LOW_POWER
+            delay(WRITE_TIME_BYTES);
+#endif
           }
+          eepromAddress++;
           if (sizeof(int(data.temp)) <= 1) {
-            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.temp));
-            delay(10);
-            eepromAddress++;
+            myMem.write(eepromAddress, int(data.temp));
+#ifdef LOW_POWER
+            LowPower.sleep(WRITE_TIME_BYTES);
+#endif
+#ifndef LOW_POWER
+            delay(WRITE_TIME_BYTES);
+#endif
           }
+          eepromAddress++;
           if (sizeof(int(data.pressure / 500)) <= 1) {
-            writeToEEPROM(EEPROM_I2C_ADDRESS, eepromAddress, int(data.pressure / 500));
-            delay(10);
-            eepromAddress++;
+            myMem.write(eepromAddress, int(data.pressure / 500));
+#ifdef LOW_POWER
+            LowPower.sleep(WRITE_TIME_BYTES);
+#endif
+#ifndef LOW_POWER
+            delay(WRITE_TIME_BYTES);
+#endif
           }
+          eepromAddress++;
         }
       }
 #endif
     } else {
+#ifdef LOW_POWER
+      LowPower.sleep(BELOW_THRESHOLD_SLEEP); // If the heading drift is below the threshold, sleep and repeat the cycle until the heading drift is above threshold.
+#endif
+#ifndef LOW_POWER
       delay(BELOW_THRESHOLD_SLEEP); // If the heading drift is below the threshold, sleep and repeat the cycle until the heading drift is above threshold.
+#endif
     }
   } else {
+#ifdef LOW_POWER
+    LowPower.sleep(SPIRAL_SLEEP); // If spiraling, skip above section and wakeup every "SPIRAL_SLEEP" ms only to check GPS to see if it's time to open the parachute.
+#endif
+#ifndef LOW_POWER
     delay(SPIRAL_SLEEP); // If spiraling, skip above section and wakeup every "SPIRAL_SLEEP" ms only to check GPS to see if it's time to open the parachute.
+#endif
   }
 }

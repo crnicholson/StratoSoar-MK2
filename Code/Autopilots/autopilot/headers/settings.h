@@ -21,8 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-// #define DEVMODE    // Toggle the serial monitor on and off.
-#define LOW_POWER // Activates low power mode. Note that the serial monitor will no longer work.
+#define DEVMODE    // Toggle the serial monitor on and off.
+// #define LOW_POWER // Activates low power mode. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
@@ -88,7 +88,7 @@ double testLat = 42.3165665, testLon = -71.33451619; // NEST coordinates.
 
 // EEPROM.
 #define MAX_ADDRESS 64000       // This is how many 8 bit pages your EEPROM has, 64,000 for a 512 kilobit EEPROM.
-#define EEPROM_I2C_ADDRESS 0x50 // I2C address of the EEPROM.
+#define WRITE_TIME_BYTES 5 // Milliseconds between writing a byte to the EEPROM.
 #define WRITE_TIME 1.5          // The seconds between EEPROM writings as calculated previously.
 
 // Servo objects and names.

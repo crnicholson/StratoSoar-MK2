@@ -57,14 +57,6 @@ double calculateDistance(double cLat, double cLon, double tLat, double tLon) {
   return distance;
 }
 
-void writeToEEPROM(byte EEPROMAddress, byte dataAddress, byte dataValue) {
-  Wire.beginTransmission(EEPROMAddress);
-  Wire.write(dataAddress);
-  Wire.write(dataValue);
-  Wire.endTransmission();
-  delay(5);
-}
-
 int pidMagicElevator() {
   errorElevator = SETPOINT_ELEVATOR - data.pitch; // Calculate the error.
 
@@ -140,10 +132,10 @@ void longPulse(int pin, int sleep = 1) {
 void shortPulse(int pin) {
   digitalWrite(pin, HIGH);
 #ifdef LOW_POWER
-    LowPower.sleep(250);
+  LowPower.sleep(250);
 #endif
 #ifndef LOW_POWER
-    delay(250);
+  delay(250);
 #endif
   digitalWrite(pin, LOW);
 }
@@ -259,10 +251,23 @@ void getIMUData() {
     SerialUSB.println(t);
   }
   digitalWrite(WRITE_PIN, HIGH);
+#ifdef LOW_POWER
+  LowPower.sleep(5);
+#endif
+#ifndef LOW_POWER
   delay(5);
+#endif
   digitalWrite(WRITE_PIN, LOW);
-  delay(100); // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
-              // if (Serial1.available() == sizeof(receivedData)) {
+  // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
+
+#ifdef LOW_POWER
+  LowPower.sleep(100);
+#endif
+#ifndef LOW_POWER
+  delay(100);
+#endif
+
+  // if (Serial1.available() == sizeof(receivedData)) {
   Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
   data.yaw = receivedData.yaw;
   data.pitch = receivedData.pitch;
@@ -362,9 +367,19 @@ void onWake() {
 
 void gpsWakeup() {
   digitalWrite(WAKEUP_PIN, LOW);
+#ifdef LOW_POWER
+  LowPower.sleep(1000);
+#endif
+#ifndef LOW_POWER
   delay(1000);
+#endif
   digitalWrite(WAKEUP_PIN, HIGH);
+#ifdef LOW_POWER
+  LowPower.sleep(1000);
+#endif
+#ifndef LOW_POWER
   delay(1000);
+#endif
   digitalWrite(WAKEUP_PIN, LOW);
 }
 
