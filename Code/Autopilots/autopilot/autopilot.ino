@@ -64,7 +64,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #define pi 3.14159265358979323846
 
-ExternalEEPROM myMem;
+ExternalEEPROM eeprom;
 
 int yawDifference, nowEEPROM;
 long lastEEPROM = 123456;
@@ -168,9 +168,9 @@ void setup() {
 
   I2CScan();
 
-  myMem.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
+  eeprom.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
-  if (myMem.begin() == false) {
+  if (eeprom.begin() == false) {
     SerialUSB.println("No memory detected. Freezing.");
     while (1)
       ;
@@ -178,7 +178,7 @@ void setup() {
 
   SerialUSB.println("EEPROM detected!");
   SerialUSB.print("EEPROM size in bytes: ");
-  SerialUSB.println(myMem.length());
+  SerialUSB.println(eeprom.length());
 
 #ifdef NEED_RUDDER
   rudderServo.attach(RUDDER_PIN);
@@ -357,7 +357,7 @@ void loop() {
         if ((millis() - lastEEPROM) > WRITE_TIME) {
           lastEEPROM = millis();
           if (sizeof(int(data.yaw / 2)) <= 1) {
-            myMem.write(eepromAddress, int(data.yaw / 2));
+            eeprom.write(eepromAddress, int(data.yaw / 2));
 #ifdef LOW_POWER
             LowPower.sleep(WRITE_TIME_BYTES);
 #endif
@@ -367,7 +367,7 @@ void loop() {
           }
           eepromAddress++;
           if (sizeof(int(data.pitch)) <= 1) {
-            myMem.write(eepromAddress, int(data.pitch));
+            eeprom.write(eepromAddress, int(data.pitch));
 #ifdef LOW_POWER
             LowPower.sleep(WRITE_TIME_BYTES);
 #endif
@@ -377,7 +377,7 @@ void loop() {
           }
           eepromAddress++;
           if (sizeof(int(data.temp)) <= 1) {
-            myMem.write(eepromAddress, int(data.temp));
+            eeprom.write(eepromAddress, int(data.temp));
 #ifdef LOW_POWER
             LowPower.sleep(WRITE_TIME_BYTES);
 #endif
@@ -387,7 +387,7 @@ void loop() {
           }
           eepromAddress++;
           if (sizeof(int(data.pressure / 500)) <= 1) {
-            myMem.write(eepromAddress, int(data.pressure / 500));
+            eeprom.write(eepromAddress, int(data.pressure / 500));
 #ifdef LOW_POWER
             LowPower.sleep(WRITE_TIME_BYTES);
 #endif
