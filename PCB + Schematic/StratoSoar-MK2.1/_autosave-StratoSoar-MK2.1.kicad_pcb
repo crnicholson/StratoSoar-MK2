@@ -23383,7 +23383,7 @@
 	(footprint "RF_Antenna:RAINSUN_GPS1003"
 		(layer "F.Cu")
 		(uuid "f0b55c3b-c0ac-451b-8d63-d6e0c6957aa8")
-		(at 87.249 30.6086 -90)
+		(at 87.249 30.7356 -90)
 		(descr "RFID Transponder Coil")
 		(tags "antenna rfid coilcraft")
 		(property "Reference" "AE1"
