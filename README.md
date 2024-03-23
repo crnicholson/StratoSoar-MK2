@@ -1,8 +1,7 @@
   
   
 
-![StratoSoar Logo](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png)
-*StratoSoar logo*
+![StratoSoar Logo](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png)<br>*StratoSoar logo*
 
 
 
