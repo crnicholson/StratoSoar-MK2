@@ -1,7 +1,7 @@
-  
-  
 
-![StratoSoar Logo](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png)<br>*StratoSoar logo*
+![StratoSoar Logo](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png)<br>*StratoSoar Logo.*
+
+![StratoSoar PCB](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png)<br>*StratoSoar MK2.0 Circuit Board.*
 
 
 
