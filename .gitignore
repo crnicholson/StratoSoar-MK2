@@ -4,3 +4,4 @@
 *.kicad_prl
 fp-info-cache
 StratoSoar-MK2.1-backups/
+.stfolder
