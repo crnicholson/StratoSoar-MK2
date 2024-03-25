@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // https://github.com/crnicholson/StratoSoar-MK2/.
 
 // Original work done by S.J. Remington 3/2020.
-// Adapted to work in an autopilot system by Charles Nicholson, 2023.
+// Adapted to work in an autopilot system by Charles Nicholson.
 
 // Use this code in conjuction with the autopilot sketch to obtain pitch, roll, and yaw values that can be used in the autopilot system.
 
