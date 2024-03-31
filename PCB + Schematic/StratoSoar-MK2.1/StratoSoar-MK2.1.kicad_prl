@@ -61,7 +61,7 @@
       39,
       40
     ],
-    "visible_layers": "7fd3ff7_00000001",
+    "visible_layers": "7fd3fe7_00000001",
     "zone_display_mode": 0
   },
   "git": {
@@ -71,7 +71,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "StratoSoar MK2.1.kicad_prl",
+    "filename": "StratoSoar-MK2.1.kicad_prl",
     "version": 3
   },
   "project": {

@@ -37308,7 +37308,7 @@
 			(uuid "407776c1-2fc1-46c5-a2a9-823d66082915")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0109")
 					(unit 1)
@@ -37378,7 +37378,7 @@
 			(uuid "61a461b2-49f1-42d3-9517-c319b3772d0e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J11")
 					(unit 1)
@@ -37448,7 +37448,7 @@
 			(uuid "befc209a-a292-444c-82f7-55d5bfb24b9e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C7")
 					(unit 1)
@@ -37515,7 +37515,7 @@
 			(uuid "252861b2-3497-4aa9-9cec-672c0a6a3416")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR042")
 					(unit 1)
@@ -37582,7 +37582,7 @@
 			(uuid "201c836a-eade-4703-9336-eda6e32b0f27")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR031")
 					(unit 1)
@@ -37655,7 +37655,7 @@
 			(uuid "31a77329-6d26-4f58-83f4-03d5def96e4c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR062")
 					(unit 1)
@@ -37723,7 +37723,7 @@
 			(uuid "53442eaa-5edc-4aa1-9d89-de31615f72a0")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C15")
 					(unit 1)
@@ -37793,7 +37793,7 @@
 			(uuid "38dfcde1-194c-4233-bd87-b4864e8704e8")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R20")
 					(unit 1)
@@ -37887,7 +37887,7 @@
 			(uuid "51eada29-c62a-4f65-9e4e-54366a0d082d")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "U4")
 					(unit 1)
@@ -37960,7 +37960,7 @@
 			(uuid "bb2c2d20-b975-453f-9dcb-2a072d366a95")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR020")
 					(unit 1)
@@ -38030,7 +38030,7 @@
 			(uuid "b888bbd9-5cb9-44d0-b15e-7f70e97909ab")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R10")
 					(unit 1)
@@ -38103,7 +38103,7 @@
 			(uuid "1ee6a2e7-a603-4627-a379-56619596b2bf")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR037")
 					(unit 1)
@@ -38171,7 +38171,7 @@
 			(uuid "39b09508-e928-4c62-b29c-a21fa0a800a9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C32")
 					(unit 1)
@@ -38245,7 +38245,7 @@
 			(uuid "1685d09a-c3ca-44d1-9317-72299d0a0940")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "JP2")
 					(unit 1)
@@ -38309,7 +38309,7 @@
 			)
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "H2")
 					(unit 1)
@@ -38375,7 +38375,7 @@
 			(uuid "a5780d3e-55ad-4fc4-a0a5-802b0d374600")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0106")
 					(unit 1)
@@ -38469,7 +38469,7 @@
 			(uuid "eff80679-e7dc-414f-a48e-5c0895239ecc")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#U1")
 					(unit 1)
@@ -38539,7 +38539,7 @@
 			(uuid "b1fc18e7-c694-424d-934c-bf079642e65b")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R23")
 					(unit 1)
@@ -38612,7 +38612,7 @@
 			(uuid "43c2f93d-0642-49d3-817e-67b0963f8abc")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR023")
 					(unit 1)
@@ -38712,7 +38712,7 @@
 			(uuid "58fc5008-36f0-457c-8f74-d6414c81a669")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Q5")
 					(unit 1)
@@ -38795,7 +38795,7 @@
 			(uuid "7c6db1e5-161d-4970-a379-592a9055c00a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J3")
 					(unit 1)
@@ -38862,7 +38862,7 @@
 			(uuid "ae9cc337-9ff9-49ca-af97-cc08c7cd6d76")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR073")
 					(unit 1)
@@ -38930,7 +38930,7 @@
 			(uuid "371c9b47-5bbb-4f9e-9f6d-9519734fd0d9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#R1")
 					(unit 1)
@@ -39006,7 +39006,7 @@
 					(unit 1)
 				)
 			)
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "AE1")
 					(unit 1)
@@ -39088,7 +39088,7 @@
 			(uuid "d45409b9-5df6-41c9-bcb4-0458c99541b8")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "D3")
 					(unit 1)
@@ -39164,7 +39164,7 @@
 			(uuid "770a6b94-1808-42ac-b6eb-d798d7352a2a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "BT2")
 					(unit 1)
@@ -39276,7 +39276,7 @@
 			(uuid "8dfca536-4b40-47e0-9910-8521d5965db9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Q6")
 					(unit 1)
@@ -39349,7 +39349,7 @@
 			(uuid "4c955f77-a5f6-419f-ad36-342c7401f2e4")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR016")
 					(unit 1)
@@ -39417,7 +39417,7 @@
 			(uuid "a3658cbc-797c-4a68-8b06-b5b1ff24a771")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C23")
 					(unit 1)
@@ -39485,7 +39485,7 @@
 			(uuid "9b16cf87-b178-413b-9615-4b223c801721")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Y1")
 					(unit 1)
@@ -39561,7 +39561,7 @@
 			(uuid "5a53c45f-55b7-4502-bb8b-cca7dad45aed")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "U5")
 					(unit 1)
@@ -39588,7 +39588,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C_Small"
+		(property "Value" "100nF"
 			(at 152.4 245.1162 0)
 			(effects
 				(font
@@ -39631,7 +39631,7 @@
 			(uuid "176068dd-1c66-4c90-b106-5d91ee2c32c8")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C16")
 					(unit 1)
@@ -39697,7 +39697,7 @@
 			(uuid "f24c023c-be3f-41f3-be6c-d2332384bbc0")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR038")
 					(unit 1)
@@ -39763,7 +39763,7 @@
 			(uuid "475ce573-373c-4605-99fc-3f1568e0f3eb")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR084")
 					(unit 1)
@@ -39833,7 +39833,7 @@
 			(uuid "ec948097-4456-4300-a383-976127e92af8")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R18")
 					(unit 1)
@@ -39906,7 +39906,7 @@
 			(uuid "49620a70-52f4-43b8-9f25-1b5a7504bf61")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR052")
 					(unit 1)
@@ -39976,7 +39976,7 @@
 			(uuid "a008b06e-ab63-4cda-ad05-cc5965116b02")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C22")
 					(unit 1)
@@ -40043,7 +40043,7 @@
 			(uuid "4093095f-95f5-405a-9b28-ca6f1a6c2b36")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR034")
 					(unit 1)
@@ -40110,7 +40110,7 @@
 			(uuid "e1c8a962-970c-4259-9c89-052a1df8402a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0103")
 					(unit 1)
@@ -40176,7 +40176,7 @@
 			(uuid "b8268fdd-791e-4f51-91b1-701bcde5de36")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR072")
 					(unit 1)
@@ -40244,7 +40244,7 @@
 			(uuid "0af3d379-3b94-4162-90af-7127889fe664")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C2")
 					(unit 1)
@@ -40311,7 +40311,7 @@
 			(uuid "a0fe0135-13bc-47d7-a62f-54b361b9378c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR088")
 					(unit 1)
@@ -40384,7 +40384,7 @@
 			(uuid "4f46676c-e0a3-47d0-a81b-1687d259d785")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J8")
 					(unit 1)
@@ -40457,7 +40457,7 @@
 			(uuid "cbefcc5d-d930-4da3-a71b-45d51b286536")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C27")
 					(unit 1)
@@ -40530,7 +40530,7 @@
 			(uuid "1488a477-4408-4760-95b8-59b5cb06a803")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR079")
 					(unit 1)
@@ -40636,7 +40636,7 @@
 			(uuid "584bda5d-f20b-4ef6-9776-82234ea6ef13")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "U2")
 					(unit 1)
@@ -40709,7 +40709,7 @@
 			(uuid "64cbc7de-1cdd-448e-9884-e794924d51c8")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J9")
 					(unit 1)
@@ -40785,7 +40785,7 @@
 			(uuid "2f4a7da9-2916-442c-81a4-f2f5c2f80313")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R7")
 					(unit 1)
@@ -40869,7 +40869,7 @@
 			(uuid "8b856f46-b0f9-4439-a4c1-b0be181be204")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J7")
 					(unit 1)
@@ -40936,7 +40936,7 @@
 			(uuid "555bd7af-f4b1-4ddf-bdbe-4a9bdbf5a774")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR025")
 					(unit 1)
@@ -41002,7 +41002,7 @@
 			(uuid "83016889-5bd8-434e-9acb-7d512e378ab9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0100")
 					(unit 1)
@@ -41068,7 +41068,7 @@
 			(uuid "7e588f7a-5459-4eb8-bd36-d149f8bb2d4f")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR030")
 					(unit 1)
@@ -41134,7 +41134,7 @@
 			(uuid "8a515128-5d6d-46fe-95c4-6390e4b9d4e3")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR02")
 					(unit 1)
@@ -41204,7 +41204,7 @@
 			(uuid "e30f761a-aa13-4883-a662-9da0fd7bb564")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C21")
 					(unit 1)
@@ -41271,7 +41271,7 @@
 			(uuid "51f80eaf-4ba3-4c2e-89f0-fd23c38ac12a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR077")
 					(unit 1)
@@ -41343,7 +41343,7 @@
 			(uuid "87655b88-5c17-4969-900f-4ea03befa67f")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0101")
 					(unit 1)
@@ -41414,7 +41414,7 @@
 			(uuid "f9e98226-fc3b-44a2-b6a5-f584361a208e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "SW4")
 					(unit 1)
@@ -41484,7 +41484,7 @@
 			(uuid "71172b39-01d8-42f2-8cd2-6da2cba471f1")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C4")
 					(unit 1)
@@ -41554,7 +41554,7 @@
 			(uuid "b1722f00-ee5f-41b5-a3db-f1250ab556ad")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "U7")
 					(unit 1)
@@ -41627,7 +41627,7 @@
 			(uuid "5c330826-e007-4ac4-8296-397203ea5e34")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR06")
 					(unit 1)
@@ -41697,7 +41697,7 @@
 			(uuid "0b1f65ba-1338-4c50-baf3-7645f5c6a794")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R16")
 					(unit 1)
@@ -41779,7 +41779,7 @@
 			(uuid "cb663611-6ab3-4b7e-8046-2192f5a17f3a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Q1")
 					(unit 1)
@@ -41852,7 +41852,7 @@
 			(uuid "7dc68efb-b52e-4588-a1f3-6d765e01ddf9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR049")
 					(unit 1)
@@ -41922,7 +41922,7 @@
 			(uuid "0492f29e-19c2-4672-ac24-77083c758a92")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "SW1")
 					(unit 1)
@@ -42047,7 +42047,7 @@
 			(uuid "fc12b827-ca3e-4c3f-9053-4b6cdac04c1f")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J5")
 					(unit 1)
@@ -42123,7 +42123,7 @@
 			(uuid "503e09c7-4eba-43c4-92de-fe1b64fb17bd")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R13")
 					(unit 1)
@@ -42193,7 +42193,7 @@
 			)
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "H3")
 					(unit 1)
@@ -42261,7 +42261,7 @@
 			(uuid "2f05400f-45be-40d5-a592-8648c8cc493a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R11")
 					(unit 1)
@@ -42334,7 +42334,7 @@
 			(uuid "0a2c63b0-2019-43b4-87f5-ff2e4c927e61")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR010")
 					(unit 1)
@@ -42401,7 +42401,7 @@
 			(uuid "9cebe0fb-421b-48a2-a4b8-07b6d1518bd7")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0112")
 					(unit 1)
@@ -42471,7 +42471,7 @@
 			(uuid "8141925c-b546-4600-92fa-f06aee1220e9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C14")
 					(unit 1)
@@ -42539,7 +42539,7 @@
 			(uuid "6250b186-c96f-4b94-9d9a-3539310f212b")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C10")
 					(unit 1)
@@ -42606,7 +42606,7 @@
 			(uuid "69fca13e-df4f-4a21-96a4-c8e0cfbb2d01")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR040")
 					(unit 1)
@@ -42674,7 +42674,7 @@
 			(uuid "0506824c-f43d-472e-8020-6181095dc939")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R3")
 					(unit 1)
@@ -42750,7 +42750,7 @@
 			(uuid "7fd58210-e8b8-4db7-84e3-9adb4d0bf373")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "D4")
 					(unit 1)
@@ -42918,7 +42918,7 @@
 			(uuid "89c177e7-731c-43b8-8e82-de386c121d1c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "U3")
 					(unit 1)
@@ -42985,7 +42985,7 @@
 			(uuid "d9db0070-b444-4df2-82cd-f7f77de3381c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0107")
 					(unit 1)
@@ -43059,7 +43059,7 @@
 			(uuid "da442ed5-8142-4196-b1f7-21ab632d772a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "JP4")
 					(unit 1)
@@ -43126,7 +43126,7 @@
 			(uuid "a08f7f8c-4bba-4e2a-a337-26a2e7a0d754")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR097")
 					(unit 1)
@@ -43192,7 +43192,7 @@
 			(uuid "e240e6a0-5961-4c47-9c35-f5d9ea4f5461")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR074")
 					(unit 1)
@@ -43259,7 +43259,7 @@
 			(uuid "9cc512dc-6103-4651-8716-88299cf7e2d3")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR015")
 					(unit 1)
@@ -43329,7 +43329,7 @@
 			(uuid "0e2bdddb-f016-4ef9-8bc6-d015757df406")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R14")
 					(unit 1)
@@ -43395,7 +43395,7 @@
 			(uuid "57bb96c9-4080-4891-b7c6-7993b65da656")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR012")
 					(unit 1)
@@ -43465,7 +43465,7 @@
 			(uuid "24efd390-72c2-460a-91c7-1935a31ff183")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C9")
 					(unit 1)
@@ -43532,7 +43532,7 @@
 			(uuid "ce63e1cb-3660-426c-9c9d-4642095b8ead")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR05")
 					(unit 1)
@@ -43599,7 +43599,7 @@
 			(uuid "74cf4e1d-ffe4-4c0e-807d-68cfcf6a8fbe")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0105")
 					(unit 1)
@@ -43671,7 +43671,7 @@
 			(uuid "df5fea9d-49e6-4045-b480-4f336c62206a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR026")
 					(unit 1)
@@ -43747,7 +43747,7 @@
 			(uuid "51344995-aa8e-4e34-9b8e-6dd869f885f1")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Q2")
 					(unit 1)
@@ -43820,7 +43820,7 @@
 			(uuid "f129b832-1d3d-4316-872f-9d3b62276273")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR060")
 					(unit 1)
@@ -43890,7 +43890,7 @@
 			(uuid "6d44ecb6-6b17-48f7-97a6-4102eb0a1e01")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "SW5")
 					(unit 1)
@@ -43975,7 +43975,7 @@
 			(uuid "21494528-a607-47e6-8b7f-82457c44e3f2")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J6")
 					(unit 1)
@@ -44043,7 +44043,7 @@
 			(uuid "d2bb3603-0ec6-4fe8-9eb3-9baca105e188")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "FB1")
 					(unit 1)
@@ -44111,7 +44111,7 @@
 			(uuid "42e588bb-86f6-4d8f-bce8-510dd18ed1fd")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Y2")
 					(unit 1)
@@ -44178,7 +44178,7 @@
 			(uuid "b40bdc82-0b82-457b-a603-382f860fa7fa")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR041")
 					(unit 1)
@@ -44245,7 +44245,7 @@
 			(uuid "a8c3c67b-1d1a-4852-9934-18d35edd2617")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR014")
 					(unit 1)
@@ -44312,7 +44312,7 @@
 			(uuid "071a8ad4-0e09-4d3e-8a3b-83cacdf184d0")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR04")
 					(unit 1)
@@ -44382,7 +44382,7 @@
 			(uuid "4f7ab121-ea9d-4165-8624-50c74e0d690a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C12")
 					(unit 1)
@@ -44461,7 +44461,7 @@
 			(uuid "af765ba3-b03b-4e36-962d-504a48aed5d9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR033")
 					(unit 1)
@@ -44528,7 +44528,7 @@
 			(uuid "a83ea885-a6d9-4a29-be8a-28d326f08eda")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR099")
 					(unit 1)
@@ -44595,7 +44595,7 @@
 			(uuid "22a42f6b-d017-4864-8ba8-e6a90bd2470c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR045")
 					(unit 1)
@@ -44662,7 +44662,7 @@
 			(uuid "25d34022-7ee8-427e-9e2a-e5200f861b25")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR096")
 					(unit 1)
@@ -44734,7 +44734,7 @@
 			(uuid "dfa93cae-6429-4eea-bd14-d2b36b0c8914")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR047")
 					(unit 1)
@@ -44802,7 +44802,7 @@
 			(uuid "4f6d2558-a1ac-4d73-8448-ea76b78b6179")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R5")
 					(unit 1)
@@ -44872,7 +44872,7 @@
 			(uuid "514dfbe0-cc0b-4a8d-9727-5d0e7e934608")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R1")
 					(unit 1)
@@ -44945,7 +44945,7 @@
 			(uuid "bc69154a-4a28-4068-a432-f8561c5e6a94")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR027")
 					(unit 1)
@@ -45012,7 +45012,7 @@
 			(uuid "cc2cd291-45a5-4a2c-ad65-855d7f7202a7")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR098")
 					(unit 1)
@@ -45088,7 +45088,7 @@
 			(uuid "27468da3-b732-4143-ae20-d1658d834fef")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Q3")
 					(unit 1)
@@ -45160,7 +45160,7 @@
 			(uuid "01191c3e-2c69-48ca-8991-33dee96ac68d")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR070")
 					(unit 1)
@@ -45230,7 +45230,7 @@
 			(uuid "c75ad729-38f0-4ed2-b455-a21e3d6745d2")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R21")
 					(unit 1)
@@ -45304,7 +45304,7 @@
 			(uuid "ec379a97-5ee4-4d20-ad16-7664ca2b4dde")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C19")
 					(unit 1)
@@ -45372,7 +45372,7 @@
 			(uuid "7fd3582f-2e93-4949-8188-06312ad71e93")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R2")
 					(unit 1)
@@ -45448,7 +45448,7 @@
 			(uuid "908e2744-6fe8-449e-9d21-77611aa90cc5")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "JP6")
 					(unit 1)
@@ -45515,7 +45515,7 @@
 			(uuid "6b9ac1a2-e012-49aa-a23a-851ccdc4f6aa")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR028")
 					(unit 1)
@@ -45583,7 +45583,7 @@
 			(uuid "ae755587-b43b-4a5a-8c00-dd6918f09d38")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C25")
 					(unit 1)
@@ -45655,7 +45655,7 @@
 			(uuid "0f2b91df-f4fc-492f-afb7-ac0952e0650f")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR061")
 					(unit 1)
@@ -45723,7 +45723,7 @@
 			(uuid "4485c4c7-2f5c-4de2-a633-c347b69d8216")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C24")
 					(unit 1)
@@ -45791,7 +45791,7 @@
 			(uuid "2248f5a8-2d35-4fd4-a2b9-a888732ad205")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#R2")
 					(unit 1)
@@ -45861,7 +45861,7 @@
 			(uuid "c562d75c-d102-4c44-9ed7-1dc487fd26d2")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R17")
 					(unit 1)
@@ -45934,7 +45934,7 @@
 			(uuid "d6d3551d-6153-45b6-92cb-b2f83624bc02")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR053")
 					(unit 1)
@@ -46004,7 +46004,7 @@
 			(uuid "d0d4ea38-b237-42c5-8c6c-99f7b5dc0dc1")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C11")
 					(unit 1)
@@ -46080,7 +46080,7 @@
 			(uuid "ef1164ba-6c15-456f-a440-be5f78c18969")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J1")
 					(unit 1)
@@ -46147,7 +46147,7 @@
 			(uuid "293c1ecb-a646-4814-8145-e31890dd705c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR075")
 					(unit 1)
@@ -46217,7 +46217,7 @@
 			(uuid "06c05938-e27a-43a3-b34b-9901311ac161")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "JP1")
 					(unit 1)
@@ -46287,7 +46287,7 @@
 			(uuid "c5472bb4-664d-4e7d-8e63-5701888ad714")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R4")
 					(unit 1)
@@ -46354,7 +46354,7 @@
 			(uuid "9ea67aac-0359-4c13-854c-bdfbc6296e13")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR090")
 					(unit 1)
@@ -46422,7 +46422,7 @@
 			(uuid "667745bf-7481-4417-912c-287562e865fb")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C28")
 					(unit 1)
@@ -46495,7 +46495,7 @@
 			(uuid "e2821a29-a45f-43cd-91b2-5805b3d4024c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR055")
 					(unit 1)
@@ -46562,7 +46562,7 @@
 			(uuid "9e09947b-563f-49d4-b73b-eaaaf85e5cbe")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR044")
 					(unit 1)
@@ -46632,7 +46632,7 @@
 			(uuid "d4a549d3-4bfd-4c42-a4cb-7f19c4a42868")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C6")
 					(unit 1)
@@ -46699,7 +46699,7 @@
 			(uuid "27a41379-4108-4a20-8ec8-39f159941d1e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR01")
 					(unit 1)
@@ -46770,7 +46770,7 @@
 			(uuid "13eea156-bef2-4872-85a4-eb9bf9fa2177")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J10")
 					(unit 1)
@@ -46843,7 +46843,7 @@
 			(uuid "77154acd-e48a-4e31-8fd5-14d70ccdd6a7")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR07")
 					(unit 1)
@@ -46913,7 +46913,7 @@
 			(uuid "3cca08c5-d2ee-4057-8ef3-99b64119f1b6")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R22")
 					(unit 1)
@@ -46985,7 +46985,7 @@
 			(uuid "e2760249-5043-4c6b-b10e-771fdbfa62e4")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR054")
 					(unit 1)
@@ -47053,7 +47053,7 @@
 			(uuid "152d89a6-4b5f-4dfe-a1dc-5b13cfef1283")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C29")
 					(unit 1)
@@ -47120,7 +47120,7 @@
 			(uuid "1dc03f75-cf99-4580-8c30-64730fe9ee14")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR018")
 					(unit 1)
@@ -47187,7 +47187,7 @@
 			(uuid "bc5d6ab6-5829-419d-a046-0f5d313a9d77")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0110")
 					(unit 1)
@@ -47255,7 +47255,7 @@
 			(uuid "91e25831-a9d5-4bca-908c-dc150ddc1b75")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C3")
 					(unit 1)
@@ -47322,7 +47322,7 @@
 			(uuid "8bfbe703-5e72-4f15-9f5b-2fd2b82fef6b")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0102")
 					(unit 1)
@@ -47389,7 +47389,7 @@
 			(uuid "44ee030c-9ae5-40d4-9b2e-428447a1cc46")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR082")
 					(unit 1)
@@ -47459,7 +47459,7 @@
 			(uuid "cef52e1c-8bcc-4766-b75d-836bd2dbe864")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R19")
 					(unit 1)
@@ -47533,7 +47533,7 @@
 			(uuid "737c6a4b-82cb-4b5e-8539-d7b1d0b624fb")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C8")
 					(unit 1)
@@ -47600,7 +47600,7 @@
 			(uuid "723587a2-28fa-44c3-94e7-ce7fc216cd44")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR043")
 					(unit 1)
@@ -47700,7 +47700,7 @@
 			(uuid "0f9d4955-10b4-445d-b8d7-d062f544707c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "Q4")
 					(unit 1)
@@ -47776,7 +47776,7 @@
 			(uuid "ec84530c-b652-489f-981c-f2866480779f")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "JP5")
 					(unit 1)
@@ -47843,7 +47843,7 @@
 			(uuid "f3a62d7d-dbdb-4e15-8e1a-547407d55c2e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR022")
 					(unit 1)
@@ -47913,7 +47913,7 @@
 			(uuid "ca5c7851-c70a-4d98-86ac-a06fcb9706f6")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "BT1")
 					(unit 1)
@@ -47992,7 +47992,7 @@
 			(uuid "df987718-991e-483f-bd0e-cf2e9a1b4acd")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR017")
 					(unit 1)
@@ -48060,7 +48060,7 @@
 			(uuid "e6c44c8c-0331-4f0f-b578-3d86ee582735")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "D2")
 					(unit 1)
@@ -48127,7 +48127,7 @@
 			(uuid "78b98343-0f6c-450f-8608-7a1787dc1470")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR035")
 					(unit 1)
@@ -48192,7 +48192,7 @@
 			(uuid "2c44d6d9-90e7-40dc-94b7-f9277e42049a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR013")
 					(unit 1)
@@ -48259,7 +48259,7 @@
 			(uuid "a08d7be6-6ad0-40d2-81c6-42a60673e970")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR085")
 					(unit 1)
@@ -48325,7 +48325,7 @@
 			(uuid "c2693181-fa0c-47fc-a906-300b43edeb5b")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR03")
 					(unit 1)
@@ -48392,7 +48392,7 @@
 			(uuid "0963ee6b-2770-42fe-a173-5d96919473c5")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR09")
 					(unit 1)
@@ -48459,7 +48459,7 @@
 			(uuid "44d74b9f-0ec8-4161-b7c4-dfa6b76da715")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR089")
 					(unit 1)
@@ -48523,7 +48523,7 @@
 			)
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "H4")
 					(unit 1)
@@ -48589,7 +48589,7 @@
 			(uuid "2a924bb6-8aa2-4de5-acd3-5a342daef65c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR059")
 					(unit 1)
@@ -48657,7 +48657,7 @@
 			(uuid "9cac5503-2ef9-402a-8a82-b76d7c777a7c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C5")
 					(unit 1)
@@ -48727,7 +48727,7 @@
 			(uuid "137f8526-41f2-4890-954b-ecd520f983f1")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J12")
 					(unit 1)
@@ -48797,7 +48797,7 @@
 			(uuid "73e95af7-ca0d-4a90-9349-41419e5a564e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "D1")
 					(unit 1)
@@ -48870,7 +48870,7 @@
 			(uuid "8296d58a-ae2b-4ead-ba4f-0aba5fae3fbf")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR050")
 					(unit 1)
@@ -48937,7 +48937,7 @@
 			(uuid "b185c7ad-c297-47de-9930-36dd00253864")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR066")
 					(unit 1)
@@ -49004,7 +49004,7 @@
 			(uuid "460ccc19-ec8e-4014-9cd4-524a12c2f73a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR036")
 					(unit 1)
@@ -49072,7 +49072,7 @@
 			(uuid "50334c16-008a-4578-bc50-b1b397e210dc")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR081")
 					(unit 1)
@@ -49138,7 +49138,7 @@
 			(uuid "69104e3e-8351-415d-9811-d21c5db0a2b4")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR0104")
 					(unit 1)
@@ -49205,7 +49205,7 @@
 			(uuid "fc054d2d-ecbd-4459-9924-b45d3af31807")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR086")
 					(unit 1)
@@ -49281,7 +49281,7 @@
 			(uuid "c0300ad2-b99a-4deb-9e19-55bc1ca85922")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "L2")
 					(unit 1)
@@ -49348,7 +49348,7 @@
 			(uuid "dbb3bc1a-d0f8-4e2a-9150-4c6de6e3718a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR039")
 					(unit 1)
@@ -49434,7 +49434,7 @@
 			(uuid "7af94690-d739-4af7-9596-802170311f78")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J2")
 					(unit 1)
@@ -49501,7 +49501,7 @@
 			(uuid "1440d2dd-a8aa-44f5-a5d2-90e28b3e85f4")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR08")
 					(unit 1)
@@ -49577,7 +49577,7 @@
 			(uuid "49122829-068b-4f15-ad99-872b541b938e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R8")
 					(unit 1)
@@ -49644,7 +49644,7 @@
 			(uuid "575a73a4-b959-4875-9140-bdd0106263c3")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR011")
 					(unit 1)
@@ -49711,7 +49711,7 @@
 			(uuid "ee56884d-b769-446e-aa40-b85e49776efd")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR094")
 					(unit 1)
@@ -49785,7 +49785,7 @@
 					(unit 1)
 				)
 			)
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "L1")
 					(unit 1)
@@ -49867,7 +49867,7 @@
 			(uuid "3acae99f-53b9-4b28-ab24-0523d340689a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C17")
 					(unit 1)
@@ -49937,7 +49937,7 @@
 			(uuid "1a7b625d-e550-4e02-883e-6b51ba47fe16")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R6")
 					(unit 1)
@@ -50013,7 +50013,7 @@
 			(uuid "f5c3025a-6b4b-44fe-8534-77642fb96e71")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "JP7")
 					(unit 1)
@@ -50221,7 +50221,7 @@
 			(uuid "cb0a646a-102b-4f25-b9b6-fa4d9f1700ed")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "U6")
 					(unit 1)
@@ -50295,7 +50295,7 @@
 			(uuid "4ed30e2b-6c92-4a31-975e-f6507e9f02b9")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#C1")
 					(unit 1)
@@ -50363,7 +50363,7 @@
 			(uuid "2848b40f-add0-4cb3-a6ea-77a13422bb0c")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C1")
 					(unit 1)
@@ -50430,7 +50430,7 @@
 			(uuid "91eb70ae-7f45-4050-a208-72bd294867ba")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR051")
 					(unit 1)
@@ -50504,7 +50504,7 @@
 			(uuid "abd8da9e-ca0d-4fc5-ad90-6919fa88a88e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R9")
 					(unit 1)
@@ -50580,7 +50580,7 @@
 			(uuid "02b8ece1-faae-43dc-b7e1-0683ed0181c6")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R15")
 					(unit 1)
@@ -50650,7 +50650,7 @@
 			)
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "H1")
 					(unit 1)
@@ -50718,7 +50718,7 @@
 			(uuid "6ba7284c-f728-44f1-a6c3-f835c8ed67ee")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C20")
 					(unit 1)
@@ -50784,7 +50784,7 @@
 			(uuid "5c6288cc-727c-4c8c-81d4-d27cc0d3be43")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR019")
 					(unit 1)
@@ -50902,7 +50902,7 @@
 			(uuid "91411236-e68f-467d-9e39-f8d9bf494392")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "U1")
 					(unit 1)
@@ -50980,7 +50980,7 @@
 			(uuid "4c6ec1a7-b9d6-4898-bca0-6408dd8d7b11")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR029")
 					(unit 1)
@@ -51047,7 +51047,7 @@
 			(uuid "6a6861aa-5b43-4fa8-9615-cedf5c9e18e5")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR032")
 					(unit 1)
@@ -51115,7 +51115,7 @@
 			(uuid "3d854342-a9b4-45bb-a64c-325aa61a7dd4")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C26")
 					(unit 1)
@@ -51189,7 +51189,7 @@
 			(uuid "834fcce7-f2c2-4d8f-af49-1623c27979a2")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C30")
 					(unit 1)
@@ -51263,7 +51263,7 @@
 			(uuid "6c6d4ace-afc8-4b9f-a988-ec82ea40f7b1")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "JP3")
 					(unit 1)
@@ -51330,7 +51330,7 @@
 			(uuid "df6b521a-1ebe-4fc7-8e54-454f9551f97f")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR046")
 					(unit 1)
@@ -51397,7 +51397,7 @@
 			(uuid "f5fb782f-9595-4774-a6ba-e9689d57712e")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR024")
 					(unit 1)
@@ -51494,7 +51494,7 @@
 			(uuid "fb24260a-3981-4e49-8d45-327c0ded3240")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "J4")
 					(unit 1)
@@ -51565,7 +51565,7 @@
 			(uuid "5b99bd13-dfa7-45a8-ac06-8011cb9ce13a")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "SW3")
 					(unit 1)
@@ -51635,7 +51635,7 @@
 			(uuid "c843fa64-79e1-4b23-bab8-07567808321f")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "R12")
 					(unit 1)
@@ -51702,7 +51702,7 @@
 			(uuid "8f942d91-b463-46d9-bb7d-e4c0dcacf469")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR048")
 					(unit 1)
@@ -51772,7 +51772,7 @@
 			(uuid "49572305-fe93-48d0-93ae-abe5a2e6c6e6")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C13")
 					(unit 1)
@@ -51839,7 +51839,7 @@
 			(uuid "c19f4079-595e-48d3-adb2-6fc977256556")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "#PWR021")
 					(unit 1)
@@ -51907,7 +51907,7 @@
 			(uuid "2cf92b4a-5d6e-4fc8-8933-6fcb7a7f8593")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C31")
 					(unit 1)
@@ -51981,7 +51981,7 @@
 			(uuid "bec1fa3c-197a-407e-b4a2-df21f11c05bf")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "C18")
 					(unit 1)
@@ -52052,7 +52052,7 @@
 			(uuid "bd56d955-0b9f-41eb-bcc7-7f2682255caa")
 		)
 		(instances
-			(project "StratoSoar MK2.1"
+			(project "StratoSoar-MK2.1"
 				(path "/4d52b0cb-138f-4b09-bd59-357cba8009fd"
 					(reference "SW2")
 					(unit 1)
