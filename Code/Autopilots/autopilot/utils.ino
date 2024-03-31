@@ -140,6 +140,7 @@ void shortPulse(int pin) {
   digitalWrite(pin, LOW);
 }
 
+/*
 void moveRudder(int degrees, int sleep = 1) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
@@ -154,6 +155,34 @@ void moveRudder(int degrees, int sleep = 1) {
   } else {
     delay(300);
   }
+  digitalWrite(RUDDER_BJT, HIGH);
+  digitalWrite(RUDDER_FET, LOW);
+}
+*/
+
+void moveRudder(int degrees, int sleep = 1) {
+  digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
+  digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
+  rudderServo.write(degrees);
+  if (sleep == 1) {
+#ifdef LOW_POWER
+    LowPower.sleep(300);
+#endif
+#ifndef LOW_POWER
+    delay(300);
+#endif
+  } else {
+    delay(300);
+  }
+  digitalWrite(RUDDER_BJT, HIGH);
+  digitalWrite(RUDDER_FET, LOW);
+}
+
+void moveRudderTest(int degrees) {
+  digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
+  digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
+  rudderServo.write(degrees);
+  delay(300);
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
 }

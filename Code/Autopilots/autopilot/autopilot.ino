@@ -191,7 +191,7 @@ void setup() {
 #endif
 
 #ifdef NEED_RUDDER
-  moveRudder(90, 0); // Move the rudder to 90 degrees.
+  moveRudderTest(90); // Move the rudder to 90 degrees.
 #endif
   delay(1000);
 #ifdef NEED_ELEVATOR
