@@ -54,24 +54,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change comments
 // Work on the wireless function
 
+#include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
+
 #include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
 
-/*
-void longPulse(int, int);
-void moveRudder(int, int);
-void moveElevator(int, int = 1);
-*/
-
-void poop(int, int);
-
-#include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
-#include "src/settings.h"             // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
-#include "src/utils.cpp"
-
-poop(1);
+#include "src/settings.h"
+#include "src/utils.h"
 
 #define pi 3.14159265358979323846
 

@@ -16,7 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "settings.h"
+#pragma once
+
+#include "src/settings.h"
 #include <Arduino.h>
 
 double toRadians(double deg) {
@@ -140,7 +142,7 @@ void shortPulse(int pin) {
   digitalWrite(pin, LOW);
 }
 
-void moveRudder(int degrees, int sleep = 1) {
+void moveRudder(int degrees, int sleep) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
   rudderServo.write(degrees);
@@ -158,7 +160,7 @@ void moveRudder(int degrees, int sleep = 1) {
   digitalWrite(RUDDER_FET, LOW);
 }
 
-void moveElevator(int degrees, int sleep = 1) {
+void moveElevator(int degrees, int sleep) {
   digitalWrite(ELEVATOR_FET, HIGH); // Turn servo on.
   digitalWrite(ELEVATOR_BJT, LOW);  // Turn signal line on.
   elevatorServo.write(degrees);
