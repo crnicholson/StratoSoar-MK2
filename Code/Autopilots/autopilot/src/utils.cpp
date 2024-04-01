@@ -1,5 +1,5 @@
 /*
-utils.ino, part of StratoSoar MK2, for an autonomous glider.
+utils.cpp, part of StratoSoar MK2, for an autonomous glider.
 Copyright (C) 2024 Charles Nicholson
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "headers/settings.h"
+#include "settings.h"
 #include <Arduino.h>
 
 double toRadians(double deg) {
@@ -25,6 +25,15 @@ double toRadians(double deg) {
 
 double toDegrees(double rad) {
   return rad * 180.0 / pi;
+}
+
+double azimuth(double cLat, double cLon, double tLat, double tLon) {
+  double dLon = toRadians(tLon - cLon);
+  double dPhi = log(tan(toRadians(tLat) / 2 + pi / 4) / tan(toRadians(cLat) / 2 + pi / 4));
+  if (fabs(dLon) > pi) {
+    dLon = dLon > 0 ? -(2 * pi - dLon) : (2 * pi + dLon);
+  }
+  return fmod((atan2(dLon, dPhi) + 2 * pi), (2 * pi));
 }
 
 double turningAngle(double cLat, double cLon, double head, double tLat, double tLon) {
@@ -36,15 +45,6 @@ double turningAngle(double cLat, double cLon, double head, double tLat, double t
   if (angle > pi)
     angle -= 2 * pi;
   return toDegrees(angle);
-}
-
-double azimuth(double cLat, double cLon, double tLat, double tLon) {
-  double dLon = toRadians(tLon - cLon);
-  double dPhi = log(tan(toRadians(tLat) / 2 + pi / 4) / tan(toRadians(cLat) / 2 + pi / 4));
-  if (fabs(dLon) > pi) {
-    dLon = dLon > 0 ? -(2 * pi - dLon) : (2 * pi + dLon);
-  }
-  return fmod((atan2(dLon, dPhi) + 2 * pi), (2 * pi));
 }
 
 // Haversine formula to calculate distance between two coordinates.
@@ -140,7 +140,6 @@ void shortPulse(int pin) {
   digitalWrite(pin, LOW);
 }
 
-/*
 void moveRudder(int degrees, int sleep = 1) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
@@ -155,34 +154,6 @@ void moveRudder(int degrees, int sleep = 1) {
   } else {
     delay(300);
   }
-  digitalWrite(RUDDER_BJT, HIGH);
-  digitalWrite(RUDDER_FET, LOW);
-}
-*/
-
-void moveRudder(int degrees, int sleep = 1) {
-  digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
-  digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
-  rudderServo.write(degrees);
-  if (sleep == 1) {
-#ifdef LOW_POWER
-    LowPower.sleep(300);
-#endif
-#ifndef LOW_POWER
-    delay(300);
-#endif
-  } else {
-    delay(300);
-  }
-  digitalWrite(RUDDER_BJT, HIGH);
-  digitalWrite(RUDDER_FET, LOW);
-}
-
-void moveRudderTest(int degrees) {
-  digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
-  digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
-  rudderServo.write(degrees);
-  delay(300);
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
 }
@@ -209,24 +180,6 @@ void readVoltage() {
   int rawVolt = analogRead(BAT_VOLTAGE_PIN);
   rawVolt = rawVolt * 2;
   data.volts = rawVolt * (3.3 / 1023.0) * 100;
-}
-
-void waitForFix() {
-  data.sats = 0;
-  data.fixType = 0;
-  while ((data.fixType < 3) && (data.sats < 5)) { // Make sure location is valid before continuing.
-    if (gps.getPVT()) {
-      getGPSData();
-#ifdef DEVMODE
-      SerialUSB.println("Waiting for fix...");
-      displayData();
-#endif
-    } else {
-#ifdef DEVMODE
-      SerialUSB.println("No PVT data received. Retrying...");
-#endif
-    }
-  }
 }
 
 void I2CScan() {
@@ -388,6 +341,24 @@ void displayData() {
   SerialUSB.print(data.distanceMeters);
   SerialUSB.print(" Voltage: ");
   SerialUSB.println(data.volts);
+}
+
+void waitForFix() {
+  data.sats = 0;
+  data.fixType = 0;
+  while ((data.fixType < 3) && (data.sats < 5)) { // Make sure location is valid before continuing.
+    if (gps.getPVT()) {
+      getGPSData();
+#ifdef DEVMODE
+      SerialUSB.println("Waiting for fix...");
+      displayData();
+#endif
+    } else {
+#ifdef DEVMODE
+      SerialUSB.println("No PVT data received. Retrying...");
+#endif
+    }
+  }
 }
 
 void onWake() {

@@ -59,8 +59,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
 #include <Wire.h>
 
+/*
+void longPulse(int, int);
+void moveRudder(int, int);
+void moveElevator(int, int = 1);
+*/
+
+void poop(int, int);
+
 #include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
-#include "headers/settings.h"         // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
+#include "src/settings.h"             // File with settings for the autopilot, change this instead of the code. Has to be after other includes.
+#include "src/utils.cpp"
+
+poop(1);
 
 #define pi 3.14159265358979323846
 
@@ -191,7 +202,7 @@ void setup() {
 #endif
 
 #ifdef NEED_RUDDER
-  moveRudderTest(90); // Move the rudder to 90 degrees.
+  moveRudder(90, 0); // Move the rudder to 90 degrees.
 #endif
   delay(1000);
 #ifdef NEED_ELEVATOR
