@@ -35,7 +35,7 @@ UAVs, or Unmanned Aerial Vehicles, are autonomous aircraft, usually in the form 
 
 ## What Includes the StratoSoar Project? What Are the Different Parts of it?
 
-**NOTE:** Incomplete, more to come soon.
+**NOTE:** Soon to be merged with following section.
 
 StratoSoar has many parts, detailed below. When something is referred to StratoSoar, it is the collective interfacing of all of these parts that make it.
 
@@ -53,12 +53,13 @@ At the heart of StratoSoar, there is a main flight controller PCB. This is locat
 
 ### Wing and Control Surfaces
 
+<!--
 The glider has a wing, well, because it is a glider. This 5 mm thick foamboard wing measures 80 cm across, and at 10 cm from the wing tips, points up a bit to add a bit of dihedral for stability. The wing has a 40 cm long 2 mm OD carbon fiber rod inlay for added structural support. There are no control surfaces on the wings.
 
 The 5 mm thick foam board rudder of the glider is attached with hot glue and friction to a 3D printed part, to the dimensions shown in the 3D model. The control surface of the rudder is a peice of foam of the same size. There is a 3D printed control horn inserted into the control surface foam, where there is a 3D printed pushrod interfacer attached to the control horn. The control surface of the rudder is attached to the main part of the rudder via packing tape, leaving a 3-5 mm gap between the two foam peices.
 
 The elevator is similar to the rudder in the sense that it is also a 5 mm thick peice of foam board cut the length shown in the 3D model. The control surface of the elevator is once again the same size as the elevator, and both parts are attached through a peice of packing tape.
-
+-->
 ### Plus More, Coming Soon!
 
 ## How Does StratoSoar Work?
@@ -72,10 +73,6 @@ StratoSoar uses data from
 -->
 
 ## What Are Some of the Features?
-
-## What Are the Uses of StratoSoar?
-
-## StratoSoar File and Code Layout
 
 ## Parts and Materials
 
@@ -255,7 +252,7 @@ Currently, StratoSoar is not available to purchase online as a kit or complete p
 
 One of the goals of StratoSoar was to make an affordable and open source system for anyone to perform stratospheric research, so all the files are avilable for free. This means that you can construct StratoSoar from scratch. **A guide to do this will be available soon.**
 
-If you don't want to wait, you can order all the parts for the PCB from the BOM, order the PCB from JLCPCB using the gerbers, and 3D print all the parts according to the 3D files. You would then have to order carbon fiber rods, and cut them to size. You would have to make a wing out of an material you want. Finally, you would have to be comfortable with SMD soldering according to the PCB files.
+If you don't want to wait, you can order all the parts for the PCB from the BOM, order the PCB from JLCPCB using the gerbers, and 3D print all the parts according to the 3D files. You would then have to order carbon fiber rods, and cut them to size. You would have to make a wing out of any material you want. Finally, you would have to be comfortable with SMD soldering according to the PCB files.
 
 ## Helpful Sources and Credits
 
