@@ -18,7 +18,6 @@ A quick little summary of the versions and what worked and what didn't, plus wha
 - StratoSoar MK2.1 - Not here yet!
 
 <br>
-<br>
 
 <img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/><br>_StratoSoar Logo._
 
