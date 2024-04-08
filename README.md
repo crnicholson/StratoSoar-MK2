@@ -17,7 +17,7 @@ A quick little summary of the versions and what worked and what didn't, plus wha
 - StratoSoar MK2.0 - First attempt, many issues. Wrong LDO, transistor, and TCXO footprint. Boost converter did not work. Reset button did not work. Main sketch works along with mostly everything else. Missing silkscreen designators and numerous cosmetic problems. GPS untested. IMU untested.
 - StratoSoar MK2.1 - Not here yet!
 
-<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png)" alt="Logo" width="300"/><br>_StratoSoar Logo._
+<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="Logo" width="300"/><br>_StratoSoar Logo._
 
 <img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="PCB" width="300"/><br>_StratoSoar MK2.0 Circuit Board._
 
