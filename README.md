@@ -1,8 +1,6 @@
-![StratoSoar Logo](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png)<br>_StratoSoar Logo._
 
-![StratoSoar PCB](https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png)<br>_StratoSoar MK2.0 Circuit Board._
 
-# StratoSoar MK2 - The Low Power Autonomous High-Altitude Glider
+# StratoSoar MK2 - The Low-Power Autonomous High-Altitude Glider
 
 **NOTE** - Docs are **NOT FINISHED** yet.
 
@@ -19,23 +17,33 @@ A quick little summary of the versions and what worked and what didn't, plus wha
 - StratoSoar MK2.0 - First attempt, many issues. Wrong LDO, transistor, and TCXO footprint. Boost converter did not work. Reset button did not work. Main sketch works along with mostly everything else. Missing silkscreen designators and numerous cosmetic problems. GPS untested. IMU untested.
 - StratoSoar MK2.1 - Not here yet!
 
+<br>
+
+<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/><br>_StratoSoar Logo._
+
+<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="PCB" width="300"/><br>_StratoSoar MK2.0 Circuit Board._
+
 ## What Is the StratoSoar Project?
 
 StratoSoar is a low-power, adaptive UAV, dropped from a weather balloon at approximately 80,000 feet in altitude. The main goal of StratoSoar is to select GPS co-ordinates for the glider to fly to, and then the glider will try to go there in an efficient manner, or intelligently choose a closer, more realistic landing site without any human interaction. Currently, we want StratoSoar to run off one AAA battery (or possibly two AAAs) for a 6 hour flight.
 
+## What Are the Uses of StratoSoar?
+
+Currently, the two main ideas we are thinking of include an educational kit and something for the study of aerodynamics of StratoSoar (of which very little exist). Other ideas include reusable radiosondes, remote medicine/parcel/etc. delivery, and atmospheric monitoring. 
+
+## What Are Unmanned Aerial Vehicles?
+
+UAVs, or Unmanned Aerial Vehicles, are autonomous aircraft, usually in the form of planes or drones. UAVs have many uses, like [delivering medicine, food, and supplies](https://www.flyzipline.com/) in remote areas or aerial imaging. They also have a large presence in aerial combat with the military. Some of the common types of UAVs include the common quadcopter (what you think of when you think of drones) and fixed wing aircraft (like StratoSoar). UAVs are usually quite large (5-15 meter wingspan, heavy (2-20 kg), and expensive ($100,000-10,000,000 USD). StratoSoar aims to combat the limitations of conventional UAVs with less than 250 grams of weight, 80 cm wingspan, and less than $150 (USD) in cost.
+
 ## What Includes the StratoSoar Project? What Are the Different Parts of it?
 
-**NOTE:** Incomplete, more to come soon.
+**NOTE:** Soon to be merged with following section.
 
 StratoSoar has many parts, detailed below. When something is referred to StratoSoar, it is the collective interfacing of all of these parts that make it.
 
 - **Code** - StratoSoar includes a codebase, which is found here. This is broken into two main parts - one bit of code for the main chip and one bit of code for the secondary chip. Additionally, there is some code for reading and writing to the onboard data storage. This peices of code are refered to as `autopilot.ino`, `autopilotIMU.ino`, and `externalEEPROMRead.ino`. There are also configuration files for all of the code.
 
 - **PCB** - For StratoSoar to function, there needs to be an interface between the code and the physical glider. This is where the circuit board comes in, which houses all the electronics, the chips that hold the code, battery pack, and connections to the servos.
-
-## What Are Unmanned Aerial Vehicles?
-
-UAVs, or Unmanned Aerial Vehicles, are autonomous aircraft, usually in the form of planes or drones. UAVs have many uses, like [delivering medicine, food, and supplies](https://www.flyzipline.com/) in remote areas or aerial imaging. They also have a large presence in aerial combat with the military. Some of the common types of UAVs include the common quadcopter (what you think of when you think of drones) and fixed wing aircraft (like StratoSoar). UAVs are usually quite large (5-15 meter wingspan, heavy (2-20 kg), and expensive ($100,000-10,000,000 USD). StratoSoar aims to combat the limitations of conventional UAVs with less than 250 grams of weight, 80 cm wingspan, and less than $150 (USD) in cost.
 
 ## StratoSoar Layout and Stack-Up
 
@@ -47,12 +55,13 @@ At the heart of StratoSoar, there is a main flight controller PCB. This is locat
 
 ### Wing and Control Surfaces
 
+<!--
 The glider has a wing, well, because it is a glider. This 5 mm thick foamboard wing measures 80 cm across, and at 10 cm from the wing tips, points up a bit to add a bit of dihedral for stability. The wing has a 40 cm long 2 mm OD carbon fiber rod inlay for added structural support. There are no control surfaces on the wings.
 
 The 5 mm thick foam board rudder of the glider is attached with hot glue and friction to a 3D printed part, to the dimensions shown in the 3D model. The control surface of the rudder is a peice of foam of the same size. There is a 3D printed control horn inserted into the control surface foam, where there is a 3D printed pushrod interfacer attached to the control horn. The control surface of the rudder is attached to the main part of the rudder via packing tape, leaving a 3-5 mm gap between the two foam peices.
 
 The elevator is similar to the rudder in the sense that it is also a 5 mm thick peice of foam board cut the length shown in the 3D model. The control surface of the elevator is once again the same size as the elevator, and both parts are attached through a peice of packing tape.
-
+-->
 ### Plus More, Coming Soon!
 
 ## How Does StratoSoar Work?
@@ -66,10 +75,6 @@ StratoSoar uses data from
 -->
 
 ## What Are Some of the Features?
-
-## What Are the Uses of StratoSoar?
-
-## StratoSoar File and Code Layout
 
 ## Parts and Materials
 
@@ -249,7 +254,7 @@ Currently, StratoSoar is not available to purchase online as a kit or complete p
 
 One of the goals of StratoSoar was to make an affordable and open source system for anyone to perform stratospheric research, so all the files are avilable for free. This means that you can construct StratoSoar from scratch. **A guide to do this will be available soon.**
 
-If you don't want to wait, you can order all the parts for the PCB from the BOM, order the PCB from JLCPCB using the gerbers, and 3D print all the parts according to the 3D files. You would then have to order carbon fiber rods, and cut them to size. You would have to make a wing out of an material you want. Finally, you would have to be comfortable with SMD soldering according to the PCB files.
+If you don't want to wait, you can order all the parts for the PCB from the BOM, order the PCB from JLCPCB using the gerbers, and 3D print all the parts according to the 3D files. You would then have to order carbon fiber rods, and cut them to size. You would have to make a wing out of any material you want. Finally, you would have to be comfortable with SMD soldering according to the PCB files.
 
 ## Helpful Sources and Credits
 
