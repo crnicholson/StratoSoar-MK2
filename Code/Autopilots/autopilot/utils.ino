@@ -221,12 +221,14 @@ void I2CScan() {
 }
 
 void streamData() {
+#ifdef DEVMODE
   int available = Serial1.available();
   SerialUSB.print(available);
   SerialUSB.print(" available bytes ");
   while (Serial1.available() > 0) {
     SerialUSB.print(Serial1.read());
   }
+#endif
 }
 
 void getIMUData() {
@@ -234,38 +236,43 @@ void getIMUData() {
     byte t = Serial1.read();
     SerialUSB.println(t);
   }
+
+  // Ask ATMega for data.
   digitalWrite(WRITE_PIN, HIGH);
 #ifdef LOW_POWER
-  LowPower.sleep(5);
+  LowPower.sleep(50);
 #endif
 #ifndef LOW_POWER
-  delay(5);
+  delay(50);
 #endif
   digitalWrite(WRITE_PIN, LOW);
-  // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
 
+  // Wait a little bit before reading the data.
+  // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
 #ifdef LOW_POWER
-  LowPower.sleep(100);
+  LowPower.sleep(50);
 #endif
 #ifndef LOW_POWER
-  delay(100);
+  delay(50);
 #endif
 
-  // if (Serial1.available() == sizeof(receivedData)) {
-  Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
-  data.yaw = receivedData.yaw;
-  data.pitch = receivedData.pitch;
-  data.roll = receivedData.roll;
-  data.temp = receivedData.temp / 100;         // In Celsius.
-  data.humidity = receivedData.humidity / 100; // In relative humidity.
-  data.pressure = receivedData.pressure / 100; // In hPa.
-  // } else {
-  while (Serial1.available() > 0) { // Clear the buffer.
-    byte t = Serial1.read();
-    SerialUSB.println(t);
+  if (Serial1.available() == sizeof(receivedData)) {
+    Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
+    data.yaw = receivedData.yaw;
+    data.pitch = receivedData.pitch;
+    data.roll = receivedData.roll;
+    data.temp = receivedData.temp / 100;         // In Celsius.
+    data.humidity = receivedData.humidity / 100; // In relative humidity.
+    data.pressure = receivedData.pressure / 100; // In hPa.
+  } else {
+#ifdef DEVMODE
+    SerialUSB.println("We got nothing :(");
+    SerialUSB.print("Number of bytes in buffer: ");
+    SerialUSB.println(Serial1.available());
+#endif
+    shortPulse(ERR_LED);
   }
 }
-// }
 
 void calculate() {
   data.turnAngle = turningAngle(data.lat, data.lon, data.yaw, targetLat, targetLon);

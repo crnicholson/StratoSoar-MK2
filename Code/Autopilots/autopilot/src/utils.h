@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+// This is to predefine the functions to allow for default parameters. 
+
 #pragma once
 
 double toRadians(double);

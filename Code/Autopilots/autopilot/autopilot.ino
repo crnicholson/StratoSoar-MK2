@@ -21,41 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // https://github.com/crnicholson/StratoSoar-MK2/.
 
-// ***** Writing below is a bit outdated, I'm working on it. *****
-
-// ***** Usage *****
-// 1. Change the values in "settings.h" to your liking. No values in "vars.h" have to be changed.
-// 2. Do the same to the program "autopilotIMU.ino".
-// 3. Upload the program "autopilot.ino" to the USB on the autopilot board. Use the profile "Arduino Zero (Native USB Board)".
-// 4. Upload the program "autopilotIMU.ino" to the FTDI port on the tracker board. Use the profile "Arduino Pro Mini, 3.3v, 8MHz".
-
-// ***** Why Two MCUs? ****
-// There are two Arduinos (MCUs), an ATMega328P and a SAMD21G18A. The ATMega is sending is data over SoftwareSerial to the hardware serial of the SAMD.
-// The reason this is done is because the Mahony program is blocking and is made for AVR microcontrollers.
-// Blocking means that it doesn't allow the rest of the sketch to function. Delaying the rest of the sketch prevents low power modes, so that is not good.
-// Furthermore, the GPS library that is used requires more memory than what is available on the ATMega, so a SAMD with it's large memory is used.
-// The ATMega is low-power enough without sleep modes, so all is well, unlike the SAMD, which takes some more power.
-
-// ***** Calculations and Principles *****
-
-// ***** Servos *****
-// MOSFETs are used in this program to turn the servos on and off to save power.
-// I also use an NPN BJT (2N3906) to power on and off the PWM line.
-// I do this so when the FET is low, ground can't go through the servo PWM (signal) line,
-// which would damage the servo and the SAMD.
-
-// ***** Low-Power *****
-
-// ***** GPS + GPS Low-Power *****
-
-// ***** To-Do *****
-// Format code - add periods, capitalize, format above documentation
-// Write documentation
-// Change comments
-// Work on the wireless function
-
 #include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
-
 #include <ArduinoLowPower.h>
 #include <Servo.h>
 #include <SparkFun_u-blox_GNSS_v3.h> // http://librarymanager/All#SparkFun_u-blox_GNSS_v3.
@@ -114,7 +80,7 @@ struct __attribute__((packed)) dataStruct {
   int roll;
   int servoPositionElevator;
   int servoPositionRudder;
-  int volts;
+  float volts;
   float turnAngle;
   float distanceMeters;
 } data;
@@ -154,6 +120,9 @@ void setup() {
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
   Wire.begin();
+
+  longPulse(LED, 0); // Pulse LED to show power up.
+  longPulse(ERR_LED, 0);
 
 #ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.

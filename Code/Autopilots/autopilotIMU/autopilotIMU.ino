@@ -142,12 +142,14 @@ void loop() {
   if (data.yaw > 360.0)
     data.yaw -= 360.0;
   if (digitalRead(WRITE_PIN)) {
-    delay(10);
+    // delay(10);
     data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
     data.humidity = BME280humidity();  // Humidity in %RH.
 
     mcuConn.write((byte *)&data, sizeof(data));
+
+    shortPulse(LED);
   }
 #ifdef DEVMODE
   data.temp = BME280temperature();  // Temp in C.
@@ -162,6 +164,8 @@ void loop() {
   Serial.println(data.humidity);
 #endif
 }
+
+// Functions below:
 
 void get_MPU_scaled(void) {
   float temp[3];
