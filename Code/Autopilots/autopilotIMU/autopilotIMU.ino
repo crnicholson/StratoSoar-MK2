@@ -148,8 +148,6 @@ void loop() {
     data.humidity = BME280humidity();  // Humidity in %RH.
 
     mcuConn.write((byte *)&data, sizeof(data));
-
-    shortPulse(LED);
   }
 #ifdef DEVMODE
   data.temp = BME280temperature();  // Temp in C.

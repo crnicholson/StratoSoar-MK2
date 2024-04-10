@@ -70,9 +70,9 @@ int pidMagicElevator() {
   prevErrorElevator = errorElevator;
   integralElevator += errorElevator;
 
-  // int servoPositionElevatorNew = map(servoPositionElevator2, 0, 180, 750, 2250); // For servos that take time not degrees.
+  // int servoPositionElevatorNew = map(servoPositionElevator2, 0, 180, 750, 2250); // For servos that take microseconds not degrees.
 
-  return servoPositionElevator2;
+  return servoPositionElevator2; 
 }
 
 int pidMagicRudder() {
@@ -83,15 +83,15 @@ int pidMagicRudder() {
 
   int outputRudder = KP_RUDDER * errorRudder + KI_RUDDER * integralRudder + KD_RUDDER * (errorRudder - prevErrorRudder); // Calculate the output.
 
-  int servoPositionRudder2 = 90 + outputRudder; // Adjust servo position based on the output.
+  int servoPositionRudder2 = 180 + outputRudder; // Adjust servo position based on the output.
 
   // Update previous error and integral.
   prevErrorRudder = errorRudder;
   integralRudder += errorRudder;
 
-  // int servoPositionRudderNew = map(servoPositionRudder2, 0, 180, 1250, 1750); // For servos that take time not degrees.
+  // int servoPositionRudderNew = map(servoPositionRudder2, 0, 180, 1250, 1750); // For servos that take microseconds not degrees.
 
-  return servoPositionRudder2;
+  return servoPositionRudder2 / 2;
 }
 
 void longPulse(int pin, int sleep = 1) {
@@ -330,6 +330,10 @@ void displayData() {
   SerialUSB.print(data.seconds);
   SerialUSB.print(" Yaw: ");
   SerialUSB.print(data.yaw);
+  SerialUSB.print(" Last Yaw: ");
+  SerialUSB.print(lastYaw);
+  SerialUSB.print(" Yaw Difference: ");
+  SerialUSB.print(yawDifference);
   SerialUSB.print(" Pitch: ");
   SerialUSB.print(data.pitch);
   SerialUSB.print(" Roll: ");
