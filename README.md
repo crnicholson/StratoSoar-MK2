@@ -34,6 +34,8 @@ StratoSoar MK2 officially started on October 1st, and has not ended yet. It will
 
 A new sub-revision for lack of better word comes out every time I make a new PCB. For example, my first version of my PCB was MK2.0. At the time of writing, the current version of StratoSoar is MK2.1. A new version of 3D model is denoted by the Rev number. Rev starts at 0. 0 and 1 are not shown in this repo because they didn't turn out very good. The physical gliders are denoted by the 3D model number. Sometimes a small change is made with glider so the name of the glider is Rev x.x, for example. Sometimes the same happens with the 3D model, again it would be x.x. To put this in practice, the final glider may be MK2.5 Rev 7.3.1. The code has no version history in the way the 3D models and the PCB do.
 
+Also, I use "we" a lot in this writing. This usually refers to myself or this project, but it also refers to my small team over at New England Weather Balloon Society.
+
 One last thing. When I refer to StratoSoar, I am referring to the project as a whole, but more specifically, the most recent version. 
 
 ## What Includes the StratoSoar Project? What Are the Different Parts of it?
@@ -67,6 +69,10 @@ The glider will fly to the selected coordinates, and depending on the user confi
 ## What Are Some of the Features of StratoSoar?
 -->
 
+<!--
+## Why Did I Make This?
+-->
+
 ## Can I Buy a Kit or a Complete Product?
 
 Currently, StratoSoar is not available to purchase online as a kit or complete product. We have plans in the next few years to release a kit for schools, education centers, hobbyists and a complete product for industry at an affordable price. You are welcome to make one in the mean time!
@@ -77,11 +83,15 @@ One of the goals of StratoSoar was to make an affordable and open source system 
 
 ## Helpful Sources and Credits
 
+I'm in the midst of compiling this.
+
 ## Cutdown Mechanism
 
-## Funding
+[See my other WIP GitHub repo.](https://github.com/crnicholson/Cutdown-Mechanism)
 
-We currently have very limited funding to complete this project. We would love any outside support we could get to elevate (no pun intended) this project to the next level. Reach out to me if you have interest at:
+## Funding and Support
+
+We currently have <u>**very**</u> limited funding to complete this project. We would **love any donations or sponsorships** we could get to elevate (no pun intended) this project to the next level. If you don't want to donate, but want to help out, we would love your support with other areas of this project. Reach out to me if you have interest at:
 
 - [newbsballoons@gmail.com](mailto:newbsballoons@gmail.com) (organization email, recommended).
 
