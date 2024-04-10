@@ -6,16 +6,9 @@
 
 **WORK IN PROGRESS** - This project is still in the works. I don't recommend using it yet because it has the potential of being dangerous.
 
-**NEW** - Working on reducing power consumption and physical glider.
+**NEW** - Working on making a real glider. 
 
-**STATE as of 3/22/24** - Second draft of PCBs ordered and coming soon.
-
-## Version History
-
-A quick little summary of the versions and what worked and what didn't, plus what was changed between revisions.
-
-- StratoSoar MK2.0 - First attempt, many issues. Wrong LDO, transistor, and TCXO footprint. Boost converter did not work. Reset button did not work. Main sketch works along with mostly everything else. Missing silkscreen designators and numerous cosmetic problems. GPS untested. IMU untested.
-- StratoSoar MK2.1 - Not here yet!
+**STATE as of 4/9/24** - Second draft of PCBs working!
 
 <br>
 
@@ -27,238 +20,62 @@ A quick little summary of the versions and what worked and what didn't, plus wha
 
 StratoSoar is a low-power, adaptive UAV, dropped from a weather balloon at approximately 80,000 feet in altitude. The main goal of StratoSoar is to select GPS co-ordinates for the glider to fly to, and then the glider will try to go there in an efficient manner, or intelligently choose a closer, more realistic landing site without any human interaction. Currently, we want StratoSoar to run off one AAA battery (or possibly two AAAs) for a 6 hour flight.
 
+StratoSoar is a UAV. Here's a quick definition. UAVs, or Unmanned Aerial Vehicles, are autonomous aircraft, usually in the form of planes or drones. UAVs have many uses, like [delivering medicine, food, and supplies](https://www.flyzipline.com/) to remote areas. They also have a large presence in aerial combat with the military and aerial imaging. Some of the common types of UAVs include the common quadcopter (what you think of when you think of drones) and fixed wing aircraft (like StratoSoar). UAVs are usually quite large (5-15 meter wingspan, heavy (2-20 kg), and expensive ($100,000-10,000,000 USD). StratoSoar aims to combat the limitations of conventional UAVs with less than 250 grams of weight, 80 cm wingspan, and less than $150 (USD) in cost.
+
 ## What Are the Uses of StratoSoar?
 
 Currently, the two main ideas we are thinking of include an educational kit and something for the study of aerodynamics of StratoSoar (of which very little exist). Other ideas include reusable radiosondes, remote medicine/parcel/etc. delivery, and atmospheric monitoring. 
 
-## What Are Unmanned Aerial Vehicles?
+## A Quick Note on MK1, Naming, and Revisions
 
-UAVs, or Unmanned Aerial Vehicles, are autonomous aircraft, usually in the form of planes or drones. UAVs have many uses, like [delivering medicine, food, and supplies](https://www.flyzipline.com/) in remote areas or aerial imaging. They also have a large presence in aerial combat with the military. Some of the common types of UAVs include the common quadcopter (what you think of when you think of drones) and fixed wing aircraft (like StratoSoar). UAVs are usually quite large (5-15 meter wingspan, heavy (2-20 kg), and expensive ($100,000-10,000,000 USD). StratoSoar aims to combat the limitations of conventional UAVs with less than 250 grams of weight, 80 cm wingspan, and less than $150 (USD) in cost.
+StratoSoar MK1 was the precursor and the spark to StratoSoar MK2. StratoSoar MK1 was officially developed from October 1st to July 30th, although StratoSoar MK2 was unofficially being worked on in the months of March through June. StratoSoar MK1 failed to fly autonomously, and it also failed to release from the balloon. Major upgrades have been made since then.
+
+StratoSoar MK2 officially started on October 1st, and has not ended yet. It will end sometime in July, when I launch StratoSoar from a weather balloon. A new major revision (eg. MK3) comes out every time when I release the glider from the balloon in the Summer. After the Summer, work on the next revision begins, with many updates and new features. 
+
+A new sub-revision for lack of better word comes out every time I make a new PCB. For example, my first version of my PCB was MK2.0. At the time of writing, the current version of StratoSoar is MK2.1. A new version of 3D model is denoted by the Rev number. Rev starts at 0. 0 and 1 are not shown in this repo because they didn't turn out very good. The physical gliders are denoted by the 3D model number. Sometimes a small change is made with glider so the name of the glider is Rev x.x, for example. Sometimes the same happens with the 3D model, again it would be x.x. To put this in practice, the final glider may be MK2.5 Rev 7.3.1. The code has no version history in the way the 3D models and the PCB do.
+
+One last thing. When I refer to StratoSoar, I am referring to the project as a whole, but more specifically, the most recent version. 
 
 ## What Includes the StratoSoar Project? What Are the Different Parts of it?
 
-**NOTE:** Soon to be merged with following section.
+StratoSoar has many different parts, and they all combine to make this project. 
 
-StratoSoar has many parts, detailed below. When something is referred to StratoSoar, it is the collective interfacing of all of these parts that make it.
+- **Code** - All of the code directory, and the programs needed to run it. These include the main `.ino`s and the accompanying settings files, along with the test files for the EEPROM.
+- **Glider** - This is the real thing that flies! We include guides to make this, but it is really designed to be more free style, in a sense, where you can design your own glider and use StratoSoar's electronics.
+- **PCB** - The circuit board is the basis of this project, it interfaces the code with the glider. StratoSoar includes the circuit board files and the schematics and everything needed to build a PCB.
+- **3D Files** - StratoSoar requires some 3D printed parts to function, but these files also serve as an interactive build guide. StratoSoar includes the 3D files needed to print parts for the glider and the 3D files to assemble the glider.
+- **Media** - The images and logos of StratoSoar. 
+- **Docs** - StratoSoar has docs to help you assemble and work with it. It is this stuff right here! There is a folder called `Docs` which also includes some interesting legal information about StratoSoar. 
+- **Cutdown Mechanism** - This is the thing that helps you release the glider from the balloon payload - or whatever you want to drop it from. This includes all of the above things but will be in a separate GitHub repository. 
+- **Breadboard Ammeter** - This is an ammeter built into the breadboard to find extremely accurate current readings over time. There will be a small GitHub repo with the code and the wiring diagram. 
 
-- **Code** - StratoSoar includes a codebase, which is found here. This is broken into two main parts - one bit of code for the main chip and one bit of code for the secondary chip. Additionally, there is some code for reading and writing to the onboard data storage. This peices of code are refered to as `autopilot.ino`, `autopilotIMU.ino`, and `externalEEPROMRead.ino`. There are also configuration files for all of the code.
+## How Does StratoSoar Work at a High Level?
 
-- **PCB** - For StratoSoar to function, there needs to be an interface between the code and the physical glider. This is where the circuit board comes in, which houses all the electronics, the chips that hold the code, battery pack, and connections to the servos.
+StratoSoar is attached to a weather balloon via the cutdown mechanism. Once the balloon reaches the desired altitude, the cutdown mechanism drops the glider. The glider then descends, steering its way to specified coordinates. 
 
-## StratoSoar Layout and Stack-Up
+StratoSoar takes pride in being highly configurable and hackable, so there are many ways you change how it comes down built into the code. 
 
-**NOTE:** Incomplete, more to come soon.
+StratoSoar uses data from an IMU that goes through a Mahony filter to receive accurate AHRS, or Attitude Heading Reference System. This can tell StratoSoar the pitch, yaw, and roll of the glider. Then, StratoSoar integrates a GPS module to get the GPS coordinates. Both the GPS and the AHRS are used to compute the azimuth to find the turning angle of the glider. The turning angle tells the glider how much it needs to turn to be facing the correct yaw that will get the glider to the target location. Additionally, an algorithm is used to get the distance between the glider location's and the target location. 
 
-### Electronics
+With the turning angle computed, a PID mechanism is used to control the servo attached to the rudder of the glider. This PID mechanism learn from it's mistakes and can accurately aim the glider in the correct direction. 
 
-At the heart of StratoSoar, there is a main flight controller PCB. This is located in the front of the glider, contained in the bottom of a 3D printed case. The flight controller board also houses the battery. On the top of the 3D printed case, there is a GPS tracker to locate the glider during the flight and send real-time data. This GPS tracker is called LittleLoRa, which will be talked about more later.
+The glider will fly to the selected coordinates, and depending on the user configuration, will either spiral down or release a parachute above the coordinates once it has reached them to safely descend. Additionally, if the glider is too low in altitude, prior to the flight the user can enter closer coordinates as backup landing locations. 
 
-### Wing and Control Surfaces
+**More is a WIP!**
 
-<!--
-The glider has a wing, well, because it is a glider. This 5 mm thick foamboard wing measures 80 cm across, and at 10 cm from the wing tips, points up a bit to add a bit of dihedral for stability. The wing has a 40 cm long 2 mm OD carbon fiber rod inlay for added structural support. There are no control surfaces on the wings.
+## What Are Some of the Features of StratoSoar?
 
-The 5 mm thick foam board rudder of the glider is attached with hot glue and friction to a 3D printed part, to the dimensions shown in the 3D model. The control surface of the rudder is a peice of foam of the same size. There is a 3D printed control horn inserted into the control surface foam, where there is a 3D printed pushrod interfacer attached to the control horn. The control surface of the rudder is attached to the main part of the rudder via packing tape, leaving a 3-5 mm gap between the two foam peices.
-
-The elevator is similar to the rudder in the sense that it is also a 5 mm thick peice of foam board cut the length shown in the 3D model. The control surface of the elevator is once again the same size as the elevator, and both parts are attached through a peice of packing tape.
--->
-### Plus More, Coming Soon!
-
-## How Does StratoSoar Work?
-
-<!--
-**NOTE:** Incomplete, more to come soon.
-
-
-
-StratoSoar uses data from
--->
-
-## What Are Some of the Features?
-
-## Parts and Materials
-
-<!--
-
-
-**NOTE:** Incomplete, more to come soon.
-
-
-
-This codebase is meant to work with the StratoSoar PCB, also on this GitHub repository. On it are these basic components:
-
-
-
--  **Microcontroller** - [SAMD21G18A](https://www.microchip.com/en-us/product/atsamd21g18). This is a modern Cortex-M0 microcontroller by Microchip. It runs on ARM and has low-power capabilities.
-
--  **GPS Module** - [MAX-M10S](https://www.u-blox.com/en/product/max-m10-series). This is a top-of-the-line GPS module from u-blox.
-
--  **Environmental Sensor** - [BME280](https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/). This is a sensor from Bosch proven to work on HAB flights. Measures temperature, pressure, and humidity.
-
--  **Boost Converter** - [TPS61200](https://www.ti.com/product/TPS61200). This is a boost converter from Texas Instruments. This is used to convert from 1.5v (or 3v with two batteries) to 5v for the servos. The output of this is hooked up to the input of the LDO.
-
--  **LDO Step-Down Regulator** - [MCP1700](https://www.microchip.com/en-us/product/mcp1700). This is 5v to 3.3v low-dropout and low-quiescent current voltage regulator, supplying everything besides the servos.
-
--  **Internal Measurement Unit (IMU)** - [MPU-9250](https://invensense.tdk.com/products/motion-tracking/9-axis/mpu-9250/). This little device is an accelormeter, gyroscope, and magnetometer all-in-one that can be used to find pitch, roll, and yaw among other metrics.
-
-
-
-This list is not at all comprehensive, but it features the basic components. Check out the schematic for more!
--->
-
-## Setting up Microchip Studio for Bootloader Programming
-
-## Setting up Arduino IDE for USB Programming
-
-<!--
-
-
-**NOTE:** Incomplete, more to come soon.
-
-
-
-This project is based on the Arduino IDE workflow. Below steps outline steps necessary to install Arduino IDE and configure it for the SAMD microcontroller.
-
-
-
-1. Install [Arduino IDE](https://www.arduino.cc/en/software) from [here](https://www.arduino.cc/en/software).
-
-2. [Download the Arduino SAMD core](https://docs.arduino.cc/learn/starting-guide/cores/).
-
-3. Download necessary libraries from library manager:
-
-
-
-a. ArduinoLowPower
-
-c. Sparkfun GNSS v3
-
-
-
-5. To following needs to be downloaded directly from GitHub:
-
-a. TinyBME280
-
-
-
-4. Open Tiny4FSK.ino by double-clicking it (should open Arduino IDE).
-
-
-
-The SAMD goes to sleep to save power. To achieve proper sleep, some edits to the SAMD core are necessary. To find the wiring.c file on your computer, [follow this guide](https:support.arduino.cc/hc/en-us/articles/4415103213714-Find-sketches-libraries-board-cores-and-other-files-on-your-computer).
-
-Once there, comment out or completely delete this line as shown:
-
-
-
-#ifndef VERY_LOW_POWER
-
-// Setup all pins (digital and analog) in INPUT mode (default is nothing)
-
-for (uint32_t ul = 0 ; ul < NUM_DIGITAL_PINS ; ul++ )
-
-{
-
-pinMode( ul, INPUT ) ;
-
-}
-
-#endif
-
-
-
-**NOTE: ** Arduino gives you an official warning:
-
-
-
-> This breaks Arduino APIs since all pins are considered INPUT at startup. However, it really lowers the power consumption by a factor of 20 in low power mode (0.03mA vs 0.6mA).
-
->
-
-Though from testing, there do not seem to be any performance issues.
--->
-
-## Code Configuration
-
-<!--
-**NOTE:** False information, an update will be coming soon.
-
-
-
-User configuration of StratoSoar is **required**. The file to change the settings is located under `Code > Autopilots > autopilot > headers > settings.h`. Here are some instructions guiding you through configuration.
-
-
-
-`STATUS_LED` - Comment out to disable verbose status LEDs on PCB.
-
-
-
-`DEVMODE` - Comment out for flight mode. Disables Serial and enables deep sleep modes for lower power consumption.
-
-
-
-**Everything below these values in the configuration file can go unchanged.** These are pin numbers, and unless you are making your own PCB, leave them be.
-
-
-
-`EXTINT` - GPS EXTINT pin for longer packet delays.
-
-
-
-`SUCCESS_LED` - Success LED pin.
-
-
-
-`ERROR_LED` - Error LED pin.
--->
-
-## PCB Configuration
-
-<!--
-**NOTE:** False information, an update will be coming soon.
-
-
-
-The StratoSoar PCB has many configurable operating modes, pins and power sources. This section will outline these parts of the PCB.
-
-
-
-The PCB contains two jumpers, JP1 and JP2.
-
-
-
-**JP1** - Cut (desolder) to enable SW3 for power.
-
-
-
-**JP2** - Control power source (USB and center for USB mode, center and BATT for battery mode).
-
-
-
-There are also two switches/buttons, SW1 and SW2.
-
-
-
-**SW1** - Reset button for the microcontroller.
-
-
-
-**SW2** - Battery power switch. Connects battery output to boost converter input.
--->
+## What Are the Uses of StratoSoar?
 
 ## Can I Buy a Kit or a Complete Product?
 
-Currently, StratoSoar is not available to purchase online as a kit or complete product. We have plans in the next few years to release a kit for schools, education centers, hobbyists and a complete product for industry at an affordable price. You are welcome to make one.
+Currently, StratoSoar is not available to purchase online as a kit or complete product. We have plans in the next few years to release a kit for schools, education centers, hobbyists and a complete product for industry at an affordable price. You are welcome to make one in the mean time!
 
-## How Can I Make One?
+## How Can I Make One? Are There Docs?
 
-One of the goals of StratoSoar was to make an affordable and open source system for anyone to perform stratospheric research, so all the files are avilable for free. This means that you can construct StratoSoar from scratch. **A guide to do this will be available soon.**
-
-If you don't want to wait, you can order all the parts for the PCB from the BOM, order the PCB from JLCPCB using the gerbers, and 3D print all the parts according to the 3D files. You would then have to order carbon fiber rods, and cut them to size. You would have to make a wing out of any material you want. Finally, you would have to be comfortable with SMD soldering according to the PCB files.
+One of the goals of StratoSoar was to make an affordable and open source system for anyone to perform stratospheric research, so all the files are available for free. This means that you can construct StratoSoar from scratch. **A guide to do this will be available soon. It is still in the works, but you can check out `DOCS.md` under the `Docs` folder.** 
 
 ## Helpful Sources and Credits
-
-## LittleLoRa
 
 ## Cutdown Mechanism
 
@@ -276,6 +93,8 @@ This project would not be possible without the following individuals:
 
 - Max Kendall (W0MXX) for working closely together with me.
 
+- Mike Malis for helping with the design of the glider. 
+
 - Brett Miwa for schematic review, PCB design, electrical theory, and boost converter circuitry design.
 
 - Bob Phinney (K5TEC) for providing NEST and securing funding.
@@ -288,21 +107,20 @@ This project would not be possible without the following individuals:
 
 And these entities:
 
-- New England Sci-Tech (NEST) for providing a makerspace to work, funding, and hosting NEWBS.
+- New England Sci-Tech (NEST) for providing a maker space to work, funding, and hosting NEWBS.
 
-- New England Weather Balloon Society (NEWBS) for expertise and the opportunity.
+- New England Weather Balloon Society (NEWBS) for expertise and the opportunity
 
-And of course, I can't forget to thank all the individuals volunteering time developing such things as the Arduino core, Arduino libraries, KiCAD, and many other opensource tools.
+## Affiliate Programs and Projects
 
-Last but not least, thanks to all the people who helped indirectly on websites such as Stack Exchange, Stack Overflow, and NEWBS Discord server, to name a few.
-
-## Affiliate Programs
-
-## Sponsors
+- **LittleLoRa** - This is my high altitude tracking system designed to play in with my glider. It is still in development. 
+- **NEWBS** - Max and Seth Kendall of NEWBS, or New England Weather Balloon Society, are helping me launch my project from a balloon. They are dedicated to helping people in New England launch weather balloons. 
+- **New England Sci-Tech** - Bob Phinney of NEST is hosting NEWBS. NEST is a great maker space. If you are in the Greater Boston Area, go check them out!
+- **StratoScience** - This is the official class that I'm in helping me launch my project. This is a high altitude engineering class for teens. Check them out if your are in the Greater Boston area!
 
 ## Still Have Questions?
 
-Do you have any questions? Are the docs incomplete and you want to ask anything? Do you just want to say hi?
+Do you have any questions? Are the docs incomplete and you want to ask anything? Do you just want to say hi (or how cool my project is!)?
 
 Reach out to me at [charlienicholsonr@gmail.com](mailto:charlienicholsonr@gmail.com).
 

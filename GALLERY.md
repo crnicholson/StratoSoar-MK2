@@ -1,0 +1,1 @@
+# A Markdown Photo Gallery of StratoSoar - A Work in Progress!
