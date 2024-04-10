@@ -18,7 +18,7 @@
 
 ## What Is the StratoSoar Project?
 
-StratoSoar is a low-power, adaptive UAV, dropped from a weather balloon at approximately 80,000 feet in altitude. The main goal of StratoSoar is to select GPS co-ordinates for the glider to fly to, and then the glider will try to go there in an efficient manner, or intelligently choose a closer, more realistic landing site without any human interaction. Currently, we want StratoSoar to run off one AAA battery (or possibly two AAAs) for a 6 hour flight.
+StratoSoar is a low-power, adaptive UAV, dropped from a weather balloon at approximately 80,000 feet in altitude. The main goal of StratoSoar is to select GPS coordinates for the glider to fly to, and then the glider will try to go there in an efficient manner, or intelligently choose a closer, more realistic landing site without any human interaction. Currently, we want StratoSoar to run off one AAA battery (or possibly two AAAs) for a 6 hour flight.
 
 StratoSoar is a UAV. Here's a quick definition. UAVs, or Unmanned Aerial Vehicles, are autonomous aircraft, usually in the form of planes or drones. UAVs have many uses, like [delivering medicine, food, and supplies](https://www.flyzipline.com/) to remote areas. They also have a large presence in aerial combat with the military and aerial imaging. Some of the common types of UAVs include the common quadcopter (what you think of when you think of drones) and fixed wing aircraft (like StratoSoar). UAVs are usually quite large (5-15 meter wingspan, heavy (2-20 kg), and expensive ($100,000-10,000,000 USD). StratoSoar aims to combat the limitations of conventional UAVs with less than 250 grams of weight, 80 cm wingspan, and less than $150 (USD) in cost.
 
