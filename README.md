@@ -63,9 +63,9 @@ The glider will fly to the selected coordinates, and depending on the user confi
 
 **More is a WIP!**
 
+<!--
 ## What Are Some of the Features of StratoSoar?
-
-## What Are the Uses of StratoSoar?
+-->
 
 ## Can I Buy a Kit or a Complete Product?
 
