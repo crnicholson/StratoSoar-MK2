@@ -39,7 +39,7 @@ long lastEEPROM = 123456;
 int lastYaw = 361;
 bool spiral = false;
 bool runEEPROM = true;
-bool firstFive = true;
+bool fastUpdatePeriod = true;
 long eepromAddress, start, now, ms, last;
 
 // Setpoint and input variables.
@@ -197,7 +197,7 @@ void setup() {
 
 void loop() {
 #ifndef TEST_COORD
-  if (!firstFive | !spiral) {
+  if (!fastUpdatePeriod | !spiral) {
     now = millis();
     ms = now - last;
     if (ms > GPS_SLEEP) {
@@ -274,7 +274,7 @@ void loop() {
 
   // If the glider is in the fist five minutes of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
   if (!spiral) {
-    if (firstFive | yawDifference > abs(YAW_DFR_THRESHOLD)) {
+    if (fastUpdatePeriod | yawDifference > abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
 #ifdef DEVMODE
       SerialUSB.println("Out of threshold.");
@@ -297,14 +297,14 @@ void loop() {
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
-      if (ms < 300000) { // Check if it is still the first five.
+      if (ms < FAST_UPDATE_PERIOD) { // Check if it is still in the update period.
 #ifdef LOW_POWER
         LowPower.sleep(ABV_THRS_FRST_FVE_SLP - 200);
 #endif
 #ifndef LOW_POWER
         delay(ABV_THRS_FRST_FVE_SLP - 200);
 #endif
-        firstFive = true;
+        fastUpdatePeriod = true;
       } else {
 #ifdef LOW_POWER
         LowPower.sleep(ABOVE_THRESHOLD_SLEEP - 200);
@@ -312,7 +312,7 @@ void loop() {
 #ifndef LOW_POWER
         delay(ABOVE_THRESHOLD_SLEEP - 200);
 #endif
-        firstFive = false;
+        fastUpdatePeriod = false;
       }
 #ifdef DIVE_STALL
       if (TOO_SLOW <= 5) {

@@ -2,6 +2,8 @@
 *.json
 *.DS_Store
 *.kicad_prl
+*.kicad_pcb.lck
+*.kicad_sch.lck
 fp-info-cache
 StratoSoar-MK2.1-backups/
 .stfolder

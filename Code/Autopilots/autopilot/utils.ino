@@ -72,7 +72,7 @@ int pidMagicElevator() {
 
   // int servoPositionElevatorNew = map(servoPositionElevator2, 0, 180, 750, 2250); // For servos that take microseconds not degrees.
 
-  return servoPositionElevator2; 
+  return servoPositionElevator2;
 }
 
 int pidMagicRudder() {
@@ -234,16 +234,18 @@ void streamData() {
 void getIMUData() {
   while (Serial1.available() > 0) { // Clear the buffer.
     byte t = Serial1.read();
+#ifdef DEVMODE
     SerialUSB.println(t);
+#endif
   }
 
   // Ask ATMega for data.
   digitalWrite(WRITE_PIN, HIGH);
 #ifdef LOW_POWER
-  LowPower.sleep(50);
+  LowPower.sleep(30);
 #endif
 #ifndef LOW_POWER
-  delay(50);
+  delay(30);
 #endif
   digitalWrite(WRITE_PIN, LOW);
 
@@ -256,7 +258,7 @@ void getIMUData() {
   delay(50);
 #endif
 
-  if (Serial1.available() == sizeof(receivedData)) {
+  if (Serial1.available()) {
     Serial1.readBytes((byte *)&receivedData, sizeof(receivedData));
     data.yaw = receivedData.yaw;
     data.pitch = receivedData.pitch;
@@ -291,7 +293,7 @@ void getGPSData() {
   data.lon = gps.getLongitude();
   data.lon = data.lon / 10000000;
   data.alt = gps.getAltitude();
-  data.alt = data.alt / 1000; // Convert to meters, I think?
+  data.alt = data.alt / 1000;
   data.sats = gps.getSIV();
   data.fixType = gps.getFixType();
   data.speed = gps.getGroundSpeed();

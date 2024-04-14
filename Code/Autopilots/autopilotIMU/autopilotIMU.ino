@@ -137,18 +137,25 @@ void loop() {
   data.roll *= 180.0 / PI;
 
   data.yaw = -data.yaw + MAG_DEC;
-  if (data.yaw < 0)
+  if (data.yaw < 0) {
     data.yaw += 360.0;
-  if (data.yaw > 360.0)
+  }
+  if (data.yaw > 360.0) {
     data.yaw -= 360.0;
+  }
+
   if (digitalRead(WRITE_PIN)) {
-    // delay(10);
+    digitalWrite(LED, HIGH);
+    delay(50);
+    digitalWrite(LED, LOW);
+
     data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
     data.humidity = BME280humidity();  // Humidity in %RH.
 
     mcuConn.write((byte *)&data, sizeof(data));
   }
+
 #ifdef DEVMODE
   data.temp = BME280temperature();  // Temp in C.
   data.humidity = BME280humidity(); // Humidity in %RH.

@@ -2,7 +2,7 @@
 settings.h, part of StratoSoar MK2, for an autonomous glider.
 Copyright (C) 2024 Charles Nicholson
 
-This program is free software: you can redistribute it and/or modify 
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // Enables.
 #define DEVMODE    // Toggle the serial monitor on and off.
-// #define LOW_POWER // Activates low power mode. Note that the serial monitor will no longer work.
+// #define LOW_POWER  // Activates low power mode. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
@@ -34,12 +34,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 
-// Sleep time settings.
-#define GPS_SLEEP 30000 // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. 
-#define SPIRAL_SLEEP 500 // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
+// Time settings.
+#define FAST_UPDATE_PERIOD 600    // In this time, the glider will update its yaw. The time is in seconds.
+#define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes.
+#define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
 #define ABOVE_THRESHOLD_SLEEP 500 // If the yaw is above the threshold, the glider will sleep for this long. Note that 200 will be subtracted from this because there was a 200 ms delay in between moving servos.
-#define ABV_THRS_FRST_FVE_SLP 500 // If the yaw is above the threshold and if the glider is in the first five minutes of flight, the glider will for this long. Same note as above, too. 
+#define ABV_THRS_FRST_FVE_SLP 500 // If the yaw is above the threshold and if the glider is in the first five minutes of flight, the glider will for this long. Same note as above, too.
 
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
@@ -77,19 +78,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define WIRELESS_TX A5 // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
-double targetLat = 42.36011635715412, targetLon = -71.09414503280355; // MIT coordinates.
+double targetLat = 42.31562, targetLon = -71.33430; // MIT coordinates.
 
 // Testing coordinates.
-double testLat = 42.3165665, testLon = -71.33451619; // NEST coordinates.
+double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
 
 // Baud rates.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
 #define BAUD_RATE 9600          // Serial link to the ATMega.
 
 // EEPROM.
-#define MAX_ADDRESS 64000       // This is how many 8 bit pages your EEPROM has, 64,000 for a 512 kilobit EEPROM.
+#define MAX_ADDRESS 64000  // This is how many 8 bit pages your EEPROM has, 64,000 for a 512 kilobit EEPROM.
 #define WRITE_TIME_BYTES 5 // Milliseconds between writing a byte to the EEPROM.
-#define WRITE_TIME 1.5          // The seconds between EEPROM writings as calculated previously.
+#define WRITE_TIME 1.5     // The seconds between EEPROM writings as calculated previously.
 
 // Servo objects and names.
 #ifdef NEED_RUDDER
