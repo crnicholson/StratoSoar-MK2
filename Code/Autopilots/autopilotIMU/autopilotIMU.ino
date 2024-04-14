@@ -146,7 +146,7 @@ void loop() {
 
   if (digitalRead(WRITE_PIN)) {
     digitalWrite(LED, HIGH);
-    delay(50);
+    delay(25);
     digitalWrite(LED, LOW);
 
     data.pressure = BME280pressure(); // Pressure in Pa.
