@@ -81,11 +81,15 @@ void setup() {
   digitalWrite(PARACHUTE_FET, LOW);
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
+  delay(10000);
+  blink(ERR_LED);
 
   SerialUSB.begin(SERIAL_BAUD_RATE);
   while (!SerialUSB)
     ;
   SerialUSB.println("StratoSoar MK2.x EEPROM reader.");
+
+  blink(LED);
 
   Wire.begin();
 
@@ -94,7 +98,7 @@ void setup() {
   if (myMem.begin() == false) {
     SerialUSB.println("No memory detected. Freezing.");
     while (1)
-      ;
+      blink(ERR_LED);
   }
   SerialUSB.println("EEPROM detected!");
   SerialUSB.print("EEPROM size in bytes: ");
@@ -134,4 +138,15 @@ void loop() {
     while (1)
       ;
   }
+}
+
+void blink(int pin) {
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+  delay(500);
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+  delay(500);
 }

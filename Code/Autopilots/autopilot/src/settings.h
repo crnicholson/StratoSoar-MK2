@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-#define DEVMODE    // Toggle the serial monitor on and off.
+// #define DEVMODE    // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
@@ -35,7 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 
 // Time settings.
-#define FAST_UPDATE_PERIOD 600    // In this time, the glider will update its yaw. The time is in seconds.
+#define FAST_UPDATE_PERIOD_S 600    // In this time, the glider will update its yaw. The time is in seconds.
 #define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
@@ -111,3 +111,5 @@ Servo elevatorServo;
 #define KP_ELEVATOR 1.0 // Proportional gain.
 #define KI_ELEVATOR 0.0 // Integral gain.
 #define KD_ELEVATOR 0.0 // Derivative gain.
+
+#define FAST_UPDATE_PERIOD FAST_UPDATE_PERIOD_S * 1000

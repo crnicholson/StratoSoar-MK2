@@ -35,24 +35,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define LED 13              // Hardware pin 26. Pin that is connected to the main green LED.
 #define ERR_LED A0          // Hardware pin 3. Pin that connects ot the red error LED.
 #define BAT_VOLTAGE_PIN A1  // Hardware pin 7. Pin for battery voltage measurement.
-#define WRITE_PIN A2        // Hardware pin 8. Pin that is driven high to receive serial data from the ATMega.
+#define WRITE_PIN A2        // Hardware pin 8. Pin that is driven high to receive SerialUSB data from the ATMega.
 // #define GPIO A3 // Hardware pin 9. Unused GPIO on autopilot.
 #define WIRELESS_RX A4 // Hardware pin 10. Pin that connects to the HCO5. More info in the docs.
 #define WIRELESS_TX A5 // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Other settings.
-#define MAX_ADDRESS 64000       // This is how many 8 bit pages your EEPROM has. 64,000 for a 512 kilobit EEPROM.
-#define WRITE_TIME 10           // Milliseconds between writing a byte.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
 
 #include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
 #include <Wire.h>
 
-long address, start;
+long address, startTimer, endTimer, length, average;
 
 byte counter;
-
-int timeEstimate = WRITE_TIME * MAX_ADDRESS / 1000;
 
 ExternalEEPROM myMem;
 
@@ -80,46 +76,71 @@ void setup() {
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
 
+  Wire.begin();
+
+  blink(ERR_LED);
+
   SerialUSB.begin(SERIAL_BAUD_RATE);
   while (!SerialUSB)
     ;
-  SerialUSB.println("StratoSoar MK2.x EEPROM writer.");
 
-  Wire.begin();
+  SerialUSB.println("StratoSoar MK2.x EEPROM writer.");
 
   myMem.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
   if (myMem.begin() == false) {
     SerialUSB.println("No memory detected. Freezing.");
     while (1)
-      ;
+      blink(ERR_LED);
   }
 
   SerialUSB.println("EEPROM detected!");
   SerialUSB.print("EEPROM size in bytes: ");
-  SerialUSB.println(myMem.length());
-  SerialUSB.print("Time estimate in seconds: ");
-  SerialUSB.println(timeEstimate);
+  length = myMem.length();
+  SerialUSB.println(length);
+  SerialUSB.println("Erasing EEPROM, should take ~10 seconds.");
+  startTimer = millis();
+  myMem.erase();
+  endTimer = millis();
+  SerialUSB.print("Done erasing. Time took in milliseconds: ");
+  SerialUSB.println(endTimer - startTimer);
+  SerialUSB.println("Testing write time.");
+  average = myMem.detectWriteTimeMs(10);
+  SerialUSB.print("Average write time in milliseconds: ");
+  SerialUSB.println(average);
   SerialUSB.println("Beginning writing in 10 seconds...");
-  
+
   delay(10000);
-  start = millis();
+  startTimer = millis();
 }
 
 void loop() {
-  if (address < MAX_ADDRESS) {
+  if (address < length) {
     if (counter < 255) {
       myMem.write(address, counter);
       counter++;
       address++;
-      delay(WRITE_TIME);
+      while (myMem.isBusy()) {
+        delayMicroseconds(100);
+      }
     } else {
       counter = 0;
     }
   } else {
     SerialUSB.print("Time took: ");
-    SerialUSB.println(millis() - start);
+    SerialUSB.println(millis() - startTimer);
     while (1)
       ;
   }
+}
+
+void blink(int pin) {
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+  delay(500);
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+  delay(500);
 }
