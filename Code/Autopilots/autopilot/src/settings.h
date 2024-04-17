@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-// #define DEVMODE    // Toggle the serial monitor on and off.
+#define DEVMODE    // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
@@ -33,7 +33,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define DIVE_STALL    // Dive down when speed gets too low.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
-#define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button.
+// #define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button.
 #define GROUND // If doing ground testing, use this to enable faster updates.  
 // #define ERASE_EEPROM // If enabled, the EEPROM will be erased before every flight. This is not recommended.
 

@@ -147,40 +147,55 @@ void setup() {
   eeprom.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
   if (eeprom.begin() == false) {
-    #ifdef DEVMODE
+#ifdef DEVMODE
     SerialUSB.println("No EEPROM detected. Freezing sketch.");
-    #endif
+#endif
     while (1)
       longPulse(ERR_LED, 0);
   }
 
+  eepromSize = eeprom.length();
+#ifdef DEVMODE
   SerialUSB.println("EEPROM detected!");
   SerialUSB.print("EEPROM size in bytes: ");
-  eepromSize = eeprom.length();
   SerialUSB.println(eepromSize);
+#endif
 #ifdef ERASE_EEPROM
+#ifdef DEVMODE
   SerialUSB.println("Erasing EEPROM, should take ~10 seconds.");
+#endif
   startTimer = millis();
   eeprom.erase();
   endTimer = millis();
+#ifdef DEVMODE
   SerialUSB.print("Done erasing. Time took in milliseconds: ");
   SerialUSB.println(endTimer - startTimer);
 #endif
+#endif
+#ifdef DEVMODE
   SerialUSB.println("Testing write time.");
+#endif
   averageWrite = eeprom.detectWriteTimeMs(10);
+#ifdef DEVMODE
   SerialUSB.print("Average write time in milliseconds: ");
   SerialUSB.println(averageWrite);
+#endif
 
   // Testing EEPROM.
-  myMem.write(0, 200);
+  eeprom.write(0, 200);
 
+#ifdef DEVMODE
   SerialUSB.println("Testing EEPROM.");
   SerialUSB.print("I read (should be 200): ");
-  SerialUSB.println(myMem.read(0));
-  if (myMem.read(0) != 200) {
-
+  SerialUSB.println(eeprom.read(0));
+#endif
+  if (eeprom.read(0) != 200) {
+    #ifdef DEVMODE
+    SerialUSB.println("Warning: EEPROM is not working as expected. Try removing the average write time finder from the code.");
+    #endif
+    longPulse(ERR_LED, 0);
   }
-  #endif
+#endif
 
 #ifdef NEED_RUDDER
   rudderServo.attach(RUDDER_PIN);
@@ -407,7 +422,7 @@ void loop() {
       }
 #endif
 #ifdef EEPROM_BUTTON
-      if (digitalRead(BUTTON)) {
+      if (!digitalRead(BUTTON)) {
         flightNumber++;
         moveRudder(0);
         delay(500);
