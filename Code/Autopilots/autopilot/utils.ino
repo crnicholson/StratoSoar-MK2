@@ -213,10 +213,11 @@ void I2CScan() {
       SerialUSB.println(address, HEX);
     }
   }
-  if (nDevices == 0) {
-    SerialUSB.println("No I2C devices found\n");
+  if (nDevices == 0 | nDevices == 1) {
+    SerialUSB.println("One or more I2C device is not responding.");
+    longPulse(ERR_LED);
   } else {
-    SerialUSB.println("Done\n");
+    SerialUSB.println("All devices found successfully.");
   }
 }
 
@@ -404,6 +405,7 @@ void gpsConfig() {
 #ifdef DEVMODE
     SerialUSB.println(F("*** Warning: setDynamicModel failed ***"));
 #endif
+    longPulse(ERR_LED);
   } else {
 #ifdef DEVMODE
     SerialUSB.println(F("Dynamic platform model changed successfully!"));

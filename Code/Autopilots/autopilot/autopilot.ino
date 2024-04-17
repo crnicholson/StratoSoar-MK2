@@ -128,17 +128,18 @@ void setup() {
 #ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
   while (!SerialUSB) {
-    ; // Wait for serial to connect
+    longPulse(ERR_LED, 0); // Wait for serial to connect
   }
 
   SerialUSB.println("StratoSoar MK2.x Flight Controller");
 #endif
 
   Serial1.begin(BAUD_RATE); // Hardware serial connection to the ATMega and the IMU.
-  longPulse(LED, 0);        // Pulse LED to show power up.
+
+  longPulse(LED, 0);
   longPulse(ERR_LED, 0);
 
-  I2CScan();
+  I2CScan(); // This will long pulse LED if there is an error.
 
   eeprom.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
@@ -189,12 +190,12 @@ void setup() {
     SerialUSB.println(F("u-blox GNSS not detected at default I2C address. Please check wiring. Freezing."));
 #endif
     while (1)
-      ;
+      longPulse(ERR_LED, 0);
   }
 
   // gps.hardReset(); // Hard reset - force a cold start.
 
-  gpsConfig();
+  gpsConfig(); // This will long pulse LED if there is an error.
 
   waitForFix();
 #endif
@@ -210,7 +211,9 @@ void setup() {
 }
 
 void loop() {
+  shortPulse(LED);
 #ifndef TEST_COORD
+#ifdef LOW_POWER
   if (!fastUpdatePeriod | !spiral) {
     now = millis();
     ms = now - last;
@@ -230,13 +233,17 @@ void loop() {
     waitForFix();
   }
 #endif
+#ifndef LOW_POWER
+  waitForFix();
+#endif
+#endif
 
 #ifdef TEST_COORD
   data.lat = testLat;
   data.lon = testLon;
 #endif
 
-  getIMUData(); // Get data from the ATMega.
+  getIMUData(); // Get data from the ATMega. This will short pulse LED if there is an error.
   calculate();  // Find distance, turning angle, and more.
 
 #ifdef CHANGE_TARGET
@@ -286,7 +293,7 @@ void loop() {
   }
 #endif
 
-  // If the glider is in the fist five minutes of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
+  // If the glider is in the initial fast-update period of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
   if (!spiral) {
     if (fastUpdatePeriod | yawDifference > abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
@@ -316,10 +323,10 @@ void loop() {
       if (ms < FAST_UPDATE_PERIOD) { // Check if it is still in the fast update period.
 #ifndef GROUND
 #ifdef LOW_POWER
-        LowPower.sleep(ABV_THRS_FRST_FVE_SLP - 200);
+        LowPower.sleep(ABV_THRS_FST_UPDT_SLPFRST_FVE_SLP - 200);
 #endif
 #ifndef LOW_POWER
-        delay(ABV_THRS_FRST_FVE_SLP - 200);
+        delay(ABV_THRS_FST_UPDT_SLPFRST_FVE_SLP - 200);
 #endif
 #endif
         fastUpdatePeriod = true;
