@@ -76,8 +76,6 @@ void setup() {
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
 
-  Wire.begin();
-
   blink(LED);
 
   SerialUSB.begin(SERIAL_BAUD_RATE);
@@ -87,6 +85,8 @@ void setup() {
   delay(5000);
 
   SerialUSB.println("StratoSoar MK2.x EEPROM writer.");
+
+  Wire.begin();
 
   myMem.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
@@ -100,6 +100,7 @@ void setup() {
   SerialUSB.print("EEPROM size in bytes: ");
   length = myMem.length();
   SerialUSB.println(length);
+
   /*
   SerialUSB.println("Erasing EEPROM, should take ~10 seconds.");
   startTimer = millis();
@@ -108,10 +109,21 @@ void setup() {
   SerialUSB.print("Done erasing. Time took in milliseconds: ");
   SerialUSB.println(endTimer - startTimer);
   */
+  /*
+  // Detecting write time with the library version 3.2.5 gives many issues with reading and writing bytes.
   SerialUSB.println("Testing write time.");
   average = myMem.detectWriteTimeMs(10);
   SerialUSB.print("Average write time in milliseconds: ");
   SerialUSB.println(average);
+  */
+
+  // Testing EEPROM.
+  myMem.write(0, 200);
+
+  SerialUSB.println("Testing EEPROM.");
+  SerialUSB.print("I read (should be 200): ");
+  SerialUSB.println(myMem.read(0));
+
   SerialUSB.println("Beginning writing in 10 seconds...");
 
   delay(10000);
@@ -119,40 +131,24 @@ void setup() {
 }
 
 void loop() {
-  /*
   if (address < length) {
     if (counter < 255) {
       myMem.write(address, counter);
       counter++;
       address++;
       while (myMem.isBusy()) {
-        delayMicroseconds(100);
+        SerialUSB.print(".");
+        delayMicroseconds(600);
       }
     } else {
       counter = 0;
     }
   } else {
-    SerialUSB.print("Time took: ");
+    SerialUSB.print("Time took in seconds: ");
     SerialUSB.println((millis() - startTimer) / 1000);
     while (1)
-      ;
+      blink(LED);
   }
-  */
-  byte test = 1;
-  myMem.write(0, test);
-  delay(10);
-  SerialUSB.println(myMem.read(0));
-  address = address + 1;
-  myMem.write(1, 2);
-  delay(10);
-  SerialUSB.println(myMem.read(1));
-  address = address + 1;
-  myMem.write(address, 3);
-  delay(10);
-  SerialUSB.println(myMem.read(address));
-  address = address + 1;
-  while (1)
-    ;
 }
 
 void blink(int pin) {
