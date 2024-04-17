@@ -33,9 +33,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define DIVE_STALL    // Dive down when speed gets too low.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
+#define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button.
+#define GROUND // If doing ground testing, use this to enable faster updates.  
 
 // Time settings.
-#define FAST_UPDATE_PERIOD_S 600    // In this time, the glider will update its yaw. The time is in seconds.
+#define FAST_UPDATE_PERIOD_S 600  // In this time, the glider will update its yaw more frequently. The time is in seconds.
 #define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
@@ -46,6 +48,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
 #define YAW_DFR_THRESHOLD -5 // The threshold needed to move the servos. Make sure it is a negative number.
+#define EEPROM_CYCLES 10     // This is the number of times the EEPROM will record data after the button is pressed.
 
 // Threshold for parachute and spiraling.
 #define PARACHUTE_ALT_THRESHOLD 500 // If the glider is under this, and the distance is less than PARACHUTE_DST_THRESHOLD, open the parachute.
@@ -73,12 +76,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define ERR_LED A0          // Hardware pin 3. Pin that connects ot the red error LED.
 #define BAT_VOLTAGE_PIN A1  // Hardware pin 7. Pin for battery voltage measurement.
 #define WRITE_PIN A2        // Hardware pin 8. Pin that is driven high to receive serial data from the ATMega.
-// #define GPIO A3 // Hardware pin 9. Unused GPIO on autopilot.
-#define WIRELESS_RX A4 // Hardware pin 10. Pin that connects to the HCO5. More info in the docs.
-#define WIRELESS_TX A5 // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
+#define BUTTON A3           // Hardware pin 9. Used for enabling EEPROM.
+#define WIRELESS_RX A4      // Hardware pin 10. Pin that connects to the HCO5. More info in the docs.
+#define WIRELESS_TX A5      // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
-double targetLat = 42.31562, targetLon = -71.33430; // MIT coordinates.
+double targetLat = 42.31562, targetLon = -71.33430; // Landscaping place near NEST coordinates.
 
 // Testing coordinates.
 double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.

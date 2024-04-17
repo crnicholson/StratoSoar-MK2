@@ -134,10 +134,10 @@ void longPulse(int pin, int sleep = 1) {
 void shortPulse(int pin) {
   digitalWrite(pin, HIGH);
 #ifdef LOW_POWER
-  LowPower.sleep(250);
+  LowPower.sleep(75);
 #endif
 #ifndef LOW_POWER
-  delay(250);
+  delay(75);
 #endif
   digitalWrite(pin, LOW);
 }

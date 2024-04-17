@@ -43201,7 +43201,7 @@
 		(fields_autoplaced yes)
 		(uuid "6c2e2f47-cf35-4006-8a6a-f46f2ea477e1")
 		(property "Reference" "J6"
-			(at 189.738 144.78 0)
+			(at 189.23 144.7799 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -43209,8 +43209,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "JTAG"
-			(at 189.738 147.32 0)
+		(property "Value" "SWD"
+			(at 189.23 147.3199 0)
 			(effects
 				(font
 					(size 1.27 1.27)

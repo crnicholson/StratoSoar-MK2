@@ -34,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ExternalEEPROM eeprom;
 
-int yawDifference, nowEEPROM;
+int yawDifference, nowEEPROM, flightNumber, cycles;
 long lastEEPROM = 123456;
 int lastYaw = 361;
 bool spiral = false;
@@ -109,6 +109,7 @@ void setup() {
   pinMode(FALSE_WAKEUP_PIN, INPUT);
   pinMode(BAT_VOLTAGE_PIN, INPUT);
   pinMode(WRITE_PIN, OUTPUT);
+  pinMode(BUTTON, INPUT_PULLUP);
   digitalWrite(LED, LOW);
   digitalWrite(ERR_LED, LOW);
   digitalWrite(RUDDER_BJT, HIGH);
@@ -286,23 +287,27 @@ void loop() {
       delay(25);
 #endif
 #endif
-      moveRudder(data.servoPositionRudder); // Move servo and turn it off.
-#ifdef LOW_POWER
-      LowPower.sleep(100);
-#endif
-#ifndef LOW_POWER
-      delay(100); // Have a small delay to release the draw on the power supply.
-#endif
-      moveElevator(data.servoPositionElevator); // Move servo and turn it off.
+      moveRudder(data.servoPositionRudder);
+      /*
+      #ifdef LOW_POWER
+            LowPower.sleep(100);
+      #endif
+      #ifndef LOW_POWER
+            delay(100); // Have a small delay to release the draw on the power supply.
+      #endif
+      */
+      moveElevator(data.servoPositionElevator);
       now = millis();
       ms = start - now;
       lastYaw = data.yaw;
-      if (ms < FAST_UPDATE_PERIOD) { // Check if it is still in the update period.
+      if (ms < FAST_UPDATE_PERIOD) { // Check if it is still in the fast update period.
+#ifndef GROUND
 #ifdef LOW_POWER
         LowPower.sleep(ABV_THRS_FRST_FVE_SLP - 200);
 #endif
 #ifndef LOW_POWER
         delay(ABV_THRS_FRST_FVE_SLP - 200);
+#endif
 #endif
         fastUpdatePeriod = true;
       } else {
@@ -320,8 +325,7 @@ void loop() {
       }
 #endif
 #ifdef USE_EEPROM
-      // This saves to an external EEPROM (AT24Cx) so we can get some data.
-      // EEPROM calculations:
+#ifndef EEPROM_BUTTON
       // 512 kilobits, with one byte written at a time. 512,000 / 8 = 64,000. We write four different data points, so 64,000 / 4 = 16,000. There are 21,600 seconds in a six hour flight, so 21,600 / 16,000 = 1.35. We can round that up to 1.5 seconds.
       // If we write to the EEPROM every 1.5 seconds, we won't fill up over a six hour flight.
       if (eepromAddress < MAX_ADDRESS - 200) {
@@ -335,6 +339,8 @@ void loop() {
 #ifndef LOW_POWER
             delay(WRITE_TIME_BYTES);
 #endif
+          } else {
+            eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
           if (sizeof(int(data.pitch)) <= 1) {
@@ -345,6 +351,8 @@ void loop() {
 #ifndef LOW_POWER
             delay(WRITE_TIME_BYTES);
 #endif
+          } else {
+            eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
           if (sizeof(int(data.temp)) <= 1) {
@@ -355,6 +363,8 @@ void loop() {
 #ifndef LOW_POWER
             delay(WRITE_TIME_BYTES);
 #endif
+          } else {
+            eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
           if (sizeof(int(data.pressure / 500)) <= 1) {
@@ -365,8 +375,80 @@ void loop() {
 #ifndef LOW_POWER
             delay(WRITE_TIME_BYTES);
 #endif
+          } else {
+            eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
+        }
+      }
+#endif
+#ifdef EEPROM_BUTTON
+      if (digitalRead(BUTTON)) {
+        flightNumber++;
+        moveRudder(0);
+        delay(500);
+        moveRudder(180);
+        delay(500);
+        moveRudder(90);
+        eeprom.write(eepromAddress, flightNumber);
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+        eeprom.write(eepromAddress, flightNumber);
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+        eeprom.write(eepromAddress, flightNumber);
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+        eeprom.write(eepromAddress, flightNumber);
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+        cycles = 0;
+        while (cycles <= EEPROM_CYCLES) {
+          if (sizeof(int(data.yaw / 2)) <= 1) {
+            eeprom.write(eepromAddress, int(data.yaw / 2));
+          } else {
+            eeprom.write(eepromAddress, 255);
+          }
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          if (sizeof(int(data.pitch)) <= 1) {
+            eeprom.write(eepromAddress, int(data.pitch));
+          } else {
+            eeprom.write(eepromAddress, 255);
+          }
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          if (sizeof(int(data.temp)) <= 1) {
+            eeprom.write(eepromAddress, int(data.temp));
+          } else {
+            eeprom.write(eepromAddress, 255);
+          }
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          if (sizeof(int(data.pressure / 500)) <= 1) {
+            eeprom.write(eepromAddress, int(data.pressure / 500));
+          } else {
+            eeprom.write(eepromAddress, 255);
+          }
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          cycles++;
         }
       }
 #endif

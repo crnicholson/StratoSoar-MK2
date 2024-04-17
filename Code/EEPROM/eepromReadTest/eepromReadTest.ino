@@ -45,18 +45,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define WIRELESS_TX A5 // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Other settings.
-#define READ_TIME 10            // Milliseconds between writing a byte.
 #define SERIAL_BAUD_RATE 115200 // SerialUSB monitor baud rate.
-#define MAX_ADDRESS 64000       // Number of 8 bit pages, usef solely for the time estimate calculations.
+// #define SPREADSHEET             // If enabled, only essential serial messages are printed for seamless integration into spreadsheets.
 
 #include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
 #include <Wire.h>
 
+long startTimer, address, length;
+
 ExternalEEPROM myMem;
-
-long start, address;
-
-int timeEstimate = READ_TIME * MAX_ADDRESS / 1000;
 
 void setup() {
   pinMode(LED, OUTPUT);
@@ -81,60 +78,74 @@ void setup() {
   digitalWrite(PARACHUTE_FET, LOW);
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
-  delay(10000);
-  blink(ERR_LED);
+
+  Wire.begin();
+
+  blink(LED);
 
   SerialUSB.begin(SERIAL_BAUD_RATE);
   while (!SerialUSB)
     ;
+
+#ifndef SPREADSHEET
   SerialUSB.println("StratoSoar MK2.x EEPROM reader.");
-
-  blink(LED);
-
-  Wire.begin();
+#endif
 
   myMem.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
   if (myMem.begin() == false) {
-    SerialUSB.println("No memory detected. Freezing.");
+    SerialUSB.println("No EEPROM detected. Freezing sketch.");
     while (1)
       blink(ERR_LED);
   }
+
+#ifndef SPREADSHEET
   SerialUSB.println("EEPROM detected!");
   SerialUSB.print("EEPROM size in bytes: ");
-  SerialUSB.println(myMem.length());
-  SerialUSB.print("Time estimate in seconds: ");
-  SerialUSB.println(timeEstimate);
+  length = myMem.length();
+  SerialUSB.println(length);
   SerialUSB.println("Beginning reading in 10 seconds...");
   SerialUSB.println("Yaw, pitch, temperature (C), pressure (Pa)");
+#endif
+
   delay(10000);
-  start = millis();
+  startTimer = millis();
 }
 
 void loop() {
-  if (address < MAX_ADDRESS) {
+  if (address < length) {
     // SerialUSB.print("Yaw: ");
     SerialUSB.print(int(myMem.read(address)) * 2);
-    delay(READ_TIME);
     address++;
+    while (myMem.isBusy()) {
+      delayMicroseconds(100);
+    }
     // SerialUSB.print(", Pitch: ");
     SerialUSB.print(" , ");
     SerialUSB.print(myMem.read(address));
-    delay(READ_TIME);
     address++;
+    while (myMem.isBusy()) {
+      delayMicroseconds(100);
+    }
     // SerialUSB.print(", Temp: ");
     SerialUSB.print(" , ");
     SerialUSB.print(myMem.read(address));
-    delay(READ_TIME);
     address++;
+    while (myMem.isBusy()) {
+      delayMicroseconds(100);
+    }
     // SerialUSB.print(", Pressure: ");
     SerialUSB.print(" , ");
     SerialUSB.println(int(myMem.read(address)) * 500);
-    delay(READ_TIME);
     address++;
+    while (myMem.isBusy()) {
+      delayMicroseconds(100);
+    }
   } else {
+#ifndef SPREADSHEET
     SerialUSB.print("Time took in seconds: ");
-    SerialUSB.println((millis() - start) / 1000);
+    SerialUSB.println((millis() - startTimer) / 1000);
+#endif
     while (1)
       ;
   }
