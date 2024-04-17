@@ -104,6 +104,14 @@ void setup() {
   SerialUSB.print("EEPROM size in bytes: ");
   length = myMem.length();
   SerialUSB.println(length);
+
+  byte previous = myMem.read(0);
+  SerialUSB.println("Testing EEPROM.");
+  SerialUSB.print("I read (should be 200): ");
+  myMem.write(0, 200);
+  SerialUSB.println(myMem.read(0));
+  myMem.write(0, previous);
+
   SerialUSB.println("Beginning reading in 10 seconds...");
   SerialUSB.println("Yaw, pitch, temperature (C), pressure (Pa)");
 #endif
