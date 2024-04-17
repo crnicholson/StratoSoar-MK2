@@ -40,7 +40,7 @@ int lastYaw = 361;
 bool spiral = false;
 bool runEEPROM = true;
 bool fastUpdatePeriod = true;
-long eepromAddress, start, now, ms, last;
+long eepromAddress, startTimer, endTimer, eepromSize, averageWrite, now, ms, last;
 
 // Setpoint and input variables.
 double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
@@ -143,14 +143,27 @@ void setup() {
   eeprom.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
   if (eeprom.begin() == false) {
-    SerialUSB.println("No memory detected. Freezing.");
+    SerialUSB.println("No EEPROM detected. Freezing sketch.");
     while (1)
-      ;
+      longPulse(ERR_LED, 0);
   }
 
   SerialUSB.println("EEPROM detected!");
   SerialUSB.print("EEPROM size in bytes: ");
-  SerialUSB.println(eeprom.length());
+  eepromSize = eeprom.length();
+  SerialUSB.println(eepromSize);
+#ifdef ERASE_EEPROM
+  SerialUSB.println("Erasing EEPROM, should take ~10 seconds.");
+  startTimer = millis();
+  eeprom.erase();
+  endTimer = millis();
+  SerialUSB.print("Done erasing. Time took in milliseconds: ");
+  SerialUSB.println(endTimer - startTimer);
+#endif
+  SerialUSB.println("Testing write time.");
+  averageWrite = eeprom.detectWriteTimeMs(10);
+  SerialUSB.print("Average write time in milliseconds: ");
+  SerialUSB.println(averageWrite);
 
 #ifdef NEED_RUDDER
   rudderServo.attach(RUDDER_PIN);
@@ -192,8 +205,8 @@ void setup() {
   SerialUSB.println("Everything has initialized and the script starts in 20 seconds!");
 #endif
   delay(20000);
-  start = millis();
-  last = start;
+  startTimer = millis();
+  last = startTimer;
 }
 
 void loop() {
@@ -298,7 +311,7 @@ void loop() {
       */
       moveElevator(data.servoPositionElevator);
       now = millis();
-      ms = start - now;
+      ms = startTimer - now;
       lastYaw = data.yaw;
       if (ms < FAST_UPDATE_PERIOD) { // Check if it is still in the fast update period.
 #ifndef GROUND
@@ -451,6 +464,7 @@ void loop() {
           cycles++;
         }
       }
+#endif
 #endif
     } else {
 #ifdef LOW_POWER

@@ -35,6 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 #define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button.
 #define GROUND // If doing ground testing, use this to enable faster updates.  
+// #define ERASE_EEPROM // If enabled, the EEPROM will be erased before every flight. This is not recommended.
 
 // Time settings.
 #define FAST_UPDATE_PERIOD_S 600  // In this time, the glider will update its yaw more frequently. The time is in seconds.
