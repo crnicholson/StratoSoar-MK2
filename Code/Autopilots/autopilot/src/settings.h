@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-#define DEVMODE    // Toggle the serial monitor on and off.
+#define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
@@ -33,9 +33,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define DIVE_STALL    // Dive down when speed gets too low.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
-// #define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button.
-#define GROUND // If doing ground testing, use this to enable faster updates.  
-// #define ERASE_EEPROM // If enabled, the EEPROM will be erased before every flight. This is not recommended.
+#define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button. It will also record more data.
+#define GROUND        // If doing ground testing, use this to enable faster updates.
+#define ERASE_EEPROM  // If enabled, the EEPROM will be erased before every flight. This is not recommended.
 
 // Time settings.
 #define FAST_UPDATE_PERIOD_S 600  // In this time, the glider will update its yaw more frequently. The time is in seconds.
@@ -81,18 +81,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define WIRELESS_TX A5      // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
-double targetLat = 42.31562, targetLon = -71.33430; // Landscaping place near NEST coordinates.
+// double targetLat = 42.31562, targetLon = -71.33430; // Landscaping place near NEST.
+double targetLat = 42.31619, targetLon = -71.36740; // House 9 on Pemberton Road.
 
 // Testing coordinates.
-double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
+// double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
+double testLat = 42.31746, testLon = -71.36467; // Local bank coordinates.
 
 // Baud rates.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
 #define BAUD_RATE 9600          // Serial link to the ATMega.
 
 // EEPROM settings.
-#define EEPROM_CYCLES 10   // This is the number of times the EEPROM will record data after the button is pressed.
-#define WRITE_TIME 1.5     // The seconds between EEPROM writings as calculated previously.
+#define EEPROM_CYCLES 10 // This is the number of times the EEPROM will record data after the button is pressed.
+#define WRITE_TIME 1.5   // The seconds between EEPROM writings as calculated previously.
 
 // Servo objects and names.
 #ifdef NEED_RUDDER

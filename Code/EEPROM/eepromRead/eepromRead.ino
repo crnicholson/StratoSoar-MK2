@@ -46,7 +46,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // Other settings.
 #define SERIAL_BAUD_RATE 115200 // SerialUSB monitor baud rate.
-#define GROUND                  // If the data from the main autopilot was collected with the ground mode enabled, enable ground mode here.
+#define EEPROM_BUTTON           // If the data from the main autopilot was collected with the EEPROM_BUTTON mode enabled, enable EEPROM_BUTTON mode here.
 // #define SPREADSHEET             // If enabled, only essential serial messages are printed for seamless integration into spreadsheets.
 
 #include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
@@ -118,7 +118,9 @@ void setup() {
   myMem.write(0, previous);
 
   SerialUSB.println("Beginning reading in 10 seconds...");
-  SerialUSB.println("Yaw, pitch, temperature (C), pressure (Pa)");
+#ifndef EEPROM_BUTTON
+  SerialUSB.println("Yaw, pitch, temperature (C), pressure (hPa), humidity, voltage");
+#endif
 #endif
 
   delay(10000);
@@ -127,7 +129,7 @@ void setup() {
 
 void loop() {
   if (address < length) {
-#ifndef GROUND
+#ifndef EEPROM_BUTTON
     // SerialUSB.print("Yaw: ");
     SerialUSB.print(int(myMem.read(address)) * 2);
     address++;
@@ -135,118 +137,129 @@ void loop() {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Pitch: ");
-    SerialUSB.print(" , ");
+    SerialUSB.print(", ");
     SerialUSB.print(myMem.read(address));
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Temp: ");
-    SerialUSB.print(" , ");
+    SerialUSB.print(", ");
     SerialUSB.print(myMem.read(address));
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Pressure: ");
-    SerialUSB.print(" , ");
-    SerialUSB.println(int(myMem.read(address)) * 500);
+    SerialUSB.print(", ");
+    SerialUSB.print(int(myMem.read(address)) * 500);
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Humidity: ");
-    SerialUSB.print(" , ");
+    SerialUSB.print(", ");
     SerialUSB.print(int(myMem.read(address)));
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Voltage: ");
-    SerialUSB.print(" , ");
-    SerialUSB.print(int(myMem.read(address)));
+    SerialUSB.print(", ");
+    SerialUSB.println(int(myMem.read(address)));
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
 #endif
-#ifdef GROUND
+#ifdef EEPROM_BUTTON
     yaw = int(myMem.read(address));
+    address++;
     pitch = int(myMem.read(address));
+    address++;
     temp = int(myMem.read(address));
+    address++;
     pressure = int(myMem.read(address));
+    address++;
     readEEPROM = true;
     if ((yaw == pitch) && (yaw == temp) && (yaw == pressure)) {
-      SerialUSB.print("Flight number: ");
-      SerialUSB.println(yaw);
-      SerialUSB.println("Yaw, Pitch, Temperature (C), Pressure (Pa), Humidity, Voltage, Turning angle, Rudder position, Latitude, Longitude");
+      if (yaw != 0) {
+        SerialUSB.print("Flight number: ");
+        SerialUSB.println(yaw);
+        SerialUSB.println("Yaw, Pitch, Temperature (C), Pressure (hPa), Humidity, Voltage, Turning angle, Rudder position, Latitude, Longitude");
+      }
       readEEPROM = false;
     }
     if (readEEPROM) {
       // SerialUSB.print("Yaw: ");
       SerialUSB.print(yaw * 2);
-      address++;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Pitch: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.print(pitch);
-      address++;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Temp: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.print(temp);
-      address++;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Pressure: ");
-      SerialUSB.print(" , ");
-      SerialUSB.println(pressure * 500);
-      address++;
+      SerialUSB.print(", ");
+      SerialUSB.print(pressure * 5);
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Humidity: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.print(int(myMem.read(address)));
       address++;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Voltage: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.print(int(myMem.read(address)));
       address++;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Turning angle: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.print(int(myMem.read(address)) * 2);
       address++;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Rudder position: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.print(int(myMem.read(address)));
       address++;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Lat: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.print(float(readFloatFromEEPROM(address)), 6);
       address = address + 4;
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
+
       // SerialUSB.print(", Lon: ");
-      SerialUSB.print(" , ");
+      SerialUSB.print(", ");
       SerialUSB.println(float(readFloatFromEEPROM(address)), 6);
       address = address + 4;
       while (myMem.isBusy()) {
@@ -254,11 +267,12 @@ void loop() {
       }
     } else {
       // SerialUSB.println("0, 0, 0, 0, 0, 0, 0, 0, 0, 0");
+      address = address + 12;
     }
 #endif
   } else {
 #ifndef SPREADSHEET
-    SerialUSB.print("Time took in seconds: ");
+    SerialUSB.print("Time took to check all addresses in seconds: ");
     SerialUSB.println((millis() - startTimer) / 1000);
 #endif
     while (1)
@@ -281,7 +295,7 @@ float readFloatFromEEPROM(int address) {
   float value;
   byte *p = (byte *)(void *)&value; // Pointer to the float value
   for (int i = 0; i < sizeof(value); i++) {
-    *p++ = EEPROM.read(address + i);
+    *p++ = myMem.read(address + i);
   }
   return value;
 }

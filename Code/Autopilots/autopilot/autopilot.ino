@@ -40,7 +40,8 @@ int lastYaw = 361;
 bool spiral = false;
 bool runEEPROM = true;
 bool fastUpdatePeriod = true;
-long eepromAddress, startTimer, endTimer, eepromSize, averageWrite, now, ms, last;
+bool inFastEEPROM = false;
+long eepromAddress, startTimer, endTimer, eepromSize, averageWrite, now, ms, last, nowGPS, msGPS, lastGPS;
 
 // Setpoint and input variables.
 double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
@@ -74,7 +75,7 @@ struct __attribute__((packed)) dataStruct {
   int year;
   float temp;     // In Celsius.
   float pressure; // In hPa.
-  float humidity; // In relative humidity.
+  float humidity; // Relative humidity.
   int yaw;
   int pitch;
   int roll;
@@ -131,6 +132,8 @@ void setup() {
     longPulse(ERR_LED, 0); // Wait for serial to connect
   }
 
+  delay(1000);
+
   SerialUSB.println("StratoSoar MK2.x Flight Controller");
 #endif
 
@@ -172,27 +175,30 @@ void setup() {
   SerialUSB.println(endTimer - startTimer);
 #endif
 #endif
-#ifdef DEVMODE
-  SerialUSB.println("Testing write time.");
-#endif
-  averageWrite = eeprom.detectWriteTimeMs(10);
-#ifdef DEVMODE
-  SerialUSB.print("Average write time in milliseconds: ");
-  SerialUSB.println(averageWrite);
-#endif
+
+  /*
+  #ifdef DEVMODE
+    SerialUSB.println("Testing write time.");
+  #endif
+    averageWrite = eeprom.detectWriteTimeMs(10);
+  #ifdef DEVMODE
+    SerialUSB.print("Average write time in milliseconds: ");
+    SerialUSB.println(averageWrite);
+  #endif
+  */
 
   // Testing EEPROM.
   eeprom.write(0, 200);
 
 #ifdef DEVMODE
   SerialUSB.println("Testing EEPROM.");
-  SerialUSB.print("I read (should be 200): ");
+  SerialUSB.print("EEPROM reads (should be 200): ");
   SerialUSB.println(eeprom.read(0));
 #endif
   if (eeprom.read(0) != 200) {
-    #ifdef DEVMODE
+#ifdef DEVMODE
     SerialUSB.println("Warning: EEPROM is not working as expected. Try removing the average write time finder from the code.");
-    #endif
+#endif
     longPulse(ERR_LED, 0);
   }
 #endif
@@ -234,9 +240,9 @@ void setup() {
   delay(1000);
 
 #ifdef DEVMODE
-  SerialUSB.println("Everything has initialized and the script starts in 20 seconds!");
+  SerialUSB.println("Everything has initialized and the script starts in 10 seconds.");
 #endif
-  delay(20000);
+  delay(10000);
   startTimer = millis();
   last = startTimer;
 }
@@ -246,12 +252,12 @@ void loop() {
 #ifndef TEST_COORD
 #ifdef LOW_POWER
   if (!fastUpdatePeriod || !spiral) {
-    now = millis();
-    ms = now - last;
-    if (ms > GPS_SLEEP) {
+    nowGPS = millis();
+    msGPS = nowGPS - lastGPS;
+    if (msGPS > GPS_SLEEP) {
       gpsWakeup();  // Wakeup GPS.
       waitForFix(); // Wait for a fix to get data from the GPS, and put the received data into the struct.
-      last = millis();
+      lastGPS = millis();
 
       // powerOff uses the 8-byte version of RXM-PMREQ - supported by older (M8) modules, like so:
       // gps.powerOff(sleepForSecs * 1000);
@@ -265,7 +271,12 @@ void loop() {
   }
 #endif
 #ifndef LOW_POWER
-  waitForFix();
+  nowGPS = millis();
+  msGPS = nowGPS - lastGPS;
+  if (msGPS > 15000 && !inFastEEPROM) {
+    lastGPS = millis();
+    getGPSData();
+  }
 #endif
 #endif
 
@@ -315,12 +326,14 @@ void loop() {
   if (yawDifference < YAW_DFR_THRESHOLD) {
     SerialUSB.println("Within threshold.");
     displayData();
+    /*
 #ifdef LOW_POWER
     LowPower.sleep(25);
 #endif
 #ifndef LOW_POWER
     delay(25);
 #endif
+*/
   }
 #endif
 
@@ -328,16 +341,26 @@ void loop() {
   if (!spiral) {
     if (fastUpdatePeriod || yawDifference > abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
+
 #ifdef DEVMODE
-      SerialUSB.println("Out of threshold.");
+      if (fastUpdatePeriod) {
+        SerialUSB.print("In fast-update period with ");
+        SerialUSB.print(FAST_UPDATE_PERIOD_S - (ms / 1000.0));
+        SerialUSB.println(" seconds left.");
+      } else {
+        SerialUSB.println("Out of threshold.");
+      }
       displayData();
-#ifdef LOW_POWER
-      LowPower.sleep(25);
+      /*
+      #ifdef LOW_POWER
+            LowPower.sleep(25);
+      #endif
+      #ifndef LOW_POWER
+            delay(25);
+      #endif
+      */
 #endif
-#ifndef LOW_POWER
-      delay(25);
-#endif
-#endif
+
       moveRudder(data.servoPositionRudder);
       /*
       #ifdef LOW_POWER
@@ -349,7 +372,7 @@ void loop() {
       */
       moveElevator(data.servoPositionElevator);
       now = millis();
-      ms = startTimer - now;
+      ms = now - startTimer;
       lastYaw = data.yaw;
       if (ms < FAST_UPDATE_PERIOD) { // Check if it is still in the fast update period.
 #ifndef GROUND
@@ -382,8 +405,8 @@ void loop() {
       if (eepromAddress < eepromSize) {
         if ((millis() - lastEEPROM) > WRITE_TIME) {
           lastEEPROM = millis();
-          if (sizeof(int(data.yaw / 2)) <= 1) {
-            eeprom.write(eepromAddress, int(data.yaw / 2));
+          if (sizeof(byte(data.yaw / 2)) == 1) {
+            eeprom.write(eepromAddress, byte(data.yaw / 2));
           } else {
             eeprom.write(eepromAddress, 255);
           }
@@ -391,8 +414,8 @@ void loop() {
           while (eeprom.isBusy()) {
             delayMicroseconds(100);
           }
-          if (sizeof(int(data.pitch)) <= 1) {
-            eeprom.write(eepromAddress, int(data.pitch));
+          if (sizeof(byte(abs(data.pitch))) == 1) {
+            eeprom.write(eepromAddress, byte(abs(data.pitch)));
           } else {
             eeprom.write(eepromAddress, 255);
           }
@@ -400,8 +423,8 @@ void loop() {
           while (eeprom.isBusy()) {
             delayMicroseconds(100);
           }
-          if (sizeof(int(data.temp)) <= 1) {
-            eeprom.write(eepromAddress, int(data.temp));
+          if (sizeof(byte(abs(data.temp))) == 1) {
+            eeprom.write(eepromAddress, byte(abs(data.temp)));
           } else {
             eeprom.write(eepromAddress, 255);
           }
@@ -409,8 +432,26 @@ void loop() {
           while (eeprom.isBusy()) {
             delayMicroseconds(100);
           }
-          if (sizeof(int(data.pressure / 500)) <= 1) {
-            eeprom.write(eepromAddress, int(data.pressure / 500));
+          if (sizeof(byte(data.pressure / 5)) == 1) {
+            eeprom.write(eepromAddress, byte(data.pressure / 5));
+          } else {
+            eeprom.write(eepromAddress, 255);
+          }
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          if (sizeof(byte(data.humidity)) == 1) {
+            eeprom.write(eepromAddress, byte(data.humidity));
+          } else {
+            eeprom.write(eepromAddress, 255);
+          }
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          if (sizeof(byte(data.volts)) == 1) {
+            eeprom.write(eepromAddress, byte(data.volts));
           } else {
             eeprom.write(eepromAddress, 255);
           }
@@ -422,13 +463,19 @@ void loop() {
       }
 #endif
 #ifdef EEPROM_BUTTON
-      if (!digitalRead(BUTTON)) {
+      if (!digitalRead(BUTTON) && !inFastEEPROM) {
         flightNumber++;
         moveRudder(0);
         delay(500);
         moveRudder(180);
         delay(500);
         moveRudder(90);
+#ifdef DEVMODE
+        SerialUSB.print("Writing to what should be the yaw spot on the EEPROM with an address of ");
+        SerialUSB.print(eepromAddress);
+        SerialUSB.print(" and a flight number of ");
+        SerialUSB.println(flightNumber);
+#endif
         eeprom.write(eepromAddress, flightNumber);
         eepromAddress++;
         while (eeprom.isBusy()) {
@@ -445,50 +492,168 @@ void loop() {
           delayMicroseconds(100);
         }
         eeprom.write(eepromAddress, flightNumber);
-        eepromAddress++;
+        eepromAddress = eepromAddress + 13;
         while (eeprom.isBusy()) {
           delayMicroseconds(100);
         }
         cycles = 0;
-        while (cycles <= EEPROM_CYCLES) {
-          if (sizeof(int(data.yaw / 2)) <= 1) {
-            eeprom.write(eepromAddress, int(data.yaw / 2));
-          } else {
-            eeprom.write(eepromAddress, 255);
-          }
-          eepromAddress++;
-          while (eeprom.isBusy()) {
-            delayMicroseconds(100);
-          }
-          if (sizeof(int(data.pitch)) <= 1) {
-            eeprom.write(eepromAddress, int(data.pitch));
-          } else {
-            eeprom.write(eepromAddress, 255);
-          }
-          eepromAddress++;
-          while (eeprom.isBusy()) {
-            delayMicroseconds(100);
-          }
-          if (sizeof(int(data.temp)) <= 1) {
-            eeprom.write(eepromAddress, int(data.temp));
-          } else {
-            eeprom.write(eepromAddress, 255);
-          }
-          eepromAddress++;
-          while (eeprom.isBusy()) {
-            delayMicroseconds(100);
-          }
-          if (sizeof(int(data.pressure / 500)) <= 1) {
-            eeprom.write(eepromAddress, int(data.pressure / 500));
-          } else {
-            eeprom.write(eepromAddress, 255);
-          }
-          eepromAddress++;
-          while (eeprom.isBusy()) {
-            delayMicroseconds(100);
-          }
-          cycles++;
+        inFastEEPROM = true;
+      }
+      if (cycles <= EEPROM_CYCLES && inFastEEPROM) {
+#ifdef DEVMODE
+        SerialUSB.print("Writing to what should be the yaw spot on the EEPROM with an address of ");
+        SerialUSB.print(eepromAddress);
+        SerialUSB.print(" and a yaw of ");
+        SerialUSB.println(byte(data.yaw / 2));
+#endif
+        // Yaw.
+        if (sizeof(byte(data.yaw / 2)) == 1) {
+          eeprom.write(eepromAddress, byte(data.yaw / 2));
+        } else {
+          eeprom.write(eepromAddress, 255);
         }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        // Pitch.
+        if (sizeof(byte(abs(data.pitch))) == 1) {
+          eeprom.write(eepromAddress, byte(abs(data.pitch)));
+        } else {
+          eeprom.write(eepromAddress, 255);
+        }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        // Temperature.
+        if (sizeof(byte(abs(data.temp))) == 1) {
+          eeprom.write(eepromAddress, byte(abs(data.temp)));
+        } else {
+          eeprom.write(eepromAddress, 255);
+        }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        // Pressure.
+        if (sizeof(byte(data.pressure / 5)) == 1) {
+          eeprom.write(eepromAddress, byte(data.pressure / 5));
+        } else {
+          eeprom.write(eepromAddress, 255);
+        }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        // Humidity.
+        if (sizeof(byte(data.humidity)) == 1) {
+          eeprom.write(eepromAddress, byte(data.humidity));
+        } else {
+          eeprom.write(eepromAddress, 255);
+        }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        // Voltage.
+        if (sizeof(byte(data.volts)) == 1) {
+          eeprom.write(eepromAddress, byte(data.volts));
+        } else {
+          eeprom.write(eepromAddress, 255);
+        }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        // Turning angle.
+        if (sizeof(byte(abs(data.turnAngle / 2))) == 1) {
+          eeprom.write(eepromAddress, byte(abs(data.turnAngle / 2)));
+        } else {
+          eeprom.write(eepromAddress, 255);
+        }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        // Rudder position.
+        if (sizeof(byte(abs(data.servoPositionRudder))) == 1) {
+          eeprom.write(eepromAddress, byte(abs(data.servoPositionRudder)));
+        } else {
+          eeprom.write(eepromAddress, 255);
+        }
+        eepromAddress++;
+        while (eeprom.isBusy()) {
+          delayMicroseconds(100);
+        }
+
+        if (sizeof(data.lat) == 4) {
+          writeFloatToEEPROM(eepromAddress, data.lat);
+          eepromAddress = eepromAddress + 4;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+        } else {
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+        }
+
+        if (sizeof(data.lon) == 4) {
+          writeFloatToEEPROM(eepromAddress, data.lon);
+          eepromAddress = eepromAddress + 4;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+        } else {
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+          eeprom.write(eepromAddress, 255);
+          eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
+        }
+        cycles++;
+      } else {
+        inFastEEPROM = false;
       }
 #endif
 #endif

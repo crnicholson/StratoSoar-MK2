@@ -256,10 +256,10 @@ void getIMUData() {
   // Ask ATMega for data.
   digitalWrite(WRITE_PIN, HIGH);
 #ifdef LOW_POWER
-  LowPower.sleep(30);
+  LowPower.sleep(40);
 #endif
 #ifndef LOW_POWER
-  delay(30);
+  delay(40);
 #endif
   digitalWrite(WRITE_PIN, LOW);
 
@@ -375,7 +375,7 @@ void displayData() {
 void waitForFix() {
   data.sats = 0;
   data.fixType = 0;
-  while ((data.fixType < 3) && (data.sats < 5)) { // Make sure location is valid before continuing.
+  while ((data.fixType < 3) && (data.sats < 3)) { // Make sure location is valid before continuing. (Changed data.sats from < 5 to < 3).
     if (gps.getPVT()) {
       getGPSData();
 #ifdef DEVMODE
@@ -423,5 +423,16 @@ void gpsConfig() {
 #ifdef DEVMODE
     SerialUSB.println(F("Dynamic platform model changed successfully!"));
 #endif
+  }
+}
+
+void writeFloatToEEPROM(int address, float value) {
+  byte *p = (byte *)(void *)&value; // Pointer to the float value
+  for (int i = 0; i < sizeof(value); i++) {
+    eeprom.write(address + i, *p++);
+  }
+  // Pad remaining bytes with 0
+  for (int i = sizeof(value); i < 4; i++) {
+    eeprom.write(address + i, 0);
   }
 }
