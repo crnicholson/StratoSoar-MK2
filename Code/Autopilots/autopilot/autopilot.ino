@@ -139,12 +139,17 @@ void setup() {
   longPulse(LED, 0);
   longPulse(ERR_LED, 0);
 
+#ifdef DEVMODE
   I2CScan(); // This will long pulse LED if there is an error.
+#endif
 
+#ifdef USE_EEPROM
   eeprom.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
 
   if (eeprom.begin() == false) {
+    #ifdef DEVMODE
     SerialUSB.println("No EEPROM detected. Freezing sketch.");
+    #endif
     while (1)
       longPulse(ERR_LED, 0);
   }
@@ -165,6 +170,17 @@ void setup() {
   averageWrite = eeprom.detectWriteTimeMs(10);
   SerialUSB.print("Average write time in milliseconds: ");
   SerialUSB.println(averageWrite);
+
+  // Testing EEPROM.
+  myMem.write(0, 200);
+
+  SerialUSB.println("Testing EEPROM.");
+  SerialUSB.print("I read (should be 200): ");
+  SerialUSB.println(myMem.read(0));
+  if (myMem.read(0) != 200) {
+
+  }
+  #endif
 
 #ifdef NEED_RUDDER
   rudderServo.attach(RUDDER_PIN);
@@ -214,7 +230,7 @@ void loop() {
   shortPulse(LED);
 #ifndef TEST_COORD
 #ifdef LOW_POWER
-  if (!fastUpdatePeriod | !spiral) {
+  if (!fastUpdatePeriod || !spiral) {
     now = millis();
     ms = now - last;
     if (ms > GPS_SLEEP) {
@@ -295,7 +311,7 @@ void loop() {
 
   // If the glider is in the initial fast-update period of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
   if (!spiral) {
-    if (fastUpdatePeriod | yawDifference > abs(YAW_DFR_THRESHOLD)) {
+    if (fastUpdatePeriod || yawDifference > abs(YAW_DFR_THRESHOLD)) {
       shortPulse(LED); // Pulse LED to show we are running.
 #ifdef DEVMODE
       SerialUSB.println("Out of threshold.");
@@ -348,57 +364,45 @@ void loop() {
 #ifndef EEPROM_BUTTON
       // 512 kilobits, with one byte written at a time. 512,000 / 8 = 64,000. We write four different data points, so 64,000 / 4 = 16,000. There are 21,600 seconds in a six hour flight, so 21,600 / 16,000 = 1.35. We can round that up to 1.5 seconds.
       // If we write to the EEPROM every 1.5 seconds, we won't fill up over a six hour flight.
-      if (eepromAddress < MAX_ADDRESS - 200) {
+      if (eepromAddress < eepromSize) {
         if ((millis() - lastEEPROM) > WRITE_TIME) {
           lastEEPROM = millis();
           if (sizeof(int(data.yaw / 2)) <= 1) {
             eeprom.write(eepromAddress, int(data.yaw / 2));
-#ifdef LOW_POWER
-            LowPower.sleep(WRITE_TIME_BYTES);
-#endif
-#ifndef LOW_POWER
-            delay(WRITE_TIME_BYTES);
-#endif
           } else {
             eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
           if (sizeof(int(data.pitch)) <= 1) {
             eeprom.write(eepromAddress, int(data.pitch));
-#ifdef LOW_POWER
-            LowPower.sleep(WRITE_TIME_BYTES);
-#endif
-#ifndef LOW_POWER
-            delay(WRITE_TIME_BYTES);
-#endif
           } else {
             eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
           if (sizeof(int(data.temp)) <= 1) {
             eeprom.write(eepromAddress, int(data.temp));
-#ifdef LOW_POWER
-            LowPower.sleep(WRITE_TIME_BYTES);
-#endif
-#ifndef LOW_POWER
-            delay(WRITE_TIME_BYTES);
-#endif
           } else {
             eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
           if (sizeof(int(data.pressure / 500)) <= 1) {
             eeprom.write(eepromAddress, int(data.pressure / 500));
-#ifdef LOW_POWER
-            LowPower.sleep(WRITE_TIME_BYTES);
-#endif
-#ifndef LOW_POWER
-            delay(WRITE_TIME_BYTES);
-#endif
           } else {
             eeprom.write(eepromAddress, 255);
           }
           eepromAddress++;
+          while (eeprom.isBusy()) {
+            delayMicroseconds(100);
+          }
         }
       }
 #endif

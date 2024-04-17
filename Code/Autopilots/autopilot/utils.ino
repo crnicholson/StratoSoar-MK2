@@ -213,12 +213,25 @@ void I2CScan() {
       SerialUSB.println(address, HEX);
     }
   }
-  if (nDevices == 0 | nDevices == 1) {
-    SerialUSB.println("One or more I2C device is not responding.");
-    longPulse(ERR_LED);
+#if (!defined(TEST_COORD) && !defined(USE_EEPROM)) || (defined(TEST_COORD) && defined(USE_EEPROM))
+  if (nDevices >= 1) {
+    SerialUSB.println("All I2C devices found successfully.");
   } else {
-    SerialUSB.println("All devices found successfully.");
+    SerialUSB.println("One I2C device is not responding.");
+    longPulse(ERR_LED);
   }
+#endif
+#if !defined(TEST_COORD) && defined(USE_EEPROM)
+  if (nDevices == 2) {
+    SerialUSB.println("All I2C devices found successfully.");
+  } else {
+    SerialUSB.println("One or more I2C devices are not responding.");
+    longPulse(ERR_LED);
+  }
+#endif
+#if defined(TEST_COORD) && !defined(USE_EEPROM)
+  SerialUSB.println("Whether or not any devices were found, no I2C devices are needed.");
+#endif
 }
 
 void streamData() {

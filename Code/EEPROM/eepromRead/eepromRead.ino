@@ -1,5 +1,5 @@
 /*
-eepromReadTest.ino, part of StratoSoar MK2, for an autonomous glider.
+eepromRead.ino, part of StratoSoar MK2, for an autonomous glider.
 Copyright (C) 2024 Charles Nicholson
 
 This program is free software: you can redistribute it and/or modify

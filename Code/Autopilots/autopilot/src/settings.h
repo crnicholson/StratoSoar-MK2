@@ -49,7 +49,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
 #define YAW_DFR_THRESHOLD -5 // The threshold needed to move the servos. Make sure it is a negative number.
-#define EEPROM_CYCLES 10     // This is the number of times the EEPROM will record data after the button is pressed.
 
 // Threshold for parachute and spiraling.
 #define PARACHUTE_ALT_THRESHOLD 500 // If the glider is under this, and the distance is less than PARACHUTE_DST_THRESHOLD, open the parachute.
@@ -91,9 +90,8 @@ double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
 #define BAUD_RATE 9600          // Serial link to the ATMega.
 
-// EEPROM.
-#define MAX_ADDRESS 64000  // This is how many 8 bit pages your EEPROM has, 64,000 for a 512 kilobit EEPROM.
-#define WRITE_TIME_BYTES 5 // Milliseconds between writing a byte to the EEPROM.
+// EEPROM settings.
+#define EEPROM_CYCLES 10   // This is the number of times the EEPROM will record data after the button is pressed.
 #define WRITE_TIME 1.5     // The seconds between EEPROM writings as calculated previously.
 
 // Servo objects and names.
