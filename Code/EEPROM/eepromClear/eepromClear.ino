@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// Simply upload this code to the main MCU (SAMD21G18A) to clear the EEPROM/
+// Simply upload this code to the main MCU (SAMD21G18A) to clear the EEPROM data.
 
 // IMPORTANT: copy and paste pin definitions from main settings.h if you've changed the pins and aren't using the PCB.
 // Stupid Arduino doesn't allow for relative paths...
@@ -35,24 +35,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define LED 13              // Hardware pin 26. Pin that is connected to the main green LED.
 #define ERR_LED A0          // Hardware pin 3. Pin that connects ot the red error LED.
 #define BAT_VOLTAGE_PIN A1  // Hardware pin 7. Pin for battery voltage measurement.
-#define WRITE_PIN A2        // Hardware pin 8. Pin that is driven high to receive serial data from the ATMega.
+#define WRITE_PIN A2        // Hardware pin 8. Pin that is driven high to receive SerialUSB data from the ATMega.
 // #define GPIO A3 // Hardware pin 9. Unused GPIO on autopilot.
 #define WIRELESS_RX A4 // Hardware pin 10. Pin that connects to the HCO5. More info in the docs.
 #define WIRELESS_TX A5 // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
-// IMPORTANT: include EEPROM settings from main settings.h file. Delete WRiTE_TIME line.
-#define MAX_ADDRESS 64000       // This is how many 8 bit pages your EEPROM has, 64,000 for a 512 kilobit EEPROM.
-#define EEPROM_I2C_ADDRESS 0x50 // I2C address of the EEPROM.
-
 // Other settings.
-#define CLEAR_TIME 10 // Milliseconds between clearing a byte.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
 
+#include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
 #include <Wire.h>
 
-long address, start;
+long startTimer, endTimer, length, average;
 
-int timeEstimate = CLEAR_TIME * MAX_ADDRESS / 1000;
+ExternalEEPROM myMem;
 
 void setup() {
   pinMode(LED, OUTPUT);
@@ -78,32 +74,53 @@ void setup() {
   digitalWrite(WAKEUP_PIN, LOW);
   digitalWrite(WRITE_PIN, LOW);
 
-  SerialUSB.begin(SERIAL_BAUD_RATE);
-  SerialUSB.print("Time estimate in seconds: ");
-  SerialUSB.println(timeEstimate);
-  SerialUSB.println("Beginning writing in ten seconds...");
   Wire.begin();
-  delay(10000);
-  start = millis();
+
+  blink(LED);
+
+  SerialUSB.begin(SERIAL_BAUD_RATE);
+  while (!SerialUSB)
+    ;
+
+  delay(5000);
+
+  SerialUSB.println("StratoSoar MK2.x EEPROM clearer.");
+
+  myMem.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
+
+  if (myMem.begin() == false) {
+    SerialUSB.println("No EEPROM detected. Freezing sketch.");
+    while (1)
+      blink(ERR_LED);
+  }
+
+  SerialUSB.println("EEPROM detected!");
+  SerialUSB.print("EEPROM size in bytes: ");
+  length = myMem.length();
+  SerialUSB.println(length);
+  SerialUSB.println("Erasing EEPROM, should take ~10 seconds.");
+  startTimer = millis();
+  myMem.erase();
+  endTimer = millis();
+  SerialUSB.print("Done erasing. Time took in milliseconds: ");
+  SerialUSB.println(endTimer - startTimer);
+  SerialUSB.println("Testing write time.");
+  average = myMem.detectWriteTimeMs(10);
+  SerialUSB.print("Average write time in milliseconds: ");
+  SerialUSB.println(average);
+  SerialUSB.println("All done!");
 }
 
 void loop() {
-  if (address < MAX_ADDRESS) {
-    writeToEEPROM(EEPROM_I2C_ADDRESS, address, 0);
-    address++;
-    delay(CLEAR_TIME);
-  } else {
-    SerialUSB.print("Time took: ");
-    SerialUSB.println(millis() - start);
-    while (1)
-      ;
-  }
 }
 
-void writeToEEPROM(byte EEPROMAddress, byte dataAddress, byte dataValue) {
-  Wire.beginTransmission(EEPROMAddress);
-  Wire.write(dataAddress);
-  Wire.write(dataValue);
-  Wire.endTransmission();
-  delay(5);
+void blink(int pin) {
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+  delay(500);
+  digitalWrite(pin, HIGH);
+  delay(500);
+  digitalWrite(pin, LOW);
+  delay(500);
 }
