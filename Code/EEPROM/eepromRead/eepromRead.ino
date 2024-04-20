@@ -186,7 +186,7 @@ void loop() {
       if (yaw != 0) {
         SerialUSB.print("Flight number: ");
         SerialUSB.println(yaw);
-        SerialUSB.println("Yaw, Pitch, Temperature (C), Pressure (hPa), Humidity, Voltage, Turning angle, Rudder position, Latitude, Longitude");
+        SerialUSB.println("Yaw, Pitch, Temperature (C), Pressure (hPa), Humidity, Voltage, Turning angle, Rudder position, Latitude,    Longitude");
       }
       readEEPROM = false;
     }
@@ -198,28 +198,28 @@ void loop() {
       }
 
       // SerialUSB.print(", Pitch: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",   ");
       SerialUSB.print(pitch);
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
 
       // SerialUSB.print(", Temp: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",    ");
       SerialUSB.print(temp);
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
 
       // SerialUSB.print(", Pressure: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",              ");
       SerialUSB.print(pressure * 5);
       while (myMem.isBusy()) {
         delayMicroseconds(100);
       }
 
       // SerialUSB.print(", Humidity: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",           ");
       SerialUSB.print(int(myMem.read(address)));
       address++;
       while (myMem.isBusy()) {
@@ -227,7 +227,7 @@ void loop() {
       }
 
       // SerialUSB.print(", Voltage: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",        ");
       SerialUSB.print(int(myMem.read(address)));
       address++;
       while (myMem.isBusy()) {
@@ -235,7 +235,7 @@ void loop() {
       }
 
       // SerialUSB.print(", Turning angle: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",      ");
       SerialUSB.print(int(myMem.read(address)) * 2);
       address++;
       while (myMem.isBusy()) {
@@ -243,7 +243,7 @@ void loop() {
       }
 
       // SerialUSB.print(", Rudder position: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",            ");
       SerialUSB.print(int(myMem.read(address)));
       address++;
       while (myMem.isBusy()) {
@@ -251,7 +251,7 @@ void loop() {
       }
 
       // SerialUSB.print(", Lat: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",             ");
       SerialUSB.print(float(readFloatFromEEPROM(address)), 6);
       address = address + 4;
       while (myMem.isBusy()) {
@@ -259,7 +259,7 @@ void loop() {
       }
 
       // SerialUSB.print(", Lon: ");
-      SerialUSB.print(", ");
+      SerialUSB.print(",   ");
       SerialUSB.println(float(readFloatFromEEPROM(address)), 6);
       address = address + 4;
       while (myMem.isBusy()) {
