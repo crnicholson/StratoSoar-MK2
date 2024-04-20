@@ -3912,25 +3912,25 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "AE1"
-				(at 5.08 3.81 0)
+			(property "Reference" "AE"
+				(at 0 5.08 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(justify left)
+					(justify right)
 				)
 			)
 			(property "Value" "Antenna_Chip"
-				(at 5.08 1.27 0)
+				(at 0 3.175 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
-					(justify left)
+					(justify right)
 				)
 			)
-			(property "Footprint" "RF_Antenna:Coilcraft_MA5532-AE_RFID"
+			(property "Footprint" ""
 				(at -2.54 4.445 0)
 				(effects
 					(font
@@ -3981,19 +3981,7 @@
 				)
 				(polyline
 					(pts
-						(xy 0 0) (xy 1.27 0)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 0) (xy 2.54 0)
+						(xy 0 0) (xy 2.54 0)
 					)
 					(stroke
 						(width 0.254)
@@ -4041,10 +4029,10 @@
 				)
 			)
 			(symbol "Antenna_Chip_1_1"
-				(pin input line
-					(at 0 -2.54 90)
+				(pin passive line
+					(at 2.54 -2.54 90)
 					(length 2.54)
-					(name "GND"
+					(name "FEED"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4059,10 +4047,10 @@
 						)
 					)
 				)
-				(pin passive line
-					(at 2.54 -2.54 90)
+				(pin input line
+					(at 0 -2.54 90)
 					(length 2.54)
-					(name "RF"
+					(name "GND"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -40566,7 +40554,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Ceramic chip antenna with pin for PCB trace"
 			(at 331.47 382.27 0)
 			(effects
 				(font
