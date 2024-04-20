@@ -34,7 +34,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ExternalEEPROM eeprom;
 
-int yawDifference, nowEEPROM, flightNumber, cycles;
+int yawDifference, nowEEPROM, flightNumber, cycles, previous;
+float writeTime;
 long lastEEPROM = 123456;
 int lastYaw = 361;
 bool spiral = false;
@@ -242,7 +243,11 @@ void setup() {
 #ifdef DEVMODE
   SerialUSB.println("Everything has initialized and the script starts in 10 seconds.");
 #endif
+
   delay(10000);
+
+  writeTime = (FLIGHT_TIME * 60) / (eepromSize / 16);
+
   startTimer = millis();
   last = startTimer;
 }
@@ -400,10 +405,8 @@ void loop() {
 #endif
 #ifdef USE_EEPROM
 #ifndef EEPROM_BUTTON
-      // 512 kilobits, with one byte written at a time. 512,000 / 8 = 64,000. We write four different data points, so 64,000 / 4 = 16,000. There are 21,600 seconds in a six hour flight, so 21,600 / 16,000 = 1.35. We can round that up to 1.5 seconds.
-      // If we write to the EEPROM every 1.5 seconds, we won't fill up over a six hour flight.
       if (eepromAddress < eepromSize) {
-        if ((millis() - lastEEPROM) > WRITE_TIME) {
+        if ((millis() - lastEEPROM) > writeTime) {
           lastEEPROM = millis();
           if (sizeof(byte(data.yaw / 2)) == 1) {
             eeprom.write(eepromAddress, byte(data.yaw / 2));
@@ -465,11 +468,12 @@ void loop() {
 #ifdef EEPROM_BUTTON
       if (!digitalRead(BUTTON) && !inFastEEPROM) {
         flightNumber++;
+        previous = rudderServo.read();
         moveRudder(0);
         delay(500);
         moveRudder(180);
         delay(500);
-        moveRudder(90);
+        moveRudder(previous);
 #ifdef DEVMODE
         SerialUSB.print("Writing to what should be the yaw spot on the EEPROM with an address of ");
         SerialUSB.print(eepromAddress);
@@ -594,6 +598,7 @@ void loop() {
           delayMicroseconds(100);
         }
 
+        // Latitude.
         if (sizeof(data.lat) == 4) {
           writeFloatToEEPROM(eepromAddress, data.lat);
           eepromAddress = eepromAddress + 4;
@@ -623,6 +628,7 @@ void loop() {
           }
         }
 
+        // Longitude.
         if (sizeof(data.lon) == 4) {
           writeFloatToEEPROM(eepromAddress, data.lon);
           eepromAddress = eepromAddress + 4;
