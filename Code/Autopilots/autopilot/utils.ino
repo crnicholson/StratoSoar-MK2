@@ -91,7 +91,9 @@ int pidMagicRudder() {
 
   // int servoPositionRudderNew = map(servoPositionRudder2, 0, 180, 1250, 1750); // For servos that take microseconds not degrees.
 
-  return servoPositionRudder2 / 2;
+  // return servoPositionRudder2 / 2;
+
+  return servoPositionRudder2;
 }
 
 void longPulse(int pin, int sleep = 1) {
