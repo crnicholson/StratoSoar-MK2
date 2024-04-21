@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define Ki 0.0                // With MPU-9250, angles start oscillating at Kp = 0. Ki does not seem to help and is not required.
 #define MAG_DEC 14.5          // Conventional nav, yaw increases CW from North, corrected for local magnetic declination. Find yours here: http://www.ngdc.noaa.gov/geomag-web/#declination.
 #define BME_ADDRESS 0x76      // Address of the BME280 sensor.
-#define DEVMODE               // Comment to stop the use of the serial monitor.
+// #define DEVMODE               // Comment to stop the use of the serial monitor.
 
 // Accel offsets and correction matrix.
 float A_B[3]{539.75, 218.36, 834.53};

@@ -83,17 +83,15 @@ int pidMagicRudder() {
 
   int outputRudder = KP_RUDDER * errorRudder + KI_RUDDER * integralRudder + KD_RUDDER * (errorRudder - prevErrorRudder); // Calculate the output.
 
-  int servoPositionRudder2 = 180 + outputRudder; // Adjust servo position based on the output.
+  int servoPositionRudder = 180 + outputRudder; // Adjust servo position based on the output.
 
   // Update previous error and integral.
   prevErrorRudder = errorRudder;
   integralRudder += errorRudder;
 
-  // int servoPositionRudderNew = map(servoPositionRudder2, 0, 180, 1250, 1750); // For servos that take microseconds not degrees.
+  // int servoPositionRudder = map(servoPositionRudder, 0, 180, 1250, 1750); // For servos that take microseconds not degrees.
 
-  // return servoPositionRudder2 / 2;
-
-  return servoPositionRudder2;
+  return servoPositionRudder / 2;
 }
 
 void longPulse(int pin, int sleep = 1) {
@@ -136,32 +134,55 @@ void longPulse(int pin, int sleep = 1) {
 void shortPulse(int pin) {
   digitalWrite(pin, HIGH);
 #ifdef LOW_POWER
-  LowPower.sleep(75);
+  LowPower.sleep(10);
 #endif
 #ifndef LOW_POWER
-  delay(75);
+  delay(10);
 #endif
   digitalWrite(pin, LOW);
 }
 
+#ifdef NEED_RUDDER
 void moveRudder(int degrees, int sleep) {
   digitalWrite(RUDDER_FET, HIGH); // Turn servo on.
   digitalWrite(RUDDER_BJT, LOW);  // Turn signal line on.
+  int rudderLast = rudderServo.read();
+  int rudderChange = abs(rudderLast - degrees);
+  int rudderTime = rudderChange * 170 / 60;
+  if (rudderTime < 40) {
+    rudderTime = rudderTime + 40;
+  }
+  if (rudderTime < 60) {
+    rudderTime = rudderTime + 20;
+  }
   rudderServo.write(degrees);
+#ifndef SERVO_NONBLOCKING
   if (sleep == 1) {
 #ifdef LOW_POWER
-    LowPower.sleep(300);
+    LowPower.sleep(rudderTime);
 #endif
 #ifndef LOW_POWER
-    delay(300);
+    delay(rudderTime);
 #endif
   } else {
-    delay(300);
+    delay(rudderTime);
   }
+  digitalWrite(RUDDER_BJT, HIGH);
+  digitalWrite(RUDDER_FET, LOW);
+#endif
+#ifdef SERVO_NONBLOCKING
+  // nonBlockingDelay(rudderTime, turnOffRudder);
+  nonBlockingDelay(300, turnOffRudder);
+#endif
+}
+#endif
+
+void turnOffRudder() {
   digitalWrite(RUDDER_BJT, HIGH);
   digitalWrite(RUDDER_FET, LOW);
 }
 
+#ifdef NEED_ELEVATOR
 void moveElevator(int degrees, int sleep) {
   digitalWrite(ELEVATOR_FET, HIGH); // Turn servo on.
   digitalWrite(ELEVATOR_BJT, LOW);  // Turn signal line on.
@@ -179,6 +200,7 @@ void moveElevator(int degrees, int sleep) {
   digitalWrite(ELEVATOR_BJT, HIGH);
   digitalWrite(ELEVATOR_FET, LOW); // servo.detach() saves ~75 mA per servo. MOSFET saves an  additional ~4 mA per servo.
 }
+#endif
 
 void readVoltage() {
   int rawVolt = analogRead(BAT_VOLTAGE_PIN);
@@ -436,5 +458,19 @@ void writeFloatToEEPROM(int address, float value) {
   // Pad remaining bytes with 0
   for (int i = sizeof(value); i < 4; i++) {
     eeprom.write(address + i, 0);
+  }
+}
+
+void nonBlockingDelay(unsigned long interval, void (*callback)()) {
+  unsigned long currentMillis = millis(); // Get the current time.
+  unsigned long previousMillis;
+
+  // Check if the interval has passed.
+  if (currentMillis - previousMillis >= interval) {
+    // Save the current time as the last update time
+    previousMillis = currentMillis;
+
+    // Execute the callback function.
+    callback();
   }
 }

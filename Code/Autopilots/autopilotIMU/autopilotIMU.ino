@@ -145,15 +145,15 @@ void loop() {
   }
 
   if (digitalRead(WRITE_PIN)) {
-    digitalWrite(LED, HIGH);
-    delay(25);
-    digitalWrite(LED, LOW);
-
     data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
     data.humidity = BME280humidity();  // Humidity in %RH.
 
     mcuConn.write((byte *)&data, sizeof(data));
+
+    digitalWrite(LED, HIGH);
+    delay(10);
+    digitalWrite(LED, LOW);
   }
 
 #ifdef DEVMODE

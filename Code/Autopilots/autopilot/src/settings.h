@@ -21,14 +21,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-// #define DEVMODE // Toggle the serial monitor on and off.
+#define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
 // #define STALL_STOP // Land the glider by repeatedly stalling it.
 // #define NEED_PARACHUTE // Enable the parachute servo.
-#define NEED_ELEVATOR // Enable the elevator servo.
+// #define NEED_ELEVATOR // Enable the elevator servo.
 #define NEED_RUDDER   // Enable the rudder servo.
 // #define DIVE_STALL    // Dive down when speed gets too low.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
@@ -36,6 +36,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button. It will also record more data.
 #define GROUND        // If doing ground testing, use this to enable faster updates.
 // #define ERASE_EEPROM  // If enabled, the EEPROM will be erased before every flight. This is not recommended.
+// #define SERVO_NONBLOCKING  
 
 // Time settings.
 #define FAST_UPDATE_PERIOD_S 6000  // In this time, the glider will update its yaw more frequently. The time is in seconds.

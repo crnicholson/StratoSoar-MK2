@@ -272,7 +272,8 @@ void loop() {
       gps.powerOffWithInterrupt(60000, VAL_RXM_PMREQ_WAKEUPSOURCE_EXTINT0, true); // No (additional) wakeup sources. force = true.
     }
   } else {
-    waitForFix();
+    // waitForFix();
+    getGPSData();
   }
 #endif
 #ifndef LOW_POWER
@@ -306,7 +307,9 @@ void loop() {
 #ifdef SPIN_STOP
   if ((data.distanceMeters <= SPIRAL_DST_THRESHOLD) && (data.alt > SPIRAL_ALT_THRESHOLD)) {
     spiral = true;
-    moveRudder(145); // Sends into a spin to safely make it's way down.
+#ifdef NEED_RUDDER
+    moveRudder(145); // Sends into a spin to safely make its way down.
+#endif
     // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute.
   }
 #endif
@@ -366,16 +369,22 @@ void loop() {
       */
 #endif
 
+#ifdef NEED_RUDDER
       moveRudder(data.servoPositionRudder);
+#endif
+#ifdef NEED_ELEVATOR
       /*
-      #ifdef LOW_POWER
-            LowPower.sleep(100);
-      #endif
-      #ifndef LOW_POWER
-            delay(100); // Have a small delay to release the draw on the power supply.
-      #endif
-      */
+          #ifdef LOW_POWER
+                LowPower.sleep(100);
+          #endif
+          #ifndef LOW_POWER
+                delay(100); // Have a small delay to release the draw on the power supply.
+          #endif
+          */
+
       moveElevator(data.servoPositionElevator);
+#endif
+
       now = millis();
       ms = now - startTimer;
       lastYaw = data.yaw;
@@ -468,12 +477,14 @@ void loop() {
 #ifdef EEPROM_BUTTON
       if (!digitalRead(BUTTON) && !inFastEEPROM) {
         flightNumber++;
+#ifdef NEED_RUDDER
         previous = rudderServo.read();
         moveRudder(0);
         delay(500);
         moveRudder(180);
         delay(500);
         moveRudder(previous);
+#endif
 #ifdef DEVMODE
         SerialUSB.print("Writing to what should be the yaw spot on the EEPROM with an address of ");
         SerialUSB.print(eepromAddress);
