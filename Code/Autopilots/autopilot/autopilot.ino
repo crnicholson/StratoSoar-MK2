@@ -347,13 +347,13 @@ void loop() {
 
   // If the glider is in the initial fast-update period of operation, not spiraling down, or the heading drift is greater than the threshold, move the servos.
   if (!spiral) {
-    if (fastUpdatePeriod || yawDifference > abs(YAW_DFR_THRESHOLD)) {
+    if (fastUpdatePeriod || abs(yawDifference) > YAW_DFR_THRESHOLD) {
       shortPulse(LED); // Pulse LED to show we are running.
 
 #ifdef DEVMODE
       if (fastUpdatePeriod) {
         SerialUSB.print("In fast-update period with ");
-        SerialUSB.print(FAST_UPDATE_PERIOD_S - (ms / 1000.0));
+        SerialUSB.print(FAST_UPDATE_PERIOD - (ms / 1000.0));
         SerialUSB.println(" seconds left.");
       } else {
         SerialUSB.println("Out of threshold.");
@@ -388,7 +388,7 @@ void loop() {
       now = millis();
       ms = now - startTimer;
       lastYaw = data.yaw;
-      if (ms < FAST_UPDATE_PERIOD) { // Check if it is still in the fast update period.
+      if (ms < (FAST_UPDATE_PERIOD * 1000)) { // Check if it is still in the fast update period.
 #ifndef GROUND
 #ifdef LOW_POWER
         LowPower.sleep(ABV_THRS_FST_UPDT_SLPFRST_FVE_SLP - 200);

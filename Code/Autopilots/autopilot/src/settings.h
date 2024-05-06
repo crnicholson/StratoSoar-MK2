@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-// w#define DEVMODE // Toggle the serial monitor on and off.
+#define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
@@ -39,7 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define SERVO_NONBLOCKING
 
 // Time settings.
-#define FAST_UPDATE_PERIOD_S 6000 // In this time, the glider will update its yaw more frequently. The time is in seconds.
+#define FAST_UPDATE_PERIOD 1800 // In this time, the glider will update its yaw more frequently. The time is in milliseconds.
 #define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
@@ -50,7 +50,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
-#define YAW_DFR_THRESHOLD -5 // The threshold needed to move the servos. Make sure it is a negative number.
+#define YAW_DFR_THRESHOLD 5  // The threshold needed to move the servos.
 
 // Threshold for parachute and spiraling.
 #define PARACHUTE_ALT_THRESHOLD 500 // If the glider is under this, and the distance is less than PARACHUTE_DST_THRESHOLD, open the parachute.
@@ -94,7 +94,7 @@ double targetLat = 42.31549, targetLon = -71.33391; // Blue tarp at NEST.
 // double testLat = 42.31746, testLon = -71.36467; // Local bank coordinates.
 // double testLat = 42.3401859, testLon = -71.3781675;
 // double testLat = 42.3390271, testLon = -71.3782380;
-double testLat = 42.31622, testLon = -71.33370; // Woods at NEST. 
+double testLat = 42.31622, testLon = -71.33370; // Woods at NEST.
 
 // Baud rates.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
@@ -124,4 +124,3 @@ Servo elevatorServo;
 #define KI_ELEVATOR 0.0 // Integral gain.
 #define KD_ELEVATOR 0.0 // Derivative gain.
 
-#define FAST_UPDATE_PERIOD FAST_UPDATE_PERIOD_S * 1000
