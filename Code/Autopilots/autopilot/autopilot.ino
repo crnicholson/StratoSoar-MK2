@@ -353,7 +353,7 @@ void loop() {
 #ifdef DEVMODE
       if (fastUpdatePeriod) {
         SerialUSB.print("In fast-update period with ");
-        SerialUSB.print(FAST_UPDATE_PERIOD - (ms / 1000.0));
+        SerialUSB.print(FAST_UPDATE_PERIOD - (ms / 1000.00));
         SerialUSB.println(" seconds left.");
       } else {
         SerialUSB.println("Out of threshold.");

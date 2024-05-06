@@ -39,7 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define SERVO_NONBLOCKING
 
 // Time settings.
-#define FAST_UPDATE_PERIOD 1800 // In this time, the glider will update its yaw more frequently. The time is in milliseconds.
+#define FAST_UPDATE_PERIOD 1800 // In this time, the glider will update its yaw more frequently. The time is in seconds.
 #define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
