@@ -155,6 +155,7 @@ void moveRudder(int degrees, int sleep) {
   if (rudderTime < 60) {
     rudderTime = rudderTime + 20;
   }
+  rudderTime = 200;
   rudderServo.write(degrees);
 #ifndef SERVO_NONBLOCKING
   if (sleep == 1) {

@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-#define DEVMODE // Toggle the serial monitor on and off.
+// w#define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
@@ -29,17 +29,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define STALL_STOP // Land the glider by repeatedly stalling it.
 // #define NEED_PARACHUTE // Enable the parachute servo.
 // #define NEED_ELEVATOR // Enable the elevator servo.
-#define NEED_RUDDER   // Enable the rudder servo.
+#define NEED_RUDDER // Enable the rudder servo.
 // #define DIVE_STALL    // Dive down when speed gets too low.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 #define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button. It will also record more data.
 #define GROUND        // If doing ground testing, use this to enable faster updates.
 // #define ERASE_EEPROM  // If enabled, the EEPROM will be erased before every flight. This is not recommended.
-// #define SERVO_NONBLOCKING  
+// #define SERVO_NONBLOCKING
 
 // Time settings.
-#define FAST_UPDATE_PERIOD_S 6000  // In this time, the glider will update its yaw more frequently. The time is in seconds.
+#define FAST_UPDATE_PERIOD_S 6000 // In this time, the glider will update its yaw more frequently. The time is in seconds.
 #define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
@@ -83,16 +83,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define WIRELESS_TX A5      // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
-// double targetLat = 42.31562, targetLon = -71.33430; // Landscaping place near NEST.
-double testLat = 42.31619, testLon = -71.36740; // House 9 on Pemberton Road.
+// double targetLat = 42.315642, targetLon = -71.334291; // Landscaping place near NEST.
+// double targetLat = 42.31619, targetLon = -71.36740; // House 9 on Pemberton Road.
 // double targetLat = 42.3408625, targetLon = -71.3780515;
 // double targetLat = 42.3421048, targetLon = -71.3778945;
+double targetLat = 42.31549, targetLon = -71.33391; // Blue tarp at NEST.
 
 // Testing coordinates.
 // double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
-double targetLat = 42.31746, targetLon = -71.36467; // Local bank coordinates.
+// double testLat = 42.31746, testLon = -71.36467; // Local bank coordinates.
 // double testLat = 42.3401859, testLon = -71.3781675;
 // double testLat = 42.3390271, testLon = -71.3782380;
+double testLat = 42.31622, testLon = -71.33370; // Woods at NEST. 
 
 // Baud rates.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
