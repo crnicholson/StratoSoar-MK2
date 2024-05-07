@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Enables.
 #define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
-#define TEST_COORD // Use testing coordinates.
+// #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
 // #define STALL_STOP // Land the glider by repeatedly stalling it.
@@ -39,8 +39,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define SERVO_NONBLOCKING
 
 // Time settings.
-#define FAST_UPDATE_PERIOD 1800 // In this time, the glider will update its yaw more frequently. The time is in seconds.
-#define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes.
+#define FAST_UPDATE_PERIOD 1800   // In this time, the glider will update its yaw more frequently. The time is in seconds.
+#define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
 #define ABOVE_THRESHOLD_SLEEP 500 // If the yaw is above the threshold, the glider will sleep for this long. Note that 200 will be subtracted from this because there was a 200 ms delay in between moving servos.
@@ -87,7 +87,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // double targetLat = 42.31619, targetLon = -71.36740; // House 9 on Pemberton Road.
 // double targetLat = 42.3408625, targetLon = -71.3780515;
 // double targetLat = 42.3421048, targetLon = -71.3778945;
-double targetLat = 42.31549, targetLon = -71.33391; // Blue tarp at NEST.
+// double targetLat = 42.31549, targetLon = -71.33391; // Blue tarp at NEST.
+double targetLat = 42.31670, targetLon = -71.36622; // House on Stanton Street.
 
 // Testing coordinates.
 // double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
@@ -123,4 +124,3 @@ Servo elevatorServo;
 #define KP_ELEVATOR 1.0 // Proportional gain.
 #define KI_ELEVATOR 0.0 // Integral gain.
 #define KD_ELEVATOR 0.0 // Derivative gain.
-

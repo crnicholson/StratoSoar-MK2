@@ -279,10 +279,18 @@ void loop() {
 #ifndef LOW_POWER
   nowGPS = millis();
   msGPS = nowGPS - lastGPS;
+#ifdef GROUND
   if (msGPS > 15000 && !inFastEEPROM) {
     lastGPS = millis();
     getGPSData();
   }
+#endif
+#ifndef GROUND
+  if (msGPS > GPS_SLEEP && !inFastEEPROM) {
+    lastGPS = millis();
+    getGPSData();
+  }
+#endif
 #endif
 #endif
 
