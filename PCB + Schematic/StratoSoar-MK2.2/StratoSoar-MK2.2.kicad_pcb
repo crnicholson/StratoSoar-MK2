@@ -40271,30 +40271,6 @@
 			(justify left bottom mirror)
 		)
 	)
-	(gr_text "JP2 = solder 1 for BST or solder 3 for +BATT reference for voltmeter"
-		(at 165.735 78.486 0)
-		(layer "B.SilkS")
-		(uuid "108ca7be-2cac-4fce-9654-26eeef08299b")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
-	(gr_text "JP3 = solder to enable one cell"
-		(at 166.243 80.772 0)
-		(layer "B.SilkS")
-		(uuid "17de9300-a6b3-4009-82af-3e5e18f86e19")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
 	(gr_text "StratoSoar"
 		(at 92.964 39.243 0)
 		(layer "B.SilkS")
@@ -40613,30 +40589,6 @@
 			(justify left bottom mirror)
 		)
 	)
-	(gr_text "JP4 = solder to enable AT LED"
-		(at 163.068 61.849 0)
-		(layer "B.SilkS")
-		(uuid "4bdcd019-0834-4c5d-9485-c276d9b70fd3")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
-	(gr_text "JP7 = solder to bridge GND to -BATT"
-		(at 167.132 86.868 0)
-		(layer "B.SilkS")
-		(uuid "4f500873-2884-4b57-90cc-0f048ffbec5e")
-		(effects
-			(font
-				(size 1 0.99)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
 	(gr_text "~ + -"
 		(at 69.469 109.601 0)
 		(layer "B.SilkS")
@@ -40674,42 +40626,6 @@
 			(justify left bottom mirror)
 		)
 	)
-	(gr_text "JP1 = solder to enable PPS LED"
-		(at 162.052 71.882 0)
-		(layer "B.SilkS")
-		(uuid "6b56b327-9a56-41b1-ab9c-d4463c0e1b10")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
-	(gr_text "JP6 = solder to enable SAMD LED"
-		(at 165.227 83.312 0)
-		(layer "B.SilkS")
-		(uuid "784ec346-a4f7-42d9-a214-9042a001b63c")
-		(effects
-			(font
-				(size 1 0.99)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
-	(gr_text "JP5 = solder to enable ERR LED"
-		(at 161.798 64.897 0)
-		(layer "B.SilkS")
-		(uuid "83b104e5-2d54-47de-891b-04ca625845d4")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
 	(gr_text "JLCJLCJLCJLC"
 		(at 70.104 42.418 0)
 		(layer "B.SilkS")
@@ -40735,30 +40651,6 @@
 			(justify left bottom mirror)
 		)
 	)
-	(gr_text "JP9/JP10 = solder to enable \nSAMD crystal"
-		(at 162.052 69.342 0)
-		(layer "B.SilkS")
-		(uuid "968159e3-302c-4dff-af5f-5d41afa9c58b")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
-	(gr_text "AT = ATMega"
-		(at 151.892 75.057 0)
-		(layer "B.SilkS")
-		(uuid "b21d4e8f-43e5-4747-9ca2-ba0de650dd1d")
-		(effects
-			(font
-				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
 	(gr_text "~ + -"
 		(at 60.833 109.601 0)
 		(layer "B.SilkS")
@@ -40779,18 +40671,6 @@
 		(effects
 			(font
 				(size 1 1)
-				(thickness 0.15)
-			)
-			(justify left bottom mirror)
-		)
-	)
-	(gr_text "JP8 = solder to bridge BST and +BATT"
-		(at 167.005 88.646 0)
-		(layer "B.SilkS")
-		(uuid "c54b2259-2284-4499-ae94-1b345323d3d6")
-		(effects
-			(font
-				(size 1 0.99)
 				(thickness 0.15)
 			)
 			(justify left bottom mirror)
@@ -41090,6 +40970,18 @@
 			(justify left bottom)
 		)
 	)
+	(gr_text "JP2 = solder 1 for BST or solder 3 for +BATT reference for voltmeter"
+		(at 112.739128 78.486 -0)
+		(layer "F.SilkS")
+		(uuid "108ca7be-2cac-4fce-9654-26eeef08299b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
 	(gr_text "FTDI"
 		(at 54.229 75.819 0)
 		(layer "F.SilkS")
@@ -41098,6 +40990,18 @@
 			(font
 				(size 0.6 0.6)
 				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "JP3 = solder to enable one cell"
+		(at 112.231128 80.772 -0)
+		(layer "F.SilkS")
+		(uuid "17de9300-a6b3-4009-82af-3e5e18f86e19")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
 			)
 			(justify left bottom)
 		)
@@ -41499,6 +41403,42 @@
 			(justify left bottom)
 		)
 	)
+	(gr_text "JP4 = solder to enable AT LED"
+		(at 115.406128 61.849 -0)
+		(layer "F.SilkS")
+		(uuid "4bdcd019-0834-4c5d-9485-c276d9b70fd3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "JP7 = solder to bridge GND to -BATT"
+		(at 111.342128 86.868 -0)
+		(layer "F.SilkS")
+		(uuid "4f500873-2884-4b57-90cc-0f048ffbec5e")
+		(effects
+			(font
+				(size 1 0.99)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "JP1 = solder to enable PPS LED"
+		(at 116.422128 71.882 -0)
+		(layer "F.SilkS")
+		(uuid "6b56b327-9a56-41b1-ab9c-d4463c0e1b10")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
 	(gr_text "SCL"
 		(at 53.086 49.022 270)
 		(layer "F.SilkS")
@@ -41547,6 +41487,18 @@
 			(justify left bottom)
 		)
 	)
+	(gr_text "JP6 = solder to enable SAMD LED"
+		(at 113.247128 83.312 -0)
+		(layer "F.SilkS")
+		(uuid "784ec346-a4f7-42d9-a214-9042a001b63c")
+		(effects
+			(font
+				(size 1 0.99)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
 	(gr_text "3.3V"
 		(at 53.086 83.82 270)
 		(layer "F.SilkS")
@@ -41563,6 +41515,18 @@
 		(at 57.531 48.133 0)
 		(layer "F.SilkS")
 		(uuid "82488402-6b43-467f-90e2-d8088018901b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "JP5 = solder to enable ERR LED"
+		(at 116.676128 64.897 -0)
+		(layer "F.SilkS")
+		(uuid "83b104e5-2d54-47de-891b-04ca625845d4")
 		(effects
 			(font
 				(size 1 1)
@@ -41615,6 +41579,18 @@
 			(font
 				(size 0.6 0.6)
 				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "JP9/JP10 = solder to enable \nSAMD crystal"
+		(at 116.422128 69.342 -0)
+		(layer "F.SilkS")
+		(uuid "968159e3-302c-4dff-af5f-5d41afa9c58b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
 			)
 			(justify left bottom)
 		)
@@ -41683,6 +41659,18 @@
 		(at 86.741 109.093 0)
 		(layer "F.SilkS")
 		(uuid "a9bce28c-488d-4960-bbda-19f83759d988")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "AT = ATMega"
+		(at 126.582128 75.057 -0)
+		(layer "F.SilkS")
+		(uuid "b21d4e8f-43e5-4747-9ca2-ba0de650dd1d")
 		(effects
 			(font
 				(size 1 1)
@@ -41771,6 +41759,18 @@
 			(font
 				(size 0.6 0.6)
 				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "JP8 = solder to bridge BST and +BATT"
+		(at 111.469128 88.646 -0)
+		(layer "F.SilkS")
+		(uuid "c54b2259-2284-4499-ae94-1b345323d3d6")
+		(effects
+			(font
+				(size 1 0.99)
+				(thickness 0.15)
 			)
 			(justify left bottom)
 		)
