@@ -300,7 +300,7 @@ void loop() {
 #endif
 
   getIMUData(); // Get data from the ATMega. This will short pulse LED if there is an error.
-  calculate();  // Find distance, turning angle, and more.
+  calculate(); // Find distance, turning angle, and more.
 
 #ifdef CHANGE_TARGET
   if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
@@ -365,8 +365,8 @@ void loop() {
         SerialUSB.println(" seconds left.");
       } else {
         SerialUSB.println("Out of threshold.");
+        displayData();
       }
-      displayData();
       /*
       #ifdef LOW_POWER
             LowPower.sleep(25);

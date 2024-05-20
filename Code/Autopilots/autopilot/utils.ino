@@ -206,7 +206,7 @@ void moveElevator(int degrees, int sleep) {
 void readVoltage() {
   int rawVolt = analogRead(BAT_VOLTAGE_PIN);
   rawVolt = rawVolt * 2;
-  data.volts = rawVolt * (3.3 / 1023.0) * 100;
+  data.volts = rawVolt * (3.3 / 1023.0);
 }
 
 void I2CScan() {
@@ -260,23 +260,22 @@ void I2CScan() {
 }
 
 void streamData() {
-#ifdef DEVMODE
+  // Used for debugging the communication between the SAMD and the ATMega.
+  digitalWrite(WRITE_PIN, HIGH);
+  delay(40);
+  digitalWrite(WRITE_PIN, LOW);
+  delay(100);
+
   int available = Serial1.available();
   SerialUSB.print(available);
   SerialUSB.print(" available bytes ");
   while (Serial1.available() > 0) {
     SerialUSB.print(Serial1.read());
   }
-#endif
 }
 
 void getIMUData() {
-  while (Serial1.available() > 0) { // Clear the buffer.
-    byte t = Serial1.read();
-#ifdef DEVMODE
-    SerialUSB.println(t);
-#endif
-  }
+  Serial1.flush();
 
   // Ask ATMega for data.
   digitalWrite(WRITE_PIN, HIGH);
@@ -291,7 +290,7 @@ void getIMUData() {
   // Wait a little bit before reading the data.
   // 20 bytes equal 160 bits. 1 stop + start bit for every 8 bits, so 40 stop and start bits equal 200 bits. 9600/200 =~ 20 ms. Add 10 ms for safety.
 #ifdef LOW_POWER
-  LowPower.sleep(50);
+  LowPower.sleep(200);
 #endif
 #ifndef LOW_POWER
   delay(50);
@@ -305,6 +304,7 @@ void getIMUData() {
     data.temp = receivedData.temp / 100;         // In Celsius.
     data.humidity = receivedData.humidity / 100; // In relative humidity.
     data.pressure = receivedData.pressure / 100; // In hPa.
+
   } else {
 #ifdef DEVMODE
     SerialUSB.println("We got nothing :(");

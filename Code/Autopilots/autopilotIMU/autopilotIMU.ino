@@ -5,7 +5,7 @@
 autopilotIMU.ino, part of StratoSoar MK2, for an autonomous glider.
 Copyright (C) 2024 Charles Nicholson
 
-This program is free software: you can redistribute it and/or modify 
+This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -45,15 +45,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Format code - add periods, capitalize, format above documentation
 // Write documentation
 
-#include <SoftwareSerial.h>
-#include <TinyBME280.h>
-#include <Wire.h>
 #include "headers/settings.h" // Change settings here.
 #include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
 #include "src/MPU9250.h"      // Credit: https://github.com/jremington/MPU-9250-AHRS
+// #include <SoftwareSerial.h>
+#include <NeoSWSerial.h>
+#include <TinyBME280.h>
+#include <Wire.h>
 
-unsigned long now = 0, last = 0;   // Micros() timers.
-float deltat = 0;                  // Loop time in seconds.
+unsigned long now = 0, last = 0; // Micros() timers.
+float deltat = 0;                // Loop time in seconds.
+long nowPrint, lastPrint = 0;    // For printing data.
 
 static float q[4] = {1.0, 0.0, 0.0, 0.0}; // Vector to hold quaternion.
 
@@ -77,7 +79,7 @@ struct __attribute__((packed)) testStruct {
 
 MPU9250 accelgyro;
 I2Cdev I2C_M;
-SoftwareSerial mcuConn(RX, TX);
+NeoSWSerial mcuConn(RX, TX);
 
 char s[60]; // Snprintf buffer.
 int16_t ax, ay, az;
@@ -105,9 +107,9 @@ void setup() {
   Serial.println(accelgyro.testConnection() ? "MPU9250 is all good" : "MPU9250 is missing!"); // Verify connection.
 #endif
   delay(1000);
-  #ifdef DEVMODE
+#ifdef DEVMODE
   I2CScan();
-  #endif
+#endif
   longPulse(LED);
   delay(5000);
 }
@@ -147,7 +149,7 @@ void loop() {
   if (digitalRead(WRITE_PIN)) {
     data.pressure = BME280pressure(); // Pressure in Pa.
     data.temp = BME280temperature();  // Temp in C.
-    data.humidity = BME280humidity();  // Humidity in %RH.
+    data.humidity = BME280humidity(); // Humidity in %RH.
 
     mcuConn.write((byte *)&data, sizeof(data));
 
@@ -157,16 +159,20 @@ void loop() {
   }
 
 #ifdef DEVMODE
-  data.temp = BME280temperature();  // Temp in C.
-  data.humidity = BME280humidity(); // Humidity in %RH.
+  nowPrint = millis();
+  if (nowPrint - lastPrint > 1000) {
+    lastPrint = nowPrint;
+    data.temp = BME280temperature();  // Temp in C.
+    data.humidity = BME280humidity(); // Humidity in %RH.
 
-  Serial.print(data.yaw);
-  Serial.print(", ");
-  Serial.print(data.pitch);
-  Serial.print(", ");
-  Serial.print(data.temp);
-  Serial.print(", ");
-  Serial.println(data.humidity);
+    Serial.print(data.yaw);
+    Serial.print(", ");
+    Serial.print(data.pitch);
+    Serial.print(", ");
+    Serial.print(data.temp);
+    Serial.print(", ");
+    Serial.println(data.humidity);
+  }
 #endif
 }
 
