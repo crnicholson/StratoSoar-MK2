@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Enables.
 #define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
-#define TEST_COORD // Use testing coordinates.
+// #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the` target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
 // #define STALL_STOP // Land the glider by repeatedly stalling it.

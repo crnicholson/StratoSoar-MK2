@@ -342,6 +342,7 @@ void getGPSData() {
   data.day = gps.getDay();
   data.month = gps.getDay();
   data.year = gps.getYear();
+  data.hdop = gps.getDOP();
 }
 
 void displayData() {
@@ -355,6 +356,8 @@ void displayData() {
   SerialUSB.print(data.sats);
   SerialUSB.print(" Fix Type: ");
   SerialUSB.print(data.fixType);
+  SerialUSB.print(" HDOP: ");
+  SerialUSB.print(data.hdop);
   SerialUSB.print(" Speed: ");
   SerialUSB.print(data.speed);
   SerialUSB.print(" Date/Time: ");
@@ -400,7 +403,7 @@ void displayData() {
 void waitForFix() {
   data.sats = 0;
   data.fixType = 0;
-  while ((data.fixType < 3) && (data.sats < 3)) { // Make sure location is valid before continuing. (Changed data.sats from < 5 to < 3).
+  while ((data.fixType < 3) && (data.sats < 4)) { // Make sure location is valid before continuing. (Changed data.sats from < 5 to < 3).
     if (gps.getPVT()) {
       getGPSData();
 #ifdef DEVMODE
@@ -438,7 +441,7 @@ void gpsWakeup() {
 }
 
 void gpsConfig() {
-  gps.factoryDefault();                                                        // Clear any saved configuration.
+  // gps.factoryDefault();                                                        // Clear any saved configuration. Also calls hardReset(), so all the ephemeris data is lost.
   if (gps.setDynamicModel(DYN_MODEL_AIRBORNE1g, VAL_LAYER_RAM_BBR) == false) { // Set the dynamic model to airborne mode with one g of thrust allowance.
 #ifdef DEVMODE
     SerialUSB.println(F("*** Warning: setDynamicModel failed ***"));

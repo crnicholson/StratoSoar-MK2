@@ -85,6 +85,7 @@ struct __attribute__((packed)) dataStruct {
   float volts;
   float turnAngle;
   float distanceMeters;
+  float hdop;
 } data;
 
 struct __attribute__((packed)) dataStructIMU {
