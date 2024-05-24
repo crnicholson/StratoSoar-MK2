@@ -45,7 +45,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
 #define ABOVE_THRESHOLD_SLEEP 500 // If the yaw is above the threshold, the glider will sleep for this long. Note that 200 will be subtracted from this because there was a 200 ms delay in between moving servos.
 #define ABV_THRS_FST_UPDT_SLP 500 // (Above threshold fast update period sleep). If the yaw is above the threshold and if the glider is in the first five minutes of flight, the glider will for this long. Same note as above, too.
-#define FLIGHT_TIME 360           // In minutes, the time expected to be in flight for, used for calculating the time between EEPROM writes.
+#define FLIGHT_TIME 240           // In minutes, the time expected to be in flight for, used for calculating the time between EEPROM writes.
 
 // Other settings.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
@@ -102,8 +102,10 @@ double testLat = 42.31622, testLon = -71.33370; // Woods at NEST.
 #define BAUD_RATE 9600          // Serial link to the ATMega.
 
 // EEPROM settings.
-#define EEPROM_CYCLES 10 // This is the number of times the EEPROM will record data after the button is pressed.
-// #define WRITE_TIME 1.5   // The seconds between EEPROM writings as calculated previously.
+#define EEPROM_CYCLES 10   // This is the number of times the EEPROM will record data after the button is pressed.
+#define BYTES_PER_CYCLE 16 // The number of bytes written to the EEPROM per cycle.
+#define EEPROM_BUFFER .25  // Extra added time when calculating the time between EEPROM cycles.
+// As of 5/23/24: With EEPROM_BUTTON, BYTES_PER_CYCLE is 16. Without EEPROM_BUTTON, BYTES_PER_CYCLE is 6.
 
 // Servo objects and names.
 #ifdef NEED_RUDDER

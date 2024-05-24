@@ -246,8 +246,8 @@ void setup() {
 #endif
 
   delay(10000);
-
-  writeTime = (FLIGHT_TIME * 60) / (eepromSize / 16);
+ 
+  writeTime = (FLIGHT_TIME * 60) / (eepromSize / BYTES_PER_CYCLE) + EEPROM_BUFFER;
 
   startTimer = millis();
   last = startTimer;
