@@ -12,12 +12,6 @@
 -- | --
 <i>StratoSoar Logo.</i> | <i>StratoSoar MK2.0 Circuit Board.</i>
 
-<br>
-<p float="left">
-<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/><i>.</i>
-<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="PCB" width="300"/><i>StratoSoar MK2.0 Circuit Board.</i>
-</p>
-
 ## What Is the StratoSoar Project?
 
 StratoSoar is a low-power, adaptive UAV, dropped from a weather balloon at approximately 80,000 feet in altitude. The main goal of StratoSoar is to select GPS coordinates for the glider to fly to, and then the glider will try to go there in an efficient manner, or intelligently choose a closer, more realistic landing site without any human interaction. Currently, we want StratoSoar to run off one AAA battery (or possibly two AAAs) for a 6 hour flight.
