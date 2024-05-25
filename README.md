@@ -1,14 +1,12 @@
 
 
-# StratoSoar MK2 - The Low-Power Autonomous High-Altitude Glider
-
-**NOTE** - Docs are **NOT FINISHED** yet.
+# StratoSoar MK2 - The Low-Power, Autonomous High-Altitude Glider
 
 **WORK IN PROGRESS** - This project is still in the works. I don't recommend using it yet because it has the potential of being dangerous.
 
 **NEW** - Working on making a real glider. 
 
-**STATE as of 4/9/24** - Second draft of PCBs working!
+**STATE as of 5/5/24** - Full system working!
 
 <br>
 
@@ -24,7 +22,7 @@ StratoSoar is a UAV. Here's a quick definition. UAVs, or Unmanned Aerial Vehicle
 
 ## What Are the Uses of StratoSoar?
 
-Currently, the two main ideas we are thinking of include an educational kit and something for the study of aerodynamics of StratoSoar (of which very little exist). Other ideas include reusable radiosondes, remote medicine/parcel/etc. delivery, and atmospheric monitoring. 
+Currently, the two main ideas we are thinking of include an educational kit and something for the study of aerodynamics of the stratosphere (of which very little exist). Other ideas include reusable radiosondes, remote medicine/parcel/etc. delivery, and atmospheric monitoring. 
 
 ## A Quick Note on MK1, Naming, and Revisions
 
@@ -73,6 +71,10 @@ The glider will fly to the selected coordinates, and depending on the user confi
 ## Why Did I Make This?
 -->
 
+<!-- 
+## Is This Legal?
+-->
+
 ## Can I Buy a Kit or a Complete Product?
 
 Currently, StratoSoar is not available to purchase online as a kit or complete product. We have plans in the next few years to release a kit for schools, education centers, hobbyists and a complete product for industry at an affordable price. You are welcome to make one in the mean time!
@@ -112,6 +114,8 @@ This project would not be possible without the following individuals:
 - Mark Jessop (VK5QI) for answering all of my questions.
 
 - Mike Hojnowski (KD2EAT) for PCB design and hardware/software debugging.
+
+- Paul Hamilton for helping me with FAA regulations.
 
 - My parents!
 
