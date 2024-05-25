@@ -10,10 +10,10 @@
 
 <br>
 <p float="left">
-<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/><br>_StratoSoar Logo._
+<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/><i>StratoSoar Logo.</i>
 
-<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="PCB" width="300"/><br>_StratoSoar MK2.0 Circuit Board._
-<p>
+<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="PCB" width="300"/><i>StratoSoar MK2.0 Circuit Board.</i>
+</p>
 
 ## What Is the StratoSoar Project?
 
