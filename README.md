@@ -10,7 +10,7 @@
 
 <img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/> | <img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="PCB" width="300"/>
 -- |
-_StratoSoar Logo._ | _StratoSoar MK2.0 Circuit Board._
+<i>StratoSoar Logo.</i> | <i>StratoSoar MK2.0 Circuit Board.</i>
 
 <br>
 <p float="left">
