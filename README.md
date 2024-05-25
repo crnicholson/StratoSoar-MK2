@@ -8,6 +8,10 @@
 
 **STATE as of 5/5/24** - Full system working!
 
+hi |
+-- |
+<img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/> |
+
 <br>
 <p float="left">
 <img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/><i>StratoSoar Logo.</i>
