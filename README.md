@@ -9,7 +9,7 @@
 **STATE as of 5/5/24** - Full system working!
 
 <img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/logo.png" alt="Logo" width="300"/> | <img src="https://github.com/crnicholson/StratoSoar-MK2/blob/main/Media/boardPhotoMK2.0.png" alt="PCB" width="300"/>
--- |
+-- | --
 <i>StratoSoar Logo.</i> | <i>StratoSoar MK2.0 Circuit Board.</i>
 
 <br>
