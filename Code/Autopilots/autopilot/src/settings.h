@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-#define DEVMODE // Toggle the serial monitor on and off.
+// #define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
 // #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the` target location is too far away, change it to some place closer.
@@ -83,12 +83,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define WIRELESS_TX A5      // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
-// double targetLat = 42.315642, targetLon = -71.334291; // Landscaping place near NEST.
+double targetLat = 42.315373, targetLon = -71.334379; // Landscaping place near NEST.
 // double targetLat = 42.31619, targetLon = -71.36740; // House 9 on Pemberton Road.
 // double targetLat = 42.3408625, targetLon = -71.3780515;
 // double targetLat = 42.3421048, targetLon = -71.3778945;
 // double targetLat = 42.31549, targetLon = -71.33391; // Blue tarp at NEST.
-double targetLat = 42.31670, targetLon = -71.36622; // House on Stanton Street.
+// double targetLat = 42.31670, targetLon = -71.36622; // House on Stanton Street.
 
 // Testing coordinates.
 // double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
