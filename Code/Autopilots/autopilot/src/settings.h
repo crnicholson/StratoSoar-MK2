@@ -22,25 +22,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // Enables.
 // #define DEVMODE // Toggle the serial monitor on and off.
-// #define LOW_POWER  // Activates low power mode. GPS will be lower power. Note that the serial monitor will no longer work.
+// #define LOW_POWER  // Activates low power mode. GPS will be lower power among others. Note that the serial monitor will no longer work.
 // #define TEST_COORD // Use testing coordinates.
-// #define CHANGE_TARGET // If the` target location is too far away, change it to some place closer.
+// #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
 // #define SPIN_STOP  // Land the glider by sending it into a spin.
-// #define STALL_STOP // Land the glider by repeatedly stalling it.
+// #define STALL_STOP // Experimental, may be unsupported. Do not use. Land the glider by repeatedly stalling it.
 // #define NEED_PARACHUTE // Enable the parachute servo.
 // #define NEED_ELEVATOR // Enable the elevator servo.
 #define NEED_RUDDER // Enable the rudder servo.
 // #define DIVE_STALL    // Dive down when speed gets too low.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
-// #define WIRELESS   // If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
+// #define WIRELESS   // Experimental. If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
 #define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button. It will also record more data.
 #define GROUND        // If doing ground testing, use this to enable faster updates.
 // #define ERASE_EEPROM  // If enabled, the EEPROM will be erased before every flight. This is not recommended.
-// #define SERVO_NONBLOCKING
+// #define SERVO_NONBLOCKING // Experimental, do not use.
+#define DROP_START // Starts the operations when a decreasing altitude is detected.
 
 // Time settings.
 #define FAST_UPDATE_PERIOD 1800   // In this time, the glider will update its yaw more frequently. The time is in seconds.
-#define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds.
+#define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds and does not apply if ground is enabled.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
 #define ABOVE_THRESHOLD_SLEEP 500 // If the yaw is above the threshold, the glider will sleep for this long. Note that 200 will be subtracted from this because there was a 200 ms delay in between moving servos.

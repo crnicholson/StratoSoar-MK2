@@ -478,3 +478,8 @@ void nonBlockingDelay(unsigned long interval, void (*callback)()) {
     callback();
   }
 }
+
+// Altitude in meters. 
+float bme280Altitude(float referencePressure=101325.0) {
+  return ((float)-45846.2) * (pow(((float)BME280pressure() / (float)referencePressure), 0.190263) - (float)1); // referencePressure is the pressure in Pa at zero altitude; for example, 101325.0.
+}

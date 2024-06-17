@@ -34,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ExternalEEPROM eeprom;
 
-int yawDifference, nowEEPROM, flightNumber, cycles, previous;
+int yawDifference, nowEEPROM, flightNumber, cycles, previous, downwardsMeters, oldAlt, oldestAlt;
 float writeTime;
 long lastEEPROM = 123456;
 int lastYaw = 361;
@@ -64,7 +64,8 @@ double integralElevator = 0.0;  // Integral of the error.
 struct __attribute__((packed)) dataStruct {
   float lat;
   float lon;
-  int alt;
+  int alt;    // GPS altitude.
+  int bmeAlt; // BME280 altitude.
   int sats;
   int fixType;
   int speed;
@@ -131,7 +132,7 @@ void setup() {
 #ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
   while (!SerialUSB) {
-    longPulse(ERR_LED, 0); // Wait for serial to connect
+    longPulse(ERR_LED, 0); // Wait for serial to connect.
   }
 
   delay(1000);
@@ -232,7 +233,7 @@ void setup() {
       longPulse(ERR_LED, 0);
   }
 
-  // gps.hardReset(); // Hard reset - force a cold start.
+  // gps.hardReset(); // Hard reset - force a cold start. This will wipe any data in the GPS - almost never use this. 
 
   gpsConfig(); // This will long pulse LED if there is an error.
 
@@ -246,7 +247,7 @@ void setup() {
 #endif
 
   delay(10000);
- 
+
   writeTime = (FLIGHT_TIME * 60) / (eepromSize / BYTES_PER_CYCLE) + EEPROM_BUFFER;
 
   startTimer = millis();
@@ -254,7 +255,24 @@ void setup() {
 }
 
 void loop() {
+#ifdef DROP_START
+  longPulse(LED);
+  downwardsMeters = 0;
+  while (downwardsMeters < 3) {
+    oldestAlt = oldAlt;
+    oldAlt = bmeAlt;
+    bmeAlt = bme280Altitude();
+    downwardsMeters = (oldestAlt + oldAlt + bmeAlt) / 3;
+#ifdef DEVMODE
+    SerialUSB.print("Downwards meters: ");
+    SerialUSB.println(downwardsMeters);
+#endif
+    delay(500);
+  }
+#endif
+
   shortPulse(LED);
+
 #ifndef TEST_COORD
 #ifdef LOW_POWER
   if (!fastUpdatePeriod || !spiral) {
@@ -281,13 +299,13 @@ void loop() {
   nowGPS = millis();
   msGPS = nowGPS - lastGPS;
 #ifdef GROUND
-  if (msGPS > 15000 && !inFastEEPROM) {
+  if (msGPS > 15000 && !inFastEEPROM) { // Update the position every 15 seconds, but only if not in fast EEPROM mode.
     lastGPS = millis();
     getGPSData();
   }
 #endif
 #ifndef GROUND
-  if (msGPS > GPS_SLEEP && !inFastEEPROM) {
+  if (msGPS > GPS_SLEEP && !inFastEEPROM) { // Update the position every GPS_SLEEP.
     lastGPS = millis();
     getGPSData();
   }
@@ -296,30 +314,30 @@ void loop() {
 #endif
 
 #ifdef TEST_COORD
-  data.lat = testLat;
+  data.lat = testLat; // If not using GPS, use the test coordinates.
   data.lon = testLon;
 #endif
 
   getIMUData(); // Get data from the ATMega. This will short pulse LED if there is an error.
-  calculate(); // Find distance, turning angle, and more.
+  calculate();  // Find distance, turning angle, and more.
 
 #ifdef CHANGE_TARGET
   if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
-    targetLat = 42.7, targetLon = -71.9; // Change to random nearby coordinates as a back up location if previous location is too far.
+    targetLat = 42.7, targetLon = -71.9; // Change to defined nearby coordinates as a back up location if previous location is too far.
   }
   if ((distanceMeters >= 50000) && (data.alt <= 1000)) {
-    targetLat = 43.7, targetLon = -72.9; // Change to random nearby coordinates as a back up location if previous location is too far.
+    targetLat = 43.7, targetLon = -72.9; // Change to defined nearby coordinates as a back up location if previous location is too far.
   }
   calculate(); // Calculate again to get updated variables if the target has changed.
 #endif
 
 #ifdef SPIN_STOP
+  // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute.
   if ((data.distanceMeters <= SPIRAL_DST_THRESHOLD) && (data.alt > SPIRAL_ALT_THRESHOLD)) {
     spiral = true;
 #ifdef NEED_RUDDER
     moveRudder(145); // Sends into a spin to safely make its way down.
 #endif
-    // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute.
   }
 #endif
 
@@ -343,14 +361,6 @@ void loop() {
   if (yawDifference < YAW_DFR_THRESHOLD) {
     SerialUSB.println("Within threshold.");
     displayData();
-    /*
-#ifdef LOW_POWER
-    LowPower.sleep(25);
-#endif
-#ifndef LOW_POWER
-    delay(25);
-#endif
-*/
   }
 #endif
 
@@ -368,29 +378,12 @@ void loop() {
         SerialUSB.println("Out of threshold.");
         displayData();
       }
-      /*
-      #ifdef LOW_POWER
-            LowPower.sleep(25);
-      #endif
-      #ifndef LOW_POWER
-            delay(25);
-      #endif
-      */
 #endif
 
 #ifdef NEED_RUDDER
       moveRudder(data.servoPositionRudder);
 #endif
 #ifdef NEED_ELEVATOR
-      /*
-          #ifdef LOW_POWER
-                LowPower.sleep(100);
-          #endif
-          #ifndef LOW_POWER
-                delay(100); // Have a small delay to release the draw on the power supply.
-          #endif
-          */
-
       moveElevator(data.servoPositionElevator);
 #endif
 
