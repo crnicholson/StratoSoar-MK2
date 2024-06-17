@@ -256,13 +256,13 @@ void setup() {
 
 void loop() {
 #ifdef DROP_START
-  longPulse(LED);
+  longPulse(LED, 0);
   downwardsMeters = 0;
   while (downwardsMeters < 3) {
     oldestAlt = oldAlt;
-    oldAlt = bmeAlt;
+    oldAlt = data.bmeAlt;
     bmeAlt = bme280Altitude();
-    downwardsMeters = (oldestAlt + oldAlt + bmeAlt) / 3;
+    downwardsMeters = (oldestAlt + oldAlt + data.bmeAlt) / 3;
 #ifdef DEVMODE
     SerialUSB.print("Downwards meters: ");
     SerialUSB.println(downwardsMeters);

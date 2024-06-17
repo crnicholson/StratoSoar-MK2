@@ -94,7 +94,7 @@ int pidMagicRudder() {
   return servoPositionRudder / 2;
 }
 
-void longPulse(int pin, int sleep = 1) {
+void longPulse(int pin, int sleep = 1) { // Pass 1 to sleep, 0 to delay. 
   digitalWrite(pin, HIGH);
   if (sleep == 1) {
 #ifdef LOW_POWER
@@ -481,5 +481,5 @@ void nonBlockingDelay(unsigned long interval, void (*callback)()) {
 
 // Altitude in meters. 
 float bme280Altitude(float referencePressure=101325.0) {
-  return ((float)-45846.2) * (pow(((float)BME280pressure() / (float)referencePressure), 0.190263) - (float)1); // referencePressure is the pressure in Pa at zero altitude; for example, 101325.0.
+  return ((float)-45846.2) * (pow(((float)data.pressure / (float)referencePressure), 0.190263) - (float)1); // referencePressure is the pressure in Pa at zero altitude; for example, 101325.0.
 }
