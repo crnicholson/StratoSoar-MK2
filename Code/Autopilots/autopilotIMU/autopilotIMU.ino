@@ -64,7 +64,7 @@ struct __attribute__((packed)) dataStruct {
   float roll;
   float yaw;
   long temp;
-  int32_t pressure;
+  float pressure;
   long humidity;
 } data;
 

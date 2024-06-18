@@ -304,7 +304,6 @@ void getIMUData() {
     data.temp = receivedData.temp / 100;         // In Celsius.
     data.humidity = receivedData.humidity / 100; // In relative humidity.
     data.pressure = receivedData.pressure / 100; // In hPa.
-
   } else {
 #ifdef DEVMODE
     SerialUSB.println("We got nothing :(");
@@ -479,7 +478,7 @@ void nonBlockingDelay(unsigned long interval, void (*callback)()) {
   }
 }
 
-// Altitude in meters. 
-float bme280Altitude(float referencePressure=101325.0) {
-  return ((float)-45846.2) * (pow(((float)data.pressure / (float)referencePressure), 0.190263) - (float)1); // referencePressure is the pressure in Pa at zero altitude; for example, 101325.0.
+// Altitude in meters.
+float bme280Altitude(float referencePressure) {
+  return ((float)-45846.2) * (pow(((float)(data.pressure) / (float)referencePressure), 0.190263) - (float)1); // referencePressure is the pressure in hPa at zero altitude; for example, 1013.250.
 }

@@ -34,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ExternalEEPROM eeprom;
 
-int yawDifference, nowEEPROM, flightNumber, cycles, previous, downwardsMeters, oldAlt, oldestAlt;
+int yawDifference, nowEEPROM, flightNumber, cycles, previous, averageAlt, oldAverageAlt, oldAlt, oldestAlt, dropCounter;
 float writeTime;
 long lastEEPROM = 123456;
 int lastYaw = 361;
@@ -42,6 +42,7 @@ bool spiral = false;
 bool runEEPROM = true;
 bool fastUpdatePeriod = true;
 bool inFastEEPROM = false;
+bool dropped = false;
 long eepromAddress, startTimer, endTimer, eepromSize, averageWrite, now, ms, last, nowGPS, msGPS, lastGPS;
 
 // Setpoint and input variables.
@@ -94,7 +95,7 @@ struct __attribute__((packed)) dataStructIMU {
   float roll;
   float yaw;
   long temp;
-  int32_t pressure;
+  float pressure;
   long humidity;
 } receivedData;
 
@@ -233,7 +234,7 @@ void setup() {
       longPulse(ERR_LED, 0);
   }
 
-  // gps.hardReset(); // Hard reset - force a cold start. This will wipe any data in the GPS - almost never use this. 
+  // gps.hardReset(); // Hard reset - force a cold start. This will wipe any data in the GPS - almost never use this.
 
   gpsConfig(); // This will long pulse LED if there is an error.
 
@@ -256,18 +257,31 @@ void setup() {
 
 void loop() {
 #ifdef DROP_START
-  longPulse(LED, 0);
-  downwardsMeters = 0;
-  while (downwardsMeters < 3) {
-    oldestAlt = oldAlt;
-    oldAlt = data.bmeAlt;
-    bmeAlt = bme280Altitude();
-    downwardsMeters = (oldestAlt + oldAlt + data.bmeAlt) / 3;
+  if (!dropped) {
+    longPulse(LED, 0);
+    while (((averageAlt - oldAverageAlt) > -3) && (averageAlt < 2000)) { // While the glider is not dropping at least -3 meters between readings and while the glider is below 2000 meters delay th start of the sketch. 
+      oldestAlt = oldAlt;
+      oldAlt = data.bmeAlt;
+      getIMUData();
+      data.bmeAlt = bme280Altitude(1022.35); // Passing the reference pressure in hPa (millibars).
+      averageAlt = (oldestAlt + oldAlt + data.bmeAlt) / 3;
+      if (dropCounter == 3) {
+        SerialUSB.println("I'm here.");
+        oldAverageAlt = averageAlt;
+        dropCounter = 0;
+      }
+      dropCounter++;
 #ifdef DEVMODE
-    SerialUSB.print("Downwards meters: ");
-    SerialUSB.println(downwardsMeters);
+      SerialUSB.print("Average altitude (meters): ");
+      SerialUSB.println(averageAlt);
+      SerialUSB.print("Old average altitude (meters): ");
+      SerialUSB.println(oldAverageAlt);
+      SerialUSB.print("Difference in altitude: ");
+      SerialUSB.println(averageAlt - oldAverageAlt);  
 #endif
-    delay(500);
+      delay(200);
+    }
+    dropped = true;
   }
 #endif
 

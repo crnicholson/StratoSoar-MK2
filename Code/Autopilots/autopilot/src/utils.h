@@ -42,4 +42,4 @@ void waitForFix();
 void onWake();
 void gpsWakeup();
 void gpsConfig();
-float bme280Altitude();
+float bme280Altitude(float = 1013.250);
