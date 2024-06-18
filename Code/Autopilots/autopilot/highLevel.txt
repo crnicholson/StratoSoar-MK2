@@ -1,0 +1,40 @@
+// This is a high level description of the code. 
+
+include libraries;
+
+include settings and function prototype files;
+
+declare PID variables;
+declare other variables;
+
+declare the large data struct; // For printing the serial monitor.
+declare the smaller data struct; // For communication with the ATMega.
+
+initialize GPS;
+initialize EEPROM;
+
+setup() {
+    define pins states;
+    set pin values;
+
+    begin I2C;
+
+    pulse two LEDs to show power up;
+
+    if serial enabled { // DEVMODE
+        try to connect;
+        blink error LED when connecting; // ERR_LED
+        delay one second;
+        print "StratoSoar MK2.x Flight Controller";
+    }
+
+    connect to ATMega; // Connect over hardware serial to the ATMega
+
+    pulse two LEDs to show program is starting;
+
+    check for all needed I2C devices, blink if none found, print data;
+
+    
+
+
+}

@@ -30,37 +30,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "src/settings.h"
 #include "src/utils.h"
 
-#define pi 3.14159265358979323846
+// PID variables.
+float setpointRudder, inputRudder, errorRudder, prevErrorRudder, integralRudder, inputRudder, errorElevator, prevErrorElevator, integralElevator;
 
-ExternalEEPROM eeprom;
-
-int yawDifference, nowEEPROM, flightNumber, cycles, previous, averageAlt, oldAverageAlt, oldAlt, oldestAlt, dropCounter;
+// Other variables.
+int yawDifference, nowEEPROM, flightNumber, cycles, previous, averageAlt, oldAverageAlt, oldAlt, oldestAlt, dropCounter, lastYaw = 361;
+long eepromAddress, startTimer, endTimer, eepromSize, averageWrite, now, ms, last, nowGPS, msGPS, lastGPS, lastEEPROM, pi = 3.14159265358979323846;
 float writeTime;
-long lastEEPROM = 123456;
-int lastYaw = 361;
-bool spiral = false;
-bool runEEPROM = true;
-bool fastUpdatePeriod = true;
-bool inFastEEPROM = false;
-bool dropped = false;
-long eepromAddress, startTimer, endTimer, eepromSize, averageWrite, now, ms, last, nowGPS, msGPS, lastGPS;
-
-// Setpoint and input variables.
-double setpointRudder = 0.0; // Desired turn angle (in degrees) this is just a random value for now, the code will change it.
-double inputRudder = 0.0;
-
-// Variables for PID control.
-double errorRudder = 0.0;     // Error (difference between setpoint and input).
-double prevErrorRudder = 0.0; // Previous error.
-double integralRudder = 0.0;  // Integral of the error.
-
-// Input variable.
-double inputElevator = 0.0; // Current measured pitch angle, this is gibberish right now, and it will be changed by code.
-
-// Variables for PID control.
-double errorElevator = 0.0;     // Error (difference between setpoint and input).
-double prevErrorElevator = 0.0; // Previous error.
-double integralElevator = 0.0;  // Integral of the error.
+bool spiral, dropped, inFastEEPROM, runEEPROM = true, fastUpdatePeriod = true, firstEEPROM = true;
 
 struct __attribute__((packed)) dataStruct {
   float lat;
@@ -77,7 +54,7 @@ struct __attribute__((packed)) dataStruct {
   int month;
   int year;
   float temp;     // In Celsius.
-  float pressure; // In hPa.
+  float pressure; // In hPa (millibar).
   float humidity; // Relative humidity.
   int yaw;
   int pitch;
@@ -99,7 +76,8 @@ struct __attribute__((packed)) dataStructIMU {
   long humidity;
 } receivedData;
 
-SFE_UBLOX_GNSS gps; // Init GPS.
+SFE_UBLOX_GNSS gps; // Initialize GPS.
+ExternalEEPROM eeprom; // Initialize EEPROM.
 
 void setup() {
   pinMode(LED, OUTPUT);
@@ -127,8 +105,8 @@ void setup() {
   digitalWrite(WRITE_PIN, LOW);
   Wire.begin();
 
-  longPulse(LED, 0); // Pulse LED to show power up.
-  longPulse(ERR_LED, 0);
+  longPulse(LED, 0);     // Pulse LED to show power up.
+  longPulse(ERR_LED, 0); // Testing the error LED, too.
 
 #ifdef DEVMODE
   SerialUSB.begin(SERIAL_BAUD_RATE); // Start the serial monitor.
@@ -143,12 +121,10 @@ void setup() {
 
   Serial1.begin(BAUD_RATE); // Hardware serial connection to the ATMega and the IMU.
 
-  longPulse(LED, 0);
+  longPulse(LED, 0); // Signal that the sketch is starting.
   longPulse(ERR_LED, 0);
 
-#ifdef DEVMODE
-  I2CScan(); // This will long pulse LED if there is an error.
-#endif
+  I2CScan(); // This will long pulse the LED if there is an error.
 
 #ifdef USE_EEPROM
   eeprom.setMemoryType(512); // Valid types: 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1025, 2048
@@ -180,19 +156,7 @@ void setup() {
 #endif
 #endif
 
-  /*
-  #ifdef DEVMODE
-    SerialUSB.println("Testing write time.");
-  #endif
-    averageWrite = eeprom.detectWriteTimeMs(10);
-  #ifdef DEVMODE
-    SerialUSB.print("Average write time in milliseconds: ");
-    SerialUSB.println(averageWrite);
-  #endif
-  */
-
-  // Testing EEPROM.
-  eeprom.write(0, 200);
+  eeprom.write(0, 200); // Testing EEPROM.
 
 #ifdef DEVMODE
   SerialUSB.println("Testing EEPROM.");
@@ -259,14 +223,13 @@ void loop() {
 #ifdef DROP_START
   if (!dropped) {
     longPulse(LED, 0);
-    while (((averageAlt - oldAverageAlt) > -3) && (averageAlt < 2000)) { // While the glider is not dropping at least -3 meters between readings and while the glider is below 2000 meters delay th start of the sketch. 
+    while (((averageAlt - oldAverageAlt) > -3) && (averageAlt < 2000)) { // While the glider is not dropping at least -3 meters between readings and while the glider is below 2000 meters delay th start of the sketch.
       oldestAlt = oldAlt;
       oldAlt = data.bmeAlt;
       getIMUData();
       data.bmeAlt = bme280Altitude(1022.35); // Passing the reference pressure in hPa (millibars).
       averageAlt = (oldestAlt + oldAlt + data.bmeAlt) / 3;
       if (dropCounter == 3) {
-        SerialUSB.println("I'm here.");
         oldAverageAlt = averageAlt;
         dropCounter = 0;
       }
@@ -277,7 +240,7 @@ void loop() {
       SerialUSB.print("Old average altitude (meters): ");
       SerialUSB.println(oldAverageAlt);
       SerialUSB.print("Difference in altitude: ");
-      SerialUSB.println(averageAlt - oldAverageAlt);  
+      SerialUSB.println(averageAlt - oldAverageAlt);
 #endif
       delay(200);
     }
@@ -431,7 +394,8 @@ void loop() {
 #ifdef USE_EEPROM
 #ifndef EEPROM_BUTTON
       if (eepromAddress < eepromSize) {
-        if ((millis() - lastEEPROM) > writeTime) {
+        if (((millis() - lastEEPROM) > writeTime) || firstEEPROM) {
+          firstEEPROM = false;
           lastEEPROM = millis();
           if (sizeof(byte(data.yaw / 2)) == 1) {
             eeprom.write(eepromAddress, byte(data.yaw / 2));

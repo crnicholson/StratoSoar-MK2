@@ -48,7 +48,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "headers/settings.h" // Change settings here.
 #include "src/I2Cdev.h"       // Credit: https://github.com/jremington/MPU-9250-AHRS
 #include "src/MPU9250.h"      // Credit: https://github.com/jremington/MPU-9250-AHRS
-// #include <SoftwareSerial.h>
 #include <NeoSWSerial.h>
 #include <TinyBME280.h>
 #include <Wire.h>
