@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Change this file to match your needs.
 
 // Enables.
-#define DEVMODE // Toggle the serial monitor on and off.
+// #define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power among others. Note that the serial monitor will no longer work.
 #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
@@ -33,15 +33,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define DIVE_STALL    // Dive down when speed gets too low.
 #define USE_EEPROM // Toggle the usage of the EEPROM.
 // #define WIRELESS   // Experimental. If an HCO5 module is attached, a wireless serial connection can be made. More information in the docs.
-#define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button. It will also record more data.
-#define GROUND        // If doing ground testing, use this to enable faster updates.
+// #define EEPROM_BUTTON // If enabled, the EEPROM will run for a configurable number of cycles after being pressed by a button. It will also record more data.
+// #define GROUND // If doing ground testing, use this to enable faster updates.
 // #define ERASE_EEPROM  // If enabled, the EEPROM will be erased before every flight. This is not recommended.
 // #define SERVO_NONBLOCKING // Experimental, do not use.
-#define DROP_START // Starts the operations when a decreasing altitude is detected.
+// #define DROP_START // Starts the operations when a decreasing altitude is detected.
 
 // Time settings.
 #define FAST_UPDATE_PERIOD 1800   // In this time, the glider will update its yaw more frequently. The time is in seconds.
 #define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds and does not apply if ground is enabled.
+#define GPS_GROUND_SLEEP 15000    // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds and does not apply if ground is disabled.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
 #define ABOVE_THRESHOLD_SLEEP 500 // If the yaw is above the threshold, the glider will sleep for this long. Note that 200 will be subtracted from this because there was a 200 ms delay in between moving servos.
@@ -52,11 +53,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
 #define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
 #define YAW_DFR_THRESHOLD 5  // The threshold needed to move the servos.
+#define ARM_ALT 2000         // Meters before the altitude is considered safe to arm the glider if DROP_START is enabled.
+#define SPIN_DEGREE 110      // The angle of the servo when spiraling down to the ground. 90 degrees is the middle.
 
 // Threshold for parachute and spiraling.
 #define PARACHUTE_ALT_THRESHOLD 500 // If the glider is under this, and the distance is less than PARACHUTE_DST_THRESHOLD, open the parachute.
 #define PARACHUTE_DST_THRESHOLD 100 // If the glider is under PARACHUTE_ALT_THRESHOLD, and the distance is less than this, open the parachute.
-#define SPIRAL_ALT_THRESHOLD 600    // If the glider is above this, and the distance is less than SPIRAL_DST_THRESHOLD, spiral the glider down.
+#define SPIRAL_ALT_THRESHOLD 0      // If the glider is above this, and the distance is less than SPIRAL_DST_THRESHOLD, spiral the glider down.
 #define SPIRAL_DST_THRESHOLD 100    // If the glider is above SPIRAL_ALT_THRESHOLD, and the distance is less than this, spiral the glider down.
 
 // Pins. NOTE do not change these if you are using the PCB.
@@ -91,12 +94,18 @@ double targetLat = 42.315373, targetLon = -71.334379; // Landscaping place near 
 // double targetLat = 42.31549, targetLon = -71.33391; // Blue tarp at NEST.
 // double targetLat = 42.31670, targetLon = -71.36622; // House on Stanton Street.
 
-// Testing coordinates.
+// Testing glider coordinates.
 // double testLat = 42.31610, testLon = -71.33468; // NEST coordinates.
 // double testLat = 42.31746, testLon = -71.36467; // Local bank coordinates.
 // double testLat = 42.3401859, testLon = -71.3781675;
 // double testLat = 42.3390271, testLon = -71.3782380;
 double testLat = 42.31622, testLon = -71.33370; // Woods at NEST.
+
+// Backup coordinates, furthest.
+#define FURTHEST_LAT 42
+#define FURTHEST_LON -71
+#define FURTHEST_ALT_THRS 1000
+#define FURTHEST_DST_THRS 1000 // If the glider is below FURTHEST_ALT_THRS and the distance is greater to the target than this, relocate the target to FURTHEST_LAT and FURTHEST_LON.
 
 // Baud rates.
 #define SERIAL_BAUD_RATE 115200 // Serial monitor baud rate.
