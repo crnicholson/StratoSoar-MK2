@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "src/utils.h"
 
 // PID variables.
-float setpointRudder, inputRudder, errorRudder, prevErrorRudder, integralRudder, inputRudder, errorElevator, prevErrorElevator, integralElevator;
+float setpointRudder, inputRudder, errorRudder, prevErrorRudder, integralRudder, inputElevator, errorElevator, prevErrorElevator, integralElevator;
 
 // Other variables.
 int yawDifference, nowEEPROM, flightNumber, cycles, previous, averageAlt, oldAverageAlt, oldAlt, oldestAlt, dropCounter, lastYaw = 361;
@@ -76,7 +76,7 @@ struct __attribute__((packed)) dataStructIMU {
   long humidity;
 } receivedData;
 
-SFE_UBLOX_GNSS gps; // Initialize GPS.
+SFE_UBLOX_GNSS gps;    // Initialize GPS.
 ExternalEEPROM eeprom; // Initialize EEPROM.
 
 void setup() {
@@ -223,7 +223,7 @@ void loop() {
 #ifdef DROP_START
   if (!dropped) {
     longPulse(LED, 0);
-    while (((averageAlt - oldAverageAlt) > -3) && (averageAlt < 2000)) { // While the glider is not dropping at least -3 meters between readings and while the glider is below 2000 meters delay th start of the sketch.
+    while (((averageAlt - oldAverageAlt) > -3) && (averageAlt < ARM_ALT)) { // While the glider is not dropping at least -3 meters between readings and while the glider is below the ARM_ALT meters delay the start of the sketch.
       oldestAlt = oldAlt;
       oldAlt = data.bmeAlt;
       getIMUData();
@@ -276,7 +276,7 @@ void loop() {
   nowGPS = millis();
   msGPS = nowGPS - lastGPS;
 #ifdef GROUND
-  if (msGPS > 15000 && !inFastEEPROM) { // Update the position every 15 seconds, but only if not in fast EEPROM mode.
+  if (msGPS > GPS_GROUND_SLEEP && !inFastEEPROM) { // Update the position every 15 seconds, but only if not in fast EEPROM mode.
     lastGPS = millis();
     getGPSData();
   }
@@ -299,11 +299,8 @@ void loop() {
   calculate();  // Find distance, turning angle, and more.
 
 #ifdef CHANGE_TARGET
-  if ((distanceMeters >= 10000) && (data.alt <= 1000)) {
-    targetLat = 42.7, targetLon = -71.9; // Change to defined nearby coordinates as a back up location if previous location is too far.
-  }
-  if ((distanceMeters >= 50000) && (data.alt <= 1000)) {
-    targetLat = 43.7, targetLon = -72.9; // Change to defined nearby coordinates as a back up location if previous location is too far.
+  if ((data.distanceMeters >= FURTHEST_DST_THRS) && (data.alt <= FURTHEST_ALT_THRS)) {
+    targetLat = FURTHEST_LAT, targetLon = FURTHEST_LON; // Change to defined nearby coordinates as a back up location if previous location is too far.
   }
   calculate(); // Calculate again to get updated variables if the target has changed.
 #endif
@@ -313,7 +310,7 @@ void loop() {
   if ((data.distanceMeters <= SPIRAL_DST_THRESHOLD) && (data.alt > SPIRAL_ALT_THRESHOLD)) {
     spiral = true;
 #ifdef NEED_RUDDER
-    moveRudder(145); // Sends into a spin to safely make its way down.
+    moveRudder(SPIN_DEGREE); // Sends into a spin to safely make its way down.
 #endif
   }
 #endif
@@ -370,10 +367,10 @@ void loop() {
       if (ms < (FAST_UPDATE_PERIOD * 1000)) { // Check if it is still in the fast update period.
 #ifndef GROUND
 #ifdef LOW_POWER
-        LowPower.sleep(ABV_THRS_FST_UPDT_SLPFRST_FVE_SLP - 200);
+        LowPower.sleep(ABV_THRS_FST_UPDT_SLP - 200);
 #endif
 #ifndef LOW_POWER
-        delay(ABV_THRS_FST_UPDT_SLPFRST_FVE_SLP - 200);
+        delay(ABV_THRS_FST_UPDT_SLP - 200);
 #endif
 #endif
         fastUpdatePeriod = true;
