@@ -37,7 +37,7 @@ float setpointRudder, inputRudder, errorRudder, prevErrorRudder, integralRudder,
 int yawDifference, nowEEPROM, flightNumber, cycles, previous, averageAlt, oldAverageAlt, oldAlt, oldestAlt, dropCounter, lastYaw = 361;
 long eepromAddress, startTimer, endTimer, eepromSize, averageWrite, now, ms, last, nowGPS, msGPS, lastGPS, lastEEPROM, pi = 3.14159265358979323846;
 float writeTime;
-bool spiral, dropped, inFastEEPROM, runEEPROM = true, fastUpdatePeriod = true, firstEEPROM = true;
+bool spiral, dropped, inFastEEPROM, runEEPROM = true, fastUpdatePeriod = true, firstEEPROM = true, firstLoopForDropDetect = true;
 
 struct __attribute__((packed)) dataStruct {
   float lat;
@@ -182,9 +182,11 @@ void setup() {
 #endif
 
 #ifdef NEED_RUDDER
+#ifdef DEVMODE
+  SerialUSB.println("Moving rudder to 90 degrees.");
+#endif
   moveRudder(90, 0); // Move the rudder to 90 degrees.
 #endif
-  delay(1000);
 #ifdef NEED_ELEVATOR
   moveElevator(90, 0); // Move the elevator to 90 degrees.
 #endif
@@ -227,11 +229,15 @@ void loop() {
       oldestAlt = oldAlt;
       oldAlt = data.bmeAlt;
       getIMUData();
-      data.bmeAlt = bme280Altitude(1022.35); // Passing the reference pressure in hPa (millibars).
+      data.bmeAlt = bme280Altitude(REF_PRESSURE / 100); // Passing the reference pressure in hPa (millibars).
       averageAlt = (oldestAlt + oldAlt + data.bmeAlt) / 3;
       if (dropCounter == 3) {
         oldAverageAlt = averageAlt;
         dropCounter = 0;
+      }
+      if (firstLoopForDropDetect) {
+        firstLoopForDropDetect = false;
+        oldAverageAlt = averageAlt;
       }
       dropCounter++;
 #ifdef DEVMODE

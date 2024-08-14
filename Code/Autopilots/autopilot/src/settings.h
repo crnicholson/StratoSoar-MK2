@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // Enables.
 // #define DEVMODE // Toggle the serial monitor on and off.
 // #define LOW_POWER  // Activates low power mode. GPS will be lower power among others. Note that the serial monitor will no longer work.
-#define TEST_COORD // Use testing coordinates.
+// #define TEST_COORD // Use testing coordinates.
 // #define CHANGE_TARGET // If the target location is too far away, change it to some place closer.
-// #define SPIN_STOP  // Land the glider by sending it into a spin.
+#define SPIN_STOP // Land the glider by sending it into a spin.
 // #define STALL_STOP // Experimental, may be unsupported. Do not use. Land the glider by repeatedly stalling it.
 // #define NEED_PARACHUTE // Enable the parachute servo.
 // #define NEED_ELEVATOR // Enable the elevator servo.
@@ -40,27 +40,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // #define DROP_START // Starts the operations when a decreasing altitude is detected.
 
 // Time settings.
-#define FAST_UPDATE_PERIOD 1800   // In this time, the glider will update its yaw more frequently. The time is in seconds.
-#define GPS_SLEEP 30000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds and does not apply if ground is enabled.
-#define GPS_GROUND_SLEEP 15000    // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds and does not apply if ground is disabled.
+#define FAST_UPDATE_PERIOD 3600   // In this time, the glider will update its yaw more frequently. The time is in seconds.
+#define GPS_SLEEP 10000           // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds and does not apply if ground is enabled.
+#define GPS_GROUND_SLEEP 10000    // This is how long the glider will wait until it will get a new GPS fix, saving power in between fixes. The time is in milliseconds and does not apply if ground is disabled.
 #define SPIRAL_SLEEP 500          // If spiraling down, how long should the glider sleep for in between GPS and parachute checkups?
 #define BELOW_THRESHOLD_SLEEP 500 // If the yaw is below the threshold, the glider will sleep for this many seconds before checking if the drift is enough.
 #define ABOVE_THRESHOLD_SLEEP 500 // If the yaw is above the threshold, the glider will sleep for this long. Note that 200 will be subtracted from this because there was a 200 ms delay in between moving servos.
-#define ABV_THRS_FST_UPDT_SLP 500 // (Above threshold fast update period sleep). If the yaw is above the threshold and if the glider is in the first five minutes of flight, the glider will for this long. Same note as above, too.
+#define ABV_THRS_FST_UPDT_SLP 500 // (Above threshold fast update period sleep). If the yaw is above the threshold and if the glider is in the fast update period of flight, the glider will for this long. Same note as above, too.
 #define FLIGHT_TIME 240           // In minutes, the time expected to be in flight for, used for calculating the time between EEPROM writes.
 
 // Other settings.
-#define SETPOINT_ELEVATOR 10 // Desired pitch angle (in degrees).
-#define TOO_SLOW 5           // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
-#define YAW_DFR_THRESHOLD 5  // The threshold needed to move the servos.
-#define ARM_ALT 2000         // Meters before the altitude is considered safe to arm the glider if DROP_START is enabled.
-#define SPIN_DEGREE 110      // The angle of the servo when spiraling down to the ground. 90 degrees is the middle.
+#define SETPOINT_ELEVATOR 10   // Desired pitch angle (in degrees).
+#define TOO_SLOW 5             // If DIVE_STALL is defined, and the MPH is equal to or below this threshold, dive down.
+#define YAW_DFR_THRESHOLD 5    // The threshold needed to move the servos.
+#define ARM_ALT 10             // Meters before the altitude is considered safe to arm the glider if DROP_START is enabled.
+#define SPIN_DEGREE 180        // The angle of the servo when spiraling down to the ground. 90 degrees is the middle.
+#define REF_PRESSURE 101659.39 // Daily pressure at sea level today in Pa.
 
 // Threshold for parachute and spiraling.
 #define PARACHUTE_ALT_THRESHOLD 500 // If the glider is under this, and the distance is less than PARACHUTE_DST_THRESHOLD, open the parachute.
 #define PARACHUTE_DST_THRESHOLD 100 // If the glider is under PARACHUTE_ALT_THRESHOLD, and the distance is less than this, open the parachute.
 #define SPIRAL_ALT_THRESHOLD 0      // If the glider is above this, and the distance is less than SPIRAL_DST_THRESHOLD, spiral the glider down.
-#define SPIRAL_DST_THRESHOLD 100    // If the glider is above SPIRAL_ALT_THRESHOLD, and the distance is less than this, spiral the glider down.
+#define SPIRAL_DST_THRESHOLD 30     // If the glider is above SPIRAL_ALT_THRESHOLD, and the distance is less than this, spiral the glider down.
 
 // Pins. NOTE do not change these if you are using the PCB.
 // (checked with breadboard, code, and schematic on Feb 1st, 2024. Last change to pins was before Feb 1st.)
@@ -87,7 +88,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define WIRELESS_TX A5      // Hardware pin 47. Pin that connects to the HCO5. More info in the docs.
 
 // Target destination.
-double targetLat = 42.315373, targetLon = -71.334379; // Landscaping place near NEST.
+double targetLat = 42.263551, targetLon = -71.320015; // Glenwood Cemetery.
+// double targetLat = 42.315373, targetLon = -71.334379; // Landscaping place near NEST.
 // double targetLat = 42.31619, targetLon = -71.36740; // House 9 on Pemberton Road.
 // double targetLat = 42.3408625, targetLon = -71.3780515;
 // double targetLat = 42.3421048, targetLon = -71.3778945;
@@ -104,7 +106,7 @@ double testLat = 42.31622, testLon = -71.33370; // Woods at NEST.
 // Backup coordinates, furthest.
 #define FURTHEST_LAT 42
 #define FURTHEST_LON -71
-#define FURTHEST_ALT_THRS 1000
+#define FURTHEST_ALT_THRS 0
 #define FURTHEST_DST_THRS 1000 // If the glider is below FURTHEST_ALT_THRS and the distance is greater to the target than this, relocate the target to FURTHEST_LAT and FURTHEST_LON.
 
 // Baud rates.
