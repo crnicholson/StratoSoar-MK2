@@ -46,8 +46,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // Other settings.
 #define SERIAL_BAUD_RATE 115200 // SerialUSB monitor baud rate.
-#define EEPROM_BUTTON           // If the data from the main autopilot was collected with the EEPROM_BUTTON mode enabled, enable EEPROM_BUTTON mode here.
-// #define SPREADSHEET             // If enabled, only essential serial messages are printed for seamless integration into spreadsheets.
+// #define EEPROM_BUTTON           // If the data from the main autopilot was collected with the EEPROM_BUTTON mode enabled, enable EEPROM_BUTTON mode here.
+#define SPREADSHEET // If enabled, only essential serial messages are printed for seamless integration into spreadsheets.
 
 #include "SparkFun_External_EEPROM.h" // Click here to get the library: http://librarymanager/All#SparkFun_External_EEPROM
 #include <Wire.h>
@@ -104,10 +104,11 @@ void setup() {
       blink(ERR_LED);
   }
 
+  length = myMem.length();
+
 #ifndef SPREADSHEET
   SerialUSB.println("EEPROM detected!");
   SerialUSB.print("EEPROM size in bytes: ");
-  length = myMem.length();
   SerialUSB.println(length);
 
   byte previous = myMem.read(0);
@@ -131,42 +132,54 @@ void loop() {
   if (address < length) {
 #ifndef EEPROM_BUTTON
     // SerialUSB.print("Yaw: ");
-    SerialUSB.print(int(myMem.read(address)) * 2);
+    if (myMem.read(address) != 255) {
+      SerialUSB.print(int(myMem.read(address)) * 2);
+    }
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Pitch: ");
-    SerialUSB.print(", ");
-    SerialUSB.print(myMem.read(address));
+    if (myMem.read(address) != 255) {
+      SerialUSB.print(", ");
+      SerialUSB.print(myMem.read(address));
+    }
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Temp: ");
-    SerialUSB.print(", ");
-    SerialUSB.print(myMem.read(address));
+    if (myMem.read(address) != 255) {
+      SerialUSB.print(", ");
+      SerialUSB.print(myMem.read(address));
+    }
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Pressure: ");
-    SerialUSB.print(", ");
-    SerialUSB.print(int(myMem.read(address)) * 500);
+    if (myMem.read(address) != 255) {
+      SerialUSB.print(", ");
+      SerialUSB.print(int(myMem.read(address)) * 5);
+    }
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Humidity: ");
-    SerialUSB.print(", ");
-    SerialUSB.print(int(myMem.read(address)));
+    if (myMem.read(address) != 255) {
+      SerialUSB.print(", ");
+      SerialUSB.print(int(myMem.read(address)));
+    }
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
     }
     // SerialUSB.print(", Voltage: ");
-    SerialUSB.print(", ");
-    SerialUSB.println(int(myMem.read(address)));
+    if (myMem.read(address) != 255) {
+      SerialUSB.print(", ");
+      SerialUSB.println(int(myMem.read(address)));
+    }
     address++;
     while (myMem.isBusy()) {
       delayMicroseconds(100);
