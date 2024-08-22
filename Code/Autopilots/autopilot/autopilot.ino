@@ -217,6 +217,8 @@ void setup() {
 
   writeTime = (FLIGHT_TIME * 60) / (eepromSize / BYTES_PER_CYCLE) + EEPROM_BUFFER;
 
+  SerialUSB.println(writeTime);
+
   startTimer = millis();
   last = startTimer;
 }
@@ -313,7 +315,10 @@ void loop() {
 
 #ifdef SPIN_STOP
   // Once spiraling, skip the main sketch and only wakeup every 5 seconds to see if it's time to open the parachute.
-  if ((data.distanceMeters <= SPIRAL_DST_THRESHOLD) && (data.alt > SPIRAL_ALT_THRESHOLD)) {
+  if ((data.distanceMeters <= SPIRAL_DST_THRESHOLD) && (data.alt >= SPIRAL_ALT_THRESHOLD)) {
+#ifdef DEVMODE
+    SerialUSB.println("Spiraling down.");
+#endif
     spiral = true;
 #ifdef NEED_RUDDER
     moveRudder(SPIN_DEGREE); // Sends into a spin to safely make its way down.

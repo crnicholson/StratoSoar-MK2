@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import sin, cos, radians, atan2, sqrt, degrees
  
-EARTH_RADIUS = 6371000  # in meters
+EARTH_RADIUS = 6371000 
 
 data = pd.read_csv("descent.csv")
 
