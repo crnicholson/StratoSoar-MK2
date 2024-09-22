@@ -77,7 +77,7 @@ Additionally, the glider beacons it's location at a configurable interval with L
 
 The glider will fly to the selected coordinates, and depending on the user configuration, will either spiral down or release a parachute above the coordinates once it has reached them to safely descend. Additionally, if the glider is too low in altitude, prior to the flight the user can enter closer coordinates as backup landing locations.  -->
 
-StratoSoar MK3 is an advanced autonomous glider designed to operate at high altitudes, such as those reached by weather balloons. The glider is attached to a weather balloon via a cutdown mechanism. Once the balloon reaches the desired altitude, the cutdown mechanism releases the glider, initiating its descent. The glider then navigates autonomously to specified coordinates, using a combination of sensors, advanced algorithms, and low-power electronics.
+StratoSoar MK2 is an advanced autonomous glider designed to operate at high altitudes, such as those reached by weather balloons. The glider is attached to a weather balloon via a cutdown mechanism. Once the balloon reaches the desired altitude, the cutdown mechanism releases the glider, initiating its descent. The glider then navigates autonomously to specified coordinates, using a combination of sensors, advanced algorithms, and low-power electronics.
 
 ### Core Components and Functionality:
 
